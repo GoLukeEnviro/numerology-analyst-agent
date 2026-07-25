@@ -36,7 +36,13 @@ jobs:
         run: uv run ruff check .
 
       - name: Mypy strict
-        run: uv run mypy src apps tests
+        run: uv run mypy src apps tests scripts
 
-      - name: Pytest with coverage (≥ 85%)
+      - name: Core coverage (numerology_engine ≥ 95%)
+        run: uv run pytest --cov=src/numerology_engine --cov-report=term-missing --cov-fail-under=95
+
+      - name: Total coverage (src ≥ 85%)
         run: uv run pytest --cov=src --cov-report=term-missing --cov-fail-under=85
+
+      - name: Verify examples match service output
+        run: uv run python scripts/generate_examples.py --check

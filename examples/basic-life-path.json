@@ -1,46 +1,255 @@
 {
-  "_comment": "Reference output for `numerology profile --name 'Max Mustermann' --birth 1985-07-25`. The deterministic_hash is produced by the actual CLI run and is byte-stable for identical input + policy (Master Contract §2.4). Verified 2026-07-25.",
+  "audit_trace": {
+    "calculation_steps": [
+      {
+        "inputs": [
+          1,
+          9,
+          8,
+          5,
+          0,
+          7,
+          2,
+          5
+        ],
+        "label": "sum_all_digits",
+        "note": "1 + 9 + 8 + 5 + 0 + 7 + 2 + 5 = 37",
+        "output": 37
+      },
+      {
+        "inputs": [
+          37
+        ],
+        "label": "digit_sum",
+        "note": "37 -> 10",
+        "output": 10
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "label": "digit_sum",
+        "note": "10 -> 1",
+        "output": 1
+      },
+      {
+        "inputs": [
+          7
+        ],
+        "label": "reduce_month",
+        "note": "month 7 -> 7",
+        "output": 7
+      },
+      {
+        "inputs": [
+          25
+        ],
+        "label": "reduce_day",
+        "note": "day 25 -> 7",
+        "output": 7
+      },
+      {
+        "inputs": [
+          23
+        ],
+        "label": "reduce_year",
+        "note": "year 1985 digits -> 23 -> 5",
+        "output": 5
+      },
+      {
+        "inputs": [
+          7,
+          7,
+          5
+        ],
+        "label": "sum_components",
+        "note": "7 + 7 + 5 = 19",
+        "output": 19
+      },
+      {
+        "inputs": [
+          19
+        ],
+        "label": "digit_sum",
+        "note": "19 -> 10",
+        "output": 10
+      },
+      {
+        "inputs": [
+          10
+        ],
+        "label": "digit_sum",
+        "note": "10 -> 1",
+        "output": 1
+      }
+    ],
+    "disambiguation_required": false,
+    "normalization_steps": [
+      {
+        "input": "Max Mustermann",
+        "note": "identical",
+        "output": "Max Mustermann",
+        "step": "unicode_nfc"
+      },
+      {
+        "input": "Max Mustermann",
+        "note": "no accents",
+        "output": "Max Mustermann",
+        "step": "accent_removal"
+      },
+      {
+        "input": "Max Mustermann",
+        "note": "A-Z pythagorean base",
+        "output": "MAX MUSTERMANN",
+        "step": "uppercase"
+      }
+    ],
+    "warnings": []
+  },
   "claim_type": "calculation_fact",
-  "name": "life_path",
-  "deterministic_hash": "65ec7f3e8e3e4a056a4cd8ba48027684003cc043c58ca041d03d64fbfb81c2b3",
-  "input": {
-    "core_name": "Max Mustermann",
-    "active_name": null,
-    "birth_date": "1985-07-25",
-    "locale": "de"
-  },
-  "method": {
-    "system": "pythagorean",
-    "version": "v1",
-    "y_mode": "phonetic",
-    "umlaut_policy": "de-direct-v1",
-    "name_basis": "both_separate",
-    "date_method": "both",
-    "locale": "de",
-    "master_numbers": [11, 22, 33]
-  },
-  "results": {
-    "life_path_a": {
-      "method": "sum_all_digits",
-      "value": 1,
-      "intermediate": 37,
-      "is_master": false,
-      "is_karmic_debt": false
-    },
-    "life_path_b": {
-      "method": "component_then_sum",
-      "value": 1,
-      "intermediate": 19,
-      "is_master": false,
-      "is_karmic_debt": true,
-      "_karmic_note": "intermediate 19 is a karmic debt (19/1) per Master Contract §3.2; flagged as metadata only",
-      "components": { "month": 7, "day": 7, "year": 5 }
-    }
-  },
   "consistency": {
     "a_equals_b": true,
     "life_path_a": 1,
     "life_path_b": 1,
     "warning": ""
+  },
+  "deterministic_hash": "65ec7f3e8e3e4a056a4cd8ba48027684003cc043c58ca041d03d64fbfb81c2b3",
+  "input": {
+    "active_name": null,
+    "as_of_date": "2026-07-26",
+    "birth_date": "1985-07-25",
+    "core_name": "Max Mustermann",
+    "locale": "de"
+  },
+  "method": {
+    "date_method": "both",
+    "locale": "de",
+    "master_numbers": [
+      11,
+      22,
+      33
+    ],
+    "name_basis": "both_separate",
+    "system": "pythagorean",
+    "umlaut_policy": "de-direct-v1",
+    "version": "v1",
+    "y_mode": "phonetic"
+  },
+  "name": "life_path",
+  "results": {
+    "life_path_a": {
+      "components": {},
+      "compound_notation": "37/10/1",
+      "intermediate": 37,
+      "is_master": false,
+      "karmic_debt": null,
+      "method": "sum_all_digits",
+      "raw_total": 37,
+      "reduced_value": 1,
+      "steps": [
+        {
+          "inputs": [
+            1,
+            9,
+            8,
+            5,
+            0,
+            7,
+            2,
+            5
+          ],
+          "label": "sum_all_digits",
+          "note": "1 + 9 + 8 + 5 + 0 + 7 + 2 + 5 = 37",
+          "output": 37
+        },
+        {
+          "inputs": [
+            37
+          ],
+          "label": "digit_sum",
+          "note": "37 -> 10",
+          "output": 10
+        },
+        {
+          "inputs": [
+            10
+          ],
+          "label": "digit_sum",
+          "note": "10 -> 1",
+          "output": 1
+        }
+      ],
+      "value": 1
+    },
+    "life_path_b": {
+      "components": {
+        "day": 7,
+        "month": 7,
+        "year": 5
+      },
+      "compound_notation": "19/10/1",
+      "intermediate": 19,
+      "is_master": false,
+      "karmic_debt": {
+        "number": 19,
+        "origin": "component_sum"
+      },
+      "method": "component_then_sum",
+      "raw_total": 19,
+      "reduced_value": 1,
+      "steps": [
+        {
+          "inputs": [
+            7
+          ],
+          "label": "reduce_month",
+          "note": "month 7 -> 7",
+          "output": 7
+        },
+        {
+          "inputs": [
+            25
+          ],
+          "label": "reduce_day",
+          "note": "day 25 -> 7",
+          "output": 7
+        },
+        {
+          "inputs": [
+            23
+          ],
+          "label": "reduce_year",
+          "note": "year 1985 digits -> 23 -> 5",
+          "output": 5
+        },
+        {
+          "inputs": [
+            7,
+            7,
+            5
+          ],
+          "label": "sum_components",
+          "note": "7 + 7 + 5 = 19",
+          "output": 19
+        },
+        {
+          "inputs": [
+            19
+          ],
+          "label": "digit_sum",
+          "note": "19 -> 10",
+          "output": 10
+        },
+        {
+          "inputs": [
+            10
+          ],
+          "label": "digit_sum",
+          "note": "10 -> 1",
+          "output": 1
+        }
+      ],
+      "value": 1
+    }
   }
 }
