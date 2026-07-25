@@ -59,6 +59,11 @@ def reduce_to_single_digit(
     The per-iteration audit steps are reconstructed separately by the date
     layer (which owns the :class:`CalculationStep` trail); this primitive
     stays focused on the numeric outcome.
+
+    Karmic-debt detection is NOT done here (Korrektur 1): it is only
+    meaningful on a Life Path method's unreduced core value, so it lives in
+    the date layer (:func:`numerology_engine.dates.life_path_a` / ``b``).
+    ``recognize_karmic`` remains exported for that layer.
     """
     if n < 0:
         raise ValueError("reduce_to_single_digit requires a non-negative integer")
@@ -66,26 +71,39 @@ def reduce_to_single_digit(
     current = n
 
     # Master numbers are held immediately, even if they appear as the input.
-    # A karmic debt (13/14/16/19) can never coincide with a master number, so
-    # the early-return case is never karmic.
     if recognize_master(current, master_numbers):
         return ReductionOutcome(
             value=current,
             intermediate=n,
             is_master=True,
-            is_karmic_debt=False,
         )
 
     while current > 9 and not recognize_master(current, master_numbers):
         current = digit_sum(current)
 
-    # ``current`` is now <= 9 or a master number.
     is_master = recognize_master(current, master_numbers)
-    is_karmic = recognize_karmic(n) and not is_master
 
     return ReductionOutcome(
         value=current,
         intermediate=n,
         is_master=is_master,
-        is_karmic_debt=is_karmic,
     )
+
+
+def reduction_chain(n: int, *, master_numbers: frozenset[int] = MASTER_NUMBERS) -> list[int]:
+    """Return the full reduction path of ``n`` including ``n`` itself.
+
+    Example: ``reduction_chain(37) == [37, 10, 1]``. A value that is already
+    reduced (``<= 9``) or a held master number yields a single-element chain.
+
+    Used by the date layer to build ``compound_notation`` (Korrektur 1, slash
+    notation like ``'37/10/1'``).
+    """
+    if n < 0:
+        raise ValueError("reduction_chain requires a non-negative integer")
+    chain: list[int] = [n]
+    current = n
+    while current > 9 and not recognize_master(current, master_numbers):
+        current = digit_sum(current)
+        chain.append(current)
+    return chain

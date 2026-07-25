@@ -58,4 +58,4 @@ def test_determinism_same_input_same_output(n: int) -> None:
     b = reduce_to_single_digit(n)
     assert a.value == b.value
     assert a.is_master == b.is_master
-    assert a.is_karmic_debt == b.is_karmic_debt
+    # Korrektur 1: karmic detection moved off the primitive; only master flag + value matter.

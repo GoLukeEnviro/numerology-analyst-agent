@@ -67,10 +67,22 @@ class PersonInput(_FrozenModel):
       (ADR 0004 §2). Never silently merged with ``core_name``.
     * ``birth_date`` - calendar date of birth. The Life Path A/B
       calculations operate exclusively on this field.
+    * ``as_of_date`` - explicit evaluation date for deterministic tests.
+      MUST be >= ``birth_date`` for a person profile (Korrektur 3); the
+      domain core never calls ``date.today()`` - the CLI defaults this at
+      its own boundary (Korrektur 2). General date analysis (later) will
+      not carry this constraint.
     """
 
     core_name: str = Field(..., min_length=1, description="Full birth name (authoritative).")
     birth_date: date = Field(..., description="Calendar date of birth (YYYY-MM-DD).")
+    as_of_date: date = Field(
+        ...,
+        description=(
+            "Explicit evaluation date for deterministic tests. "
+            "birth_date must be <= as_of_date for a person profile."
+        ),
+    )
     active_name: str | None = Field(
         default=None,
         description="Currently used name; optional supplementary profile basis.",
@@ -93,6 +105,18 @@ class PersonInput(_FrozenModel):
         import unicodedata
 
         return unicodedata.normalize("NFC", v)
+
+    @model_validator(mode="after")
+    def _birth_date_not_in_future(self) -> PersonInput:
+        # Korrektur 3: a person profile must not have a birth_date later than
+        # the evaluation date. General date analysis is a separate command
+        # (extension point, not modelled here).
+        if self.birth_date > self.as_of_date:
+            raise ValueError(
+                "PERSON_BIRTH_DATE_IN_FUTURE: birth_date must be <= as_of_date "
+                f"(birth_date={self.birth_date}, as_of_date={self.as_of_date})"
+            )
+        return self
 
     @model_validator(mode="after")
     def _active_differs_from_core_if_set(self) -> PersonInput:
@@ -181,20 +205,21 @@ class NormalizationStep(_FrozenModel):
 
 
 class ReductionOutcome(_FrozenModel):
-    """A reduced numeric result with master/karmic metadata.
+    """A reduced numeric result with master-number metadata.
 
     ``value`` is always in ``1..9`` or one of the configured master numbers.
     ``intermediate`` is the pre-reduction sum (useful for the audit trace).
+
+    Karmic-debt detection moved OFF this primitive (Korrektur 1): the marker
+    is only meaningful on the *methodically defined unreduced core value*
+    of a Life Path method, not on arbitrary intermediate sums. The karmic
+    info therefore lives on :class:`LifePathResult` (``karmic_debt``), not
+    here. This primitive stays focused on numeric reduction + master-flag.
     """
 
     value: int = Field(..., description="Reduced value (1..9 or a master number).")
     intermediate: int = Field(..., description="Sum fed into the reduction.")
     is_master: bool = Field(default=False, description="True iff value is a master number.")
-    is_karmic_debt: bool = Field(
-        default=False,
-        description="True iff the pre-reduction intermediate is a karmic debt."
-        " Metadata only in 0.1.0 - never interpreted.",
-    )
 
     @model_validator(mode="after")
     def _check_range(self) -> ReductionOutcome:
@@ -205,11 +230,60 @@ class ReductionOutcome(_FrozenModel):
         return self
 
 
+class KarmicDebtInfo(_FrozenModel):
+    """Methodically defined karmic debt number with its origin (Korrektur 1).
+
+    The marker is attached ONLY when the *unreduced core value* of a Life
+    Path method (the raw total before the first reduction step) is one of
+    {13, 14, 16, 19}. Random intermediate sums are NOT karmic markers.
+    ``origin`` records which methodical component produced the value, e.g.
+    ``'total_sum'`` (Life Path A) or ``'component_sum'`` (Life Path B).
+    """
+
+    number: int = Field(..., description="Karmic debt number (13, 14, 16 or 19).")
+    origin: str = Field(
+        ...,
+        description="Methodical component that produced the value (e.g. 'total_sum').",
+    )
+
+    @model_validator(mode="after")
+    def _check_karmic_range(self) -> KarmicDebtInfo:
+        if self.number not in KARMIC_DEBTS:
+            raise ValueError(
+                f"karmic number must be one of {sorted(KARMIC_DEBTS)}, got {self.number}"
+            )
+        if not self.origin.strip():
+            raise ValueError("origin must be non-empty")
+        return self
+
+
 class LifePathResult(_FrozenModel):
-    """Life Path result for one reduction method (A or B)."""
+    """Life Path result for one reduction method (A or B).
+
+    Carries the *methodically defined unreduced core value* (``raw_total``)
+    alongside the final reduced value, the slash-notation reduction path
+    (``compound_notation``) and an optional karmic-debt marker attached to
+    that raw total (Korrektur 1).
+    """
 
     method: str = Field(..., description="'sum_all_digits' (A) or 'component_then_sum' (B).")
     reduction: ReductionOutcome
+    raw_total: int = Field(
+        ...,
+        description="Methodically defined unreduced core value before the first reduction.",
+    )
+    reduced_value: int = Field(
+        ...,
+        description="Final reduced value (1-9 or a master number); mirrors reduction.value.",
+    )
+    compound_notation: str = Field(
+        ...,
+        description="Reduction path as slash-notation, e.g. '19/10/1' or '37/10/1'.",
+    )
+    karmic_debt: KarmicDebtInfo | None = Field(
+        default=None,
+        description="Karmic debt info iff raw_total is a karmic debt number, else None.",
+    )
     components: dict[str, int] = Field(
         default_factory=dict,
         description="Per-component reductions (only for method B).",
@@ -218,6 +292,14 @@ class LifePathResult(_FrozenModel):
         default_factory=tuple,
         description="Ordered audit steps for this method.",
     )
+
+    @model_validator(mode="after")
+    def _reduced_value_consistent(self) -> LifePathResult:
+        if self.reduced_value != self.reduction.value:
+            raise ValueError(
+                f"reduced_value {self.reduced_value} must equal reduction.value {self.reduction.value}"
+            )
+        return self
 
 
 class ConsistencyStatus(_FrozenModel):

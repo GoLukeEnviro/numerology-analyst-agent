@@ -9,6 +9,7 @@ from numerology_engine.reduction import (
     recognize_karmic,
     recognize_master,
     reduce_to_single_digit,
+    reduction_chain,
 )
 
 
@@ -44,17 +45,35 @@ class TestReduceToSingleDigit:
         assert outcome.value == 11
         assert outcome.is_master
 
-    @pytest.mark.parametrize("n", [13, 14, 16, 19])
-    def test_karmic_debts_flagged_not_master(self, n: int) -> None:
-        outcome = reduce_to_single_digit(n)
-        assert outcome.is_karmic_debt
-        assert not outcome.is_master
-        # Karmic debts reduce to 4, 5, 7, 1 respectively.
-        assert outcome.value in {4, 5, 7, 1}
-
     def test_outcome_records_intermediate(self) -> None:
         outcome = reduce_to_single_digit(1985)
         assert outcome.intermediate == 1985
+
+    def test_outcome_has_no_karmic_field(self) -> None:
+        # Korrektur 1: karmic detection moved off the primitive; the field
+        # must not exist here so callers cannot rely on it.
+        outcome = reduce_to_single_digit(13)
+        assert not hasattr(outcome, "is_karmic_debt")
+
+
+class TestReductionChain:
+    def test_chain_for_two_step_reduction(self) -> None:
+        # 37 -> 10 -> 1
+        assert reduction_chain(37) == [37, 10, 1]
+
+    def test_chain_for_karmic_input(self) -> None:
+        # 19 -> 10 -> 1
+        assert reduction_chain(19) == [19, 10, 1]
+
+    def test_chain_for_already_single_digit(self) -> None:
+        assert reduction_chain(7) == [7]
+
+    def test_chain_holds_master_number(self) -> None:
+        assert reduction_chain(29) == [29, 11]
+        assert reduction_chain(11) == [11]
+
+    def test_chain_single_element_for_master_input(self) -> None:
+        assert reduction_chain(22) == [22]
 
 
 class TestRecognizers:

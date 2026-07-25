@@ -19,7 +19,11 @@ from numerology_engine.service import calculate_life_path
 
 @pytest.fixture
 def sample_result() -> CalculationResult:
-    person = PersonInput(core_name="Max Mustermann", birth_date=date(1985, 7, 25))
+    person = PersonInput(
+        core_name="Max Mustermann",
+        birth_date=date(1985, 7, 25),
+        as_of_date=date(2026, 7, 26),
+    )
     return calculate_life_path(person, MethodPolicy())
 
 
@@ -44,6 +48,15 @@ class TestPayload:
         assert "life_path_b" in payload["results"]
         assert payload["results"]["life_path_a"]["value"] == 1
         assert payload["results"]["life_path_b"]["components"] == {"month": 7, "day": 7, "year": 5}
+        # Korrektur 1: karmic_debt as object + compound_notation; as_of_date in input.
+        assert payload["results"]["life_path_a"]["compound_notation"] == "37/10/1"
+        assert payload["results"]["life_path_b"]["compound_notation"] == "19/10/1"
+        assert payload["results"]["life_path_a"]["karmic_debt"] is None
+        assert payload["results"]["life_path_b"]["karmic_debt"] == {
+            "number": 19,
+            "origin": "component_sum",
+        }
+        assert payload["input"]["as_of_date"] == "2026-07-26"
 
 
 class TestJsonDeterminism:
@@ -60,13 +73,21 @@ class TestJsonDeterminism:
 
     def test_byte_stability_identical_input(self) -> None:
         """Two computations from identical input must produce byte-identical JSON."""
-        person = PersonInput(core_name="Müller-Lüdenscheidt", birth_date=date(1993, 1, 1))
+        person = PersonInput(
+            core_name="Müller-Lüdenscheidt",
+            birth_date=date(1993, 1, 1),
+            as_of_date=date(2026, 7, 26),
+        )
         a = dump_result_as_json(calculate_life_path(person, MethodPolicy()))
         b = dump_result_as_json(calculate_life_path(person, MethodPolicy()))
         assert a == b
 
     def test_hash_present_and_stable(self) -> None:
-        person = PersonInput(core_name="Test", birth_date=date(2000, 12, 29))
+        person = PersonInput(
+            core_name="Test",
+            birth_date=date(2000, 12, 29),
+            as_of_date=date(2026, 7, 26),
+        )
         h1 = calculate_life_path(person, MethodPolicy()).deterministic_hash
         h2 = calculate_life_path(person, MethodPolicy()).deterministic_hash
         assert h1 == h2 and len(h1) == 64

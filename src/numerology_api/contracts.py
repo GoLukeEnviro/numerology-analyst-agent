@@ -32,6 +32,7 @@ def result_to_payload(result: CalculationResult) -> dict[str, Any]:
             "core_name": result.input_ref.core_name,
             "active_name": result.input_ref.active_name,
             "birth_date": result.input_ref.birth_date.isoformat(),
+            "as_of_date": result.input_ref.as_of_date.isoformat(),
             "locale": result.input_ref.locale.value,
         },
         "method": {
@@ -69,13 +70,21 @@ def result_to_payload(result: CalculationResult) -> dict[str, Any]:
 
 
 def _life_path_payload(lp: LifePathResult) -> dict[str, Any]:
-    """Project a :class:`LifePathResult` into a JSON-native dict."""
+    """Project a :class:`LifePathResult` into a JSON-native dict.
+
+    Korrektur 1: the karmic debt is exposed as an object with origin
+    (``{number, origin}`` or ``None``) instead of a bare boolean, and the
+    reduction path is exposed as ``compound_notation`` (slash notation).
+    """
     return {
         "method": lp.method,
         "value": lp.reduction.value,
         "intermediate": lp.reduction.intermediate,
+        "raw_total": lp.raw_total,
+        "reduced_value": lp.reduced_value,
+        "compound_notation": lp.compound_notation,
         "is_master": lp.reduction.is_master,
-        "is_karmic_debt": lp.reduction.is_karmic_debt,
+        "karmic_debt": None if lp.karmic_debt is None else lp.karmic_debt.model_dump(mode="json"),
         "components": dict(lp.components),
         "steps": [s.model_dump(mode="json") for s in lp.steps],
     }
