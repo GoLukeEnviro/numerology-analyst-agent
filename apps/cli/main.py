@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from datetime import date
 
+from pydantic import ValidationError
 import typer
 
 from numerology_api.contracts import dump_result_as_json
@@ -55,18 +56,35 @@ def profile(
     active_name: str | None = typer.Option(
         None, "--active-name", help="Currently used name (optional)."
     ),
+    as_of: str | None = typer.Option(
+        None,
+        "--as-of-date",
+        help="Evaluation date YYYY-MM-DD (default: today). birth must be <= as_of.",
+    ),
 ) -> None:
     """Compute the Life Path (A + B) profile and emit canonical JSON."""
+    # Korrektur 2 + 3: the domain core never calls date.today(); the CLI
+    # defaults as_of_date here at its own boundary so tests stay deterministic.
     try:
+        as_of_date = _parse_birth(as_of) if as_of else date.today()
         person = PersonInput(
             core_name=name,
             birth_date=_parse_birth(birth),
             active_name=active_name,
+            as_of_date=as_of_date,
         )
         policy = MethodPolicy()  # canonical pythagorean-v1 defaults
         result = calculate_life_path(person, policy)
     except NumerologyError as exc:
         typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+    except ValidationError as exc:
+        # Korrektur 3: surface the first validation failure deterministically.
+        # pydantic raises ValidationError (not ValueError) at the model boundary;
+        # we extract the human-readable message (e.g. PERSON_BIRTH_DATE_IN_FUTURE).
+        first = exc.errors()[0]
+        msg = " ".join(str(part) for part in (first.get("msg"), first.get("type"))).strip()
+        typer.echo(f"error: {msg}", err=True)
         raise typer.Exit(code=1) from exc
 
     typer.echo(dump_result_as_json(result))

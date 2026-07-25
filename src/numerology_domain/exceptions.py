@@ -32,6 +32,15 @@ class PolicyError(NumerologyError):
     """
 
 
+class PersonBirthDateInFutureError(ValidationError):
+    """Raised when a person profile's birth_date is later than as_of_date.
+
+    Korrektur 3: person profiles forbid a birth date in the future relative
+    to the explicit evaluation date. General date analysis (later command)
+    is a separate use case and remains permitted for future dates.
+    """
+
+
 class DisambiguationRequired(NumerologyError):
     """Raised (optionally) when a Y classification is ambiguous (ADR 0001).
 
