@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# uv
+# uv.lock is COMMITTED (reproducibility). Do not ignore.
+
+# Tooling caches
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.tox/
+.cache/
+
+# Coverage / test artifacts
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
