@@ -1,0 +1,46 @@
+{
+  "_comment": "Reference output for `numerology profile --name 'Max Mustermann' --birth 1985-07-25`. The deterministic_hash is produced by the actual CLI run and is byte-stable for identical input + policy (Master Contract §2.4). Verified 2026-07-25.",
+  "claim_type": "calculation_fact",
+  "name": "life_path",
+  "deterministic_hash": "65ec7f3e8e3e4a056a4cd8ba48027684003cc043c58ca041d03d64fbfb81c2b3",
+  "input": {
+    "core_name": "Max Mustermann",
+    "active_name": null,
+    "birth_date": "1985-07-25",
+    "locale": "de"
+  },
+  "method": {
+    "system": "pythagorean",
+    "version": "v1",
+    "y_mode": "phonetic",
+    "umlaut_policy": "de-direct-v1",
+    "name_basis": "both_separate",
+    "date_method": "both",
+    "locale": "de",
+    "master_numbers": [11, 22, 33]
+  },
+  "results": {
+    "life_path_a": {
+      "method": "sum_all_digits",
+      "value": 1,
+      "intermediate": 37,
+      "is_master": false,
+      "is_karmic_debt": false
+    },
+    "life_path_b": {
+      "method": "component_then_sum",
+      "value": 1,
+      "intermediate": 19,
+      "is_master": false,
+      "is_karmic_debt": true,
+      "_karmic_note": "intermediate 19 is a karmic debt (19/1) per Master Contract §3.2; flagged as metadata only",
+      "components": { "month": 7, "day": 7, "year": 5 }
+    }
+  },
+  "consistency": {
+    "a_equals_b": true,
+    "life_path_a": 1,
+    "life_path_b": 1,
+    "warning": ""
+  }
+}
