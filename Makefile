@@ -1,7 +1,7 @@
-.PHONY: help install sync lint format typecheck test test-cov all clean
+.PHONY: help install sync lint format typecheck test test-cov test-cov-core test-cov-total all clean
 
 help: ## Show available targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
 
 sync: ## Install all dependency groups into .venv (uv)
 	uv sync --all-groups
@@ -21,8 +21,13 @@ typecheck: ## Strict mypy on src, apps, tests
 test: ## Run the full test suite
 	uv run pytest
 
-test-cov: ## Run tests with coverage, fail under 85%
+test-cov-core: ## Core coverage gate (numerology_engine >= 95%)
+	uv run pytest --cov=src/numerology_engine --cov-report=term-missing --cov-fail-under=95
+
+test-cov-total: ## Total coverage gate (src >= 85%)
 	uv run pytest --cov=src --cov-report=term-missing --cov-fail-under=85
+
+test-cov: test-cov-core test-cov-total ## Both coverage gates (core + total)
 
 all: lint typecheck test-cov ## Run all Quality Gates (Master Contract §11)
 
