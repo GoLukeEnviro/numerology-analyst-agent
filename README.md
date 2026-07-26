@@ -4,10 +4,9 @@
 
 ---
 
-## Status: Release Candidate `0.1.3` — Contract Integrity
+## Status: Release `0.1.3` — Contract Integrity
 
-`0.1.3` befindet sich in PR #6 und ist noch nicht veröffentlicht.
-Der aktuelle stabile Release ist `0.1.2`.
+`0.1.3` ist der aktuelle stabile Release.
 
 `0.1.3` stärkt den deterministischen Berechnungsvertrag: Der Hash umfasst
 jetzt den vollständigen fachlich relevanten Input (Schema-Version, Eingaben,
@@ -234,9 +233,9 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 | `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                |
 | Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend       |
 | `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1 |
-| **Release Candidate `0.1.3` Contract Integrity**                        | ⏳ PR #6 offen                           |
-| Release `0.1.2` Packaging-Hardening                                 | ✅ aktueller stabiler Release            |
-| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.2`               |
+| **Release `0.1.3` Contract Integrity**                               | ✅ **LIVE**                              |
+| Release `0.1.2` Packaging-Hardening                                  | ✅ abgelöst durch `0.1.3`               |
+| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.3`               |
 | Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                   |
 | Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`       |
 | Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`    |
