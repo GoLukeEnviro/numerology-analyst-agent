@@ -1,0 +1,454 @@
+:root {
+  color-scheme: dark;
+  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  --ink: #07131e;
+  --surface: #0c1824;
+  --surface-raised: #122536;
+  --line: #2c4558;
+  --text: #ede9df;
+  --muted: #9baab5;
+  --teal: #55b9b1;
+  --teal-deep: #237b78;
+  --coral: #e47a61;
+  --sand: #d8c7a4;
+  --radius: 1.25rem;
+  background: var(--ink);
+  color: var(--text);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 20rem;
+  background: var(--ink);
+}
+
+body {
+  min-width: 20rem;
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 82% 12%, rgb(47 130 133 / 18%), transparent 31rem),
+    radial-gradient(circle at 15% 65%, rgb(228 122 97 / 8%), transparent 30rem),
+    linear-gradient(145deg, #07131e, #091925 55%, #06111a);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  width: min(100% - 2rem, 88rem);
+  margin: 0 auto;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5.5rem;
+  border-bottom: 1px solid rgb(155 170 181 / 18%);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.45rem;
+  letter-spacing: 0.01em;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
+  place-items: center;
+  border: 1px solid var(--teal);
+  border-radius: 50%;
+  color: var(--teal);
+  font-size: 1rem;
+}
+
+nav {
+  display: flex;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+nav a {
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: var(--text);
+  transform: translateY(-0.1rem);
+}
+
+.hero {
+  display: grid;
+  min-height: 42rem;
+  align-items: center;
+  gap: clamp(2rem, 6vw, 6rem);
+  grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.92fr);
+  padding: clamp(4rem, 10vw, 8.5rem) 0;
+}
+
+.eyebrow {
+  margin: 0 0 1.35rem;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  font-family: "Newsreader", Georgia, serif;
+  font-weight: 400;
+}
+
+h1 {
+  max-width: 12ch;
+  margin-bottom: 1.5rem;
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  line-height: 0.88;
+  letter-spacing: -0.055em;
+}
+
+.hero-lead {
+  max-width: 39rem;
+  color: #c5cfd5;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.75;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin: 2.25rem 0 1.5rem;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 3.3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.85rem 1.35rem;
+  font-weight: 650;
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+.button:hover,
+.button:focus-visible {
+  transform: translateY(-0.16rem);
+}
+
+.button-primary {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: #06191a;
+}
+
+.button-primary:hover,
+.button-primary:focus-visible {
+  background: #70cbc3;
+}
+
+.button-quiet:hover,
+.button-quiet:focus-visible {
+  border-color: var(--teal);
+}
+
+.privacy-note {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.atlas-card {
+  position: relative;
+  display: grid;
+  min-height: 31rem;
+  overflow: hidden;
+  align-content: space-between;
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) * 1.3);
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background:
+    linear-gradient(rgb(255 255 255 / 2%), transparent),
+    repeating-radial-gradient(circle at 50% 46%, transparent 0 3.3rem, rgb(85 185 177 / 6%) 3.35rem 3.42rem),
+    var(--surface);
+  box-shadow: 0 2rem 7rem rgb(0 0 0 / 35%);
+}
+
+.atlas-card::after {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, transparent 49.8%, rgb(85 185 177 / 8%) 50%, transparent 50.2%);
+  content: "";
+  pointer-events: none;
+}
+
+.atlas-orbit {
+  position: relative;
+  width: min(100%, 27rem);
+  aspect-ratio: 1;
+  margin: auto;
+}
+
+.orbit {
+  position: absolute;
+  border: 1px solid rgb(216 199 164 / 36%);
+  border-radius: 50%;
+  inset: 8%;
+}
+
+.orbit-inner {
+  border-color: rgb(85 185 177 / 38%);
+  inset: 25%;
+}
+
+.atlas-number,
+.satellite {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: "Newsreader", Georgia, serif;
+}
+
+.atlas-number {
+  inset: 50% auto auto 50%;
+  width: 7rem;
+  height: 7rem;
+  background: linear-gradient(145deg, #69c9c0, #237b78);
+  box-shadow: 0 0 4rem rgb(85 185 177 / 24%);
+  color: #06191a;
+  font-size: 4.8rem;
+  transform: translate(-50%, -50%);
+}
+
+.satellite {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid var(--sand);
+  background: var(--surface-raised);
+  color: var(--sand);
+  font-size: 1.55rem;
+}
+
+.satellite-one {
+  top: 3%;
+  left: 46%;
+}
+
+.satellite-two {
+  top: 48%;
+  right: 0;
+  border-color: var(--coral);
+  color: var(--coral);
+}
+
+.satellite-three {
+  bottom: 5%;
+  left: 14%;
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.atlas-caption {
+  display: flex;
+  position: relative;
+  z-index: 2;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 1.2rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.atlas-caption strong {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.boundary {
+  display: grid;
+  gap: 2.5rem;
+  border-top: 1px solid var(--line);
+  padding: 5rem 0 7rem;
+}
+
+.boundary h2 {
+  max-width: 16ch;
+  margin-bottom: 0;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  line-height: 1;
+}
+
+.claim-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.claim-grid article {
+  min-height: 13rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  background: rgb(18 37 54 / 62%);
+}
+
+.claim-grid h3 {
+  margin: 2rem 0 0.7rem;
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 1.45rem;
+}
+
+.claim-grid p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.claim-dot {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+}
+
+.claim-calculation {
+  background: var(--teal);
+  box-shadow: 0 0 1rem rgb(85 185 177 / 45%);
+}
+
+.claim-tradition {
+  background: var(--coral);
+}
+
+.claim-hypothesis {
+  border: 1px solid var(--sand);
+}
+
+.scientific-boundary {
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.reveal {
+  opacity: 0;
+  animation: reveal-up 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform: translateY(1.25rem);
+}
+
+.reveal-two {
+  animation-delay: 140ms;
+}
+
+.reveal-three {
+  animation-delay: 240ms;
+}
+
+@keyframes reveal-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 54rem) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-card {
+    min-height: 27rem;
+  }
+
+  .claim-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 40rem) {
+  .app-shell {
+    width: min(100% - 1.25rem, 88rem);
+  }
+
+  .site-header {
+    min-height: 4.5rem;
+  }
+
+  nav a:not(:last-child) {
+    display: none;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 4rem 0;
+  }
+
+  .hero-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .atlas-card {
+    min-height: 23rem;
+  }
+
+  .satellite {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .atlas-caption {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

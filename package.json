@@ -1,0 +1,11 @@
+{
+  "name": "numra-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "web:build": "pnpm --filter @numra/web build",
+    "web:lint": "pnpm --filter @numra/web lint",
+    "web:test": "pnpm --filter @numra/web test",
+    "web:typecheck": "pnpm --filter @numra/web typecheck"
+  }
+}

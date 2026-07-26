@@ -18,6 +18,11 @@ env/
 .pytest_cache/
 .tox/
 .cache/
+node_modules/
+*.tsbuildinfo
+apps/web/coverage/
+apps/web/playwright-report/
+apps/web/test-results/
 
 # Coverage / test artifacts
 .coverage
