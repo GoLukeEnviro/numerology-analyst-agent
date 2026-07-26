@@ -2,7 +2,7 @@
   "$defs": {
     "AuditTrace": {
       "additionalProperties": false,
-      "description": "Deterministic audit trail attached to every calculation result.\n\nField order is irrelevant for determinism because serialization always\nuses ``sort_keys=True`` (Master Contract §2.4; calculation-engineer\ncontract §4). ``deterministic_hash`` is computed over the sorted JSON\nof the whole trace.",
+      "description": "Deterministic audit trail attached to every calculation result.\n\nThe trace is one component of the CalculationHashEnvelope.\nThe calculation hash also covers the schema version, relevant input\nfields, MethodPolicy and calculated results — not the trace alone.",
       "properties": {
         "normalization_steps": {
           "items": {

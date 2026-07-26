@@ -4,8 +4,11 @@ Generates versioned JSON Schema files from the Pydantic models so that
 consumers can validate inputs and outputs without importing Python.
 
 Usage:
-    uv run python scripts/export_schemas.py          # write schemas/
+    uv run python scripts/export_schemas.py          # write schemas
     uv run python scripts/export_schemas.py --check  # verify schemas are up-to-date
+
+Schemas are written to:
+    src/numerology_api/schemas/
 """
 
 from __future__ import annotations

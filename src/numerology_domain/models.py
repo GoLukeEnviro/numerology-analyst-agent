@@ -314,10 +314,9 @@ class ConsistencyStatus(_FrozenModel):
 class AuditTrace(_FrozenModel):
     """Deterministic audit trail attached to every calculation result.
 
-    Field order is irrelevant for determinism because serialization always
-    uses ``sort_keys=True`` (Master Contract §2.4; calculation-engineer
-    contract §4). ``deterministic_hash`` is computed over the sorted JSON
-    of the whole trace.
+    The trace is one component of the CalculationHashEnvelope.
+    The calculation hash also covers the schema version, relevant input
+    fields, MethodPolicy and calculated results — not the trace alone.
     """
 
     normalization_steps: tuple[NormalizationStep, ...] = Field(default_factory=tuple)
