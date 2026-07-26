@@ -74,7 +74,12 @@ class PersonInput(_FrozenModel):
       not carry this constraint.
     """
 
-    core_name: str = Field(..., min_length=1, description="Full birth name (authoritative).")
+    core_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=200,
+        description="Full birth name (authoritative).",
+    )
     birth_date: date = Field(..., description="Calendar date of birth (YYYY-MM-DD).")
     as_of_date: date = Field(
         ...,
@@ -85,6 +90,7 @@ class PersonInput(_FrozenModel):
     )
     active_name: str | None = Field(
         default=None,
+        max_length=200,
         description="Currently used name; optional supplementary profile basis.",
     )
     locale: Locale = Field(default=Locale.DE, description="Normalization locale selector.")

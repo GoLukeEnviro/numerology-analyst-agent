@@ -29,9 +29,18 @@ _FORBIDDEN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
         ),
     ),
 )
-_PROMPT_INJECTION_PATTERN = re.compile(
-    r"\b(ignoriere|ignore).{0,40}\b(anweisungen|instructions|system[\s-]?prompt)\b",
-    re.IGNORECASE,
+_PROMPT_INJECTION_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(
+        r"\b(ignoriere|ignore|überschreibe|override).{0,60}"
+        r"\b(anweisungen|instructions|regeln|rules|system[\s-]?prompt)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(r"\b(jailbreak|developer[\s-]?mode|entwickler[\s-]?modus)\b", re.IGNORECASE),
+    re.compile(r"<\s*/?\s*(system|assistant|developer)\b", re.IGNORECASE),
+    re.compile(
+        r"\b(system[\s-]?(nachricht|message|prompt)|versteckte[nr]?\s+regeln)\b",
+        re.IGNORECASE,
+    ),
 )
 
 
@@ -44,6 +53,7 @@ def assert_text_safe(text: str) -> None:
     for code, pattern in _FORBIDDEN_PATTERNS:
         if pattern.search(text):
             raise SafetyError(f"{code}: unsafe language detected")
+    assert_prompt_safe(text)
 
 
 def assert_claims_safe(claims: tuple[InterpretationClaim, ...]) -> None:
@@ -56,5 +66,5 @@ def assert_claims_safe(claims: tuple[InterpretationClaim, ...]) -> None:
 
 def assert_prompt_safe(text: str) -> None:
     """Reject instruction-override attempts before any provider call."""
-    if _PROMPT_INJECTION_PATTERN.search(text):
+    if any(pattern.search(text) for pattern in _PROMPT_INJECTION_PATTERNS):
         raise SafetyError("prompt_injection: unsafe user prompt detected")

@@ -595,6 +595,7 @@
       "properties": {
         "core_name": {
           "description": "Full birth name (authoritative).",
+          "maxLength": 200,
           "minLength": 1,
           "title": "Core Name",
           "type": "string"
@@ -614,6 +615,7 @@
         "active_name": {
           "anyOf": [
             {
+              "maxLength": 200,
               "type": "string"
             },
             {

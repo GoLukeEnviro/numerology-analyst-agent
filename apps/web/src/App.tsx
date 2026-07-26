@@ -115,6 +115,194 @@ function SiteHeader() {
   );
 }
 
+function LegalFooter() {
+  return (
+    <footer className="legal-footer">
+      <span>Numra · Symbolische Reflexion mit transparentem Rechenweg</span>
+      <nav aria-label="Rechtliches">
+        <a href="/datenschutz">Datenschutz</a>
+        <a href="/impressum">Impressum</a>
+        <a href="/nutzungsbedingungen">Nutzungsbedingungen</a>
+      </nav>
+    </footer>
+  );
+}
+
+function InformationPage({
+  eyebrow,
+  title,
+  children,
+}: {
+  eyebrow: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main className="information-page">
+        <p className="eyebrow">{eyebrow}</p>
+        <h1>{title}</h1>
+        <div className="information-content">{children}</div>
+      </main>
+      <LegalFooter />
+    </div>
+  );
+}
+
+function KnowledgePage() {
+  return (
+    <InformationPage eyebrow="TRANSPARENTE METHODE" title="Methode und Aussagegrenzen">
+      <section>
+        <h2>Was Numra berechnet</h2>
+        <p>
+          Der deterministische Kern verwendet die pythagoreische
+          Buchstaben-Zuordnung in der versionierten Policy v1. Er berechnet
+          Lebensweg A und B, Geburtstag, Einstellung, Ausdruck,
+          Seelenstreben, Persönlichkeit, Reife sowie persönliche Zyklen,
+          Pinnacles und Challenges.
+        </p>
+        <p>
+          Geburtsname und aktiver Name bleiben getrennt. Das explizite
+          Berechnungsdatum, die Methodenpolicy und jeder Rechenschritt fließen
+          in den reproduzierbaren Profilhash ein.
+        </p>
+      </section>
+      <section>
+        <h2>Vier Aussageklassen</h2>
+        <dl className="information-list">
+          <div><dt>Eingabefakt</dt><dd>Eine von dir bereitgestellte Angabe.</dd></div>
+          <div><dt>Berechnungsfakt</dt><dd>Ein deterministisch reproduzierbares Ergebnis.</dd></div>
+          <div><dt>Traditionelle Aussage</dt><dd>Überlieferte numerologische Symbolik.</dd></div>
+          <div><dt>Interpretative Hypothese</dt><dd>Eine prüfbare Einladung zur persönlichen Reflexion.</dd></div>
+        </dl>
+      </section>
+      <aside className="notice">
+        <strong>Wissenschaftliche Grenze</strong>
+        <p>
+          Numerologie ist keine wissenschaftlich bestätigte Persönlichkeitsdiagnostik
+          und ersetzt keine medizinische, psychologische, rechtliche oder
+          finanzielle Beratung.
+        </p>
+      </aside>
+    </InformationPage>
+  );
+}
+
+function PrivacyPage() {
+  return (
+    <InformationPage eyebrow="DATENSCHUTZINFORMATION" title="Datenschutz">
+      <section>
+        <h2>Lokale Datenhoheit</h2>
+        <p>
+          Numra führt keine serverseitige Profilhistorie. Es gibt keine Konten
+          oder Cloud-Synchronisierung. Dauerhaft gespeicherte Profile, Berichte,
+          Rückfragen und Notizen liegen ausschließlich in der IndexedDB dieses
+          Geräts und können optional mit einer Passphrase verschlüsselt werden.
+        </p>
+      </section>
+      <section>
+        <h2>Berechnung und Protokolle</h2>
+        <p>
+          Name, Geburtsdatum und Berechnungsdatum werden verschlüsselt per HTTPS
+          zur flüchtigen Berechnung übertragen. Die API speichert weder
+          Request-Body noch Ergebnis. Betriebslogs enthalten nur Methode, Pfad,
+          Status, Korrelations-ID und Laufzeit – keine Namen, Geburtsdaten,
+          Profilantworten oder KI-Ausgaben.
+        </p>
+      </section>
+      <section>
+        <h2>Optionale KI-Analyse</h2>
+        <p>
+          Erst nach separater Einwilligung erhält DeepSeek pseudonymisierte
+          Berechnungsfakten und ausgewählte Wissensauszüge. Klarname und
+          vollständiges Geburtsdatum werden nicht übertragen. Eine Verarbeitung
+          in China ist möglich; die Funktion bleibt bis zur rechtlichen Prüfung
+          des Drittlandtransfers standardmäßig deaktiviert.
+        </p>
+        <p>
+          Für Missbrauchsschutz werden nur kurzlebige Redis-Zähler verwendet.
+          Die IP-Adresse geht ausschließlich als HMAC-pseudonymisierter
+          Tagesschlüssel ein und wird nicht im Klartext persistiert.
+        </p>
+      </section>
+      <section>
+        <h2>Deine Kontrolle</h2>
+        <p>
+          Unter Einstellungen kannst du alle lokalen Daten exportieren oder
+          vollständig löschen. Da Numra keine serverseitigen Profile führt,
+          kann der Betreiber verlorene lokale Daten oder Passphrasen nicht
+          wiederherstellen.
+        </p>
+      </section>
+    </InformationPage>
+  );
+}
+
+function ImprintPage() {
+  return (
+    <InformationPage eyebrow="LAUNCH-GATE" title="Impressum">
+      <aside className="notice notice-warning">
+        <strong>Noch nicht öffentlich freigegeben</strong>
+        <p>
+          Numra bleibt für den öffentlichen Launch gesperrt, bis der Betreiber
+          seine ladungsfähige Anschrift, Vertretungsangaben und eine
+          Datenschutz-Kontaktadresse bereitgestellt und rechtlich geprüft hat.
+        </p>
+      </aside>
+      <section>
+        <h2>Warum hier keine Platzhalter stehen</h2>
+        <p>
+          Betreiberangaben sind Tatsachen und werden nicht erfunden. Das
+          Deployment kann bis dahin ausschließlich als privates Staging
+          betrieben werden.
+        </p>
+      </section>
+      <section>
+        <h2>Software</h2>
+        <p>
+          Der Quellcode von Numra steht unter der MIT-Lizenz. Lizenz und
+          Haftungstext des Softwareprojekts bleiben davon unberührt.
+        </p>
+      </section>
+    </InformationPage>
+  );
+}
+
+function TermsPage() {
+  return (
+    <InformationPage eyebrow="NUTZUNGSRAHMEN" title="Nutzungsbedingungen">
+      <section>
+        <h2>Voraussetzungen</h2>
+        <p>
+          Numra richtet sich ausschließlich an Personen, die mindestens 18
+          Jahre alt sind. Vor einer Berechnung ist die Altersbestätigung
+          erforderlich.
+        </p>
+      </section>
+      <section>
+        <h2>Reflexion, nicht Diagnose</h2>
+        <p>
+          Ergebnisse und Berichte dienen der Unterhaltung und persönlichen
+          Reflexion. Sie sind keine Tatsachenbehauptung über Persönlichkeit oder
+          Zukunft und keine medizinische, psychologische, rechtliche oder
+          finanzielle Beratung. Triff wichtige Entscheidungen nicht allein auf
+          dieser Grundlage.
+        </p>
+      </section>
+      <section>
+        <h2>Lokale Verantwortung</h2>
+        <p>
+          Du entscheidest, ob Inhalte auf deinem Gerät gespeichert,
+          verschlüsselt, exportiert oder gelöscht werden. Ohne Export gibt es
+          keine serverseitige Wiederherstellung. Teile Berichte nur mit
+          Einwilligung der betroffenen Person.
+        </p>
+      </section>
+    </InformationPage>
+  );
+}
+
 function NewAnalysisPage() {
   const navigate = useNavigate();
   const complete = (result: ProfileCalculationResult) => {
@@ -407,6 +595,10 @@ export function App() {
         <Route path="/profil/:id/bericht" element={<ReportPage />} />
         <Route path="/bibliothek" element={<LibraryPage />} />
         <Route path="/einstellungen" element={<SettingsPage />} />
+        <Route path="/wissen" element={<KnowledgePage />} />
+        <Route path="/datenschutz" element={<PrivacyPage />} />
+        <Route path="/impressum" element={<ImprintPage />} />
+        <Route path="/nutzungsbedingungen" element={<TermsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
       <PwaRegistration />
