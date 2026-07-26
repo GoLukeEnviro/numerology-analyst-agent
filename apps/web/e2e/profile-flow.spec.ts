@@ -1,6 +1,8 @@
-import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 
-test("calculates a complete profile from the guided flow", async ({ page }) => {
+import { expect, test, type Page } from "@playwright/test";
+
+async function completeAnalysis(page: Page): Promise<void> {
   await page.goto("/analyse/neu");
   await expect(page.getByRole("heading", { name: "Deine Ausgangsdaten" })).toBeVisible();
 
@@ -14,9 +16,68 @@ test("calculates a complete profile from the guided flow", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Prüfen und freigeben" })).toBeVisible();
   await page.getByLabel(/symbolische Reflexionsmethode/i).check();
   await page.getByRole("button", { name: "Profil berechnen" }).click();
+}
 
-  await expect(page).toHaveURL(/\/profil\/[a-f0-9]{12}$/);
+test("calculates, stores and exports a complete profile", async ({ page }, testInfo) => {
+  await completeAnalysis(page);
+
+  await expect(page).toHaveURL(/\/profil\/[a-f0-9]{16}$/);
   await expect(page.getByRole("heading", { name: "Dein Zahlenatlas" })).toBeVisible();
   await expect(page.getByRole("table", { name: "Tabellarischer Zahlenatlas" })).toBeVisible();
   await expect(page.getByText("Persönliche Zyklen")).toBeVisible();
+
+  await page.getByRole("button", { name: "Lokal speichern", exact: true }).click();
+  await expect(page.getByText(/Profil dauerhaft.+gespeichert/)).toBeVisible();
+  const downloadEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "PDF exportieren" }).click();
+  const download = await downloadEvent;
+  await download.saveAs(testInfo.outputPath("numra-profile.pdf"));
+  const path = await download.path();
+  expect(path).not.toBeNull();
+  if (path === null) throw new Error("PDF download path is unavailable");
+  const bytes = await readFile(path);
+  expect(bytes.subarray(0, 5).toString()).toBe("%PDF-");
+  expect(bytes.byteLength).toBeGreaterThan(1_000);
+});
+
+test("keeps a saved profile readable after a browser restart", async ({ page }) => {
+  await completeAnalysis(page);
+  await page.getByRole("button", { name: "Lokal speichern", exact: true }).click();
+  await expect(page.getByText(/Profil dauerhaft.+gespeichert/)).toBeVisible();
+  await page.goto("/bibliothek");
+  await page.getByRole("link", { name: "Max Mustermann" }).click();
+  await page.reload();
+
+  await expect(page.getByRole("heading", { name: "Max Mustermann" })).toBeVisible();
+});
+
+test("keeps a saved profile readable after an offline restart", async ({
+  page,
+  context,
+  browserName,
+}) => {
+  test.skip(
+    browserName === "webkit",
+    "Playwright WebKit blocks offline reload in Web Inspector before the service worker.",
+  );
+  await completeAnalysis(page);
+  await page.getByRole("button", { name: "Lokal speichern", exact: true }).click();
+  await expect(page.getByText(/Profil dauerhaft.+gespeichert/)).toBeVisible();
+  await page.goto("/bibliothek");
+  await page.getByRole("link", { name: "Max Mustermann" }).click();
+  await page.waitForFunction(() => "serviceWorker" in navigator && navigator.serviceWorker.controller);
+
+  await context.setOffline(true);
+  await page.reload();
+
+  await expect(page.getByRole("heading", { name: "Max Mustermann" })).toBeVisible();
+});
+
+test("persists the light theme and explains installation", async ({ page }) => {
+  await page.goto("/einstellungen");
+  await page.getByRole("button", { name: "Light Atlas" }).click();
+  await page.reload();
+
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.getByText(/iPhone und iPad/)).toBeVisible();
 });

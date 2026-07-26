@@ -107,7 +107,11 @@ export function ReportExperience({
   };
 
   const askFollowUp = () => {
-    if (report === null || !question.trim() || !navigator.onLine) return;
+    if (report === null || !question.trim()) return;
+    if (!navigator.onLine) {
+      setMessage("Für eine neue Rückfrage ist eine Internetverbindung erforderlich.");
+      return;
+    }
     setBusy(true);
     void requestFollowUp({
       consent: true,

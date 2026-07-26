@@ -120,4 +120,14 @@ describe("LocalProfileRepository", () => {
       /zwei Rückfragen/,
     );
   });
+
+  it("creates, updates and removes a local note for a profile", async () => {
+    const state = repository();
+    const saved = await state.repository.saveProfile(profile("Note Name", "n"), true);
+
+    await state.repository.saveNote(saved.id, "Eine persönliche Reflexion.", true);
+    expect(await state.repository.getNote(saved.id)).toBe("Eine persönliche Reflexion.");
+    await state.repository.deleteNote(saved.id);
+    expect(await state.repository.getNote(saved.id)).toBeNull();
+  });
 });

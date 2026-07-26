@@ -23,6 +23,7 @@ node_modules/
 apps/web/coverage/
 apps/web/playwright-report/
 apps/web/test-results/
+tmp/
 
 # Coverage / test artifacts
 .coverage

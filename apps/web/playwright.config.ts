@@ -18,7 +18,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: "pnpm dev --host 127.0.0.1",
+      command: "pnpm build && pnpm preview --host 127.0.0.1 --port 5173",
       port: 5173,
       reuseExistingServer: !process.env.CI,
     },

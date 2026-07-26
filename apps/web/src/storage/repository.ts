@@ -213,6 +213,36 @@ export class LocalProfileRepository {
     );
   }
 
+  async saveNote(
+    profileId: string,
+    text: string,
+    optIn: boolean,
+    reportId?: string,
+  ): Promise<void> {
+    if (!optIn) throw new Error("Opt-in ist vor dauerhafter Speicherung erforderlich.");
+    const normalized = text.trim();
+    if (!normalized || normalized.length > 5_000) {
+      throw new Error("Notizen müssen zwischen 1 und 5.000 Zeichen enthalten.");
+    }
+    const id = `note:${profileId}:${reportId ?? "profile"}`;
+    await this.database.notes.put({
+      id,
+      profileId,
+      reportId,
+      updatedAt: Date.now(),
+      payload: await this.encodePayload(normalized),
+    });
+  }
+
+  async getNote(profileId: string, reportId?: string): Promise<string | null> {
+    const record = await this.database.notes.get(`note:${profileId}:${reportId ?? "profile"}`);
+    return record === undefined ? null : this.decodePayload<string>(record.payload);
+  }
+
+  async deleteNote(profileId: string, reportId?: string): Promise<void> {
+    await this.database.notes.delete(`note:${profileId}:${reportId ?? "profile"}`);
+  }
+
   async deleteAllLocalData(): Promise<void> {
     await this.database.transaction(
       "rw",

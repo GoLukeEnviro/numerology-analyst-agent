@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Numra</title>
+  <rect width="512" height="512" rx="112" fill="#07131e"/>
+  <circle cx="256" cy="256" r="178" fill="none" stroke="#55b9b1" stroke-width="8"/>
+  <circle cx="256" cy="256" r="126" fill="none" stroke="#d8c7a4" stroke-width="3" opacity=".6"/>
+  <path d="M170 352V160h38l96 128V160h38v192h-38l-96-128v128z" fill="#ede9df"/>
+  <circle cx="375" cy="144" r="22" fill="#e47a61"/>
+  <circle cx="140" cy="374" r="16" fill="#55b9b1"/>
+</svg>

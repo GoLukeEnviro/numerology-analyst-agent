@@ -20,7 +20,7 @@ describe("NumberAtlas", () => {
     expect(screen.getAllByLabelText("Aussageklasse Berechnung")).toHaveLength(2);
     expect(screen.getByRole("table", { name: "Tabellarischer Zahlenatlas" })).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Expertenansicht öffnen" }));
-    expect(screen.getByText(/Berechnungshash/)).toBeVisible();
+    expect(await screen.findByText(/Berechnungshash/)).toBeVisible();
     expect(screen.getAllByText("37/10/1")).toHaveLength(2);
   });
 });

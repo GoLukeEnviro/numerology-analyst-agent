@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+
+const ExpertDetails = lazy(() => import("./ExpertDetails"));
 
 export interface AtlasNumber {
   label: string;
@@ -45,12 +47,9 @@ export function NumberAtlas({ hash, numbers }: NumberAtlasProps) {
         </table>
       </div>
       {expert && (
-        <div className="provenance">
-          <span>Berechnungshash</span>
-          <code>{hash}</code>
-          <span>Schema</span>
-          <code>profile-calculation-result-v2</code>
-        </div>
+        <Suspense fallback={<p>Expertendaten werden geladen …</p>}>
+          <ExpertDetails hash={hash} />
+        </Suspense>
       )}
     </section>
   );

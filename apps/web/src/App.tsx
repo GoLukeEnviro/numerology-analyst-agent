@@ -4,9 +4,12 @@ import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-rout
 import type { ProfileCalculationResult } from "./api/types";
 import { AnalysisWizard } from "./features/analysis/AnalysisWizard";
 import { NumberAtlas, type AtlasNumber } from "./features/profile/NumberAtlas";
+import { ProfileActions } from "./features/profile/ProfileActions";
 import { ReportExperience } from "./features/report/ReportExperience";
+import { PwaRegistration } from "./pwa/PwaUpdateNotice";
 import { VaultLockedError, parseEncryptedArchive } from "./storage/crypto";
 import { localProfiles, type LocalProfile } from "./storage/repository";
+import { applyTheme, readTheme, type Theme } from "./theme";
 
 function HomePage() {
   return (
@@ -228,6 +231,7 @@ function ProfilePage() {
             </div>
           </div>
         </section>
+        {id !== undefined && <ProfileActions profileId={id} profile={result} />}
       </main>
     </div>
   );
@@ -307,6 +311,7 @@ function LibraryPage() {
 function SettingsPage() {
   const [passphrase, setPassphrase] = useState("");
   const [message, setMessage] = useState("");
+  const [theme, setTheme] = useState<Theme>(() => readTheme());
   const handle = (action: () => Promise<unknown>) => {
     void action().then(() => setMessage("Aktion erfolgreich.")).catch((error: unknown) => setMessage(error instanceof Error ? error.message : "Aktion fehlgeschlagen."));
   };
@@ -325,6 +330,31 @@ function SettingsPage() {
       <SiteHeader />
       <main className="settings-page">
         <p className="eyebrow">LOKALER DATENSCHUTZ</p><h1>Einstellungen</h1>
+        <section className="settings-card">
+          <h2>Erscheinungsbild</h2>
+          <p>Dark Atlas ist Standard. Deine manuelle Auswahl bleibt lokal gespeichert.</p>
+          <div className="hero-actions" role="group" aria-label="Farbschema">
+            {(["dark", "light"] as const).map((value) => (
+              <button
+                className={theme === value ? "button button-primary" : "button button-quiet"}
+                type="button"
+                key={value}
+                onClick={() => {
+                  applyTheme(value);
+                  setTheme(value);
+                }}
+              >
+                {value === "dark" ? "Dark Atlas" : "Light Atlas"}
+              </button>
+            ))}
+          </div>
+        </section>
+        <section className="settings-card">
+          <h2>Numra installieren</h2>
+          <p><strong>Android und Desktop:</strong> Öffne das Browsermenü und wähle „App installieren“ oder „Zum Startbildschirm hinzufügen“.</p>
+          <p><strong>iPhone und iPad:</strong> Öffne Numra in Safari, tippe auf „Teilen“ und anschließend auf „Zum Home-Bildschirm“.</p>
+          <p>Die App-Oberfläche und lokal gespeicherte Profile bleiben offline lesbar. Neue Berechnungen und KI-Berichte benötigen eine Verbindung.</p>
+        </section>
         <section className="settings-card">
           <h2>Passphraseschutz</h2>
           <p>Der Schlüssel bleibt ausschließlich im Arbeitsspeicher und wird nach 15 Minuten Inaktivität verworfen.</p>
@@ -379,6 +409,7 @@ export function App() {
         <Route path="/einstellungen" element={<SettingsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
+      <PwaRegistration />
     </BrowserRouter>
   );
 }

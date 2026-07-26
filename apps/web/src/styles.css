@@ -18,6 +18,20 @@
   text-rendering: optimizeLegibility;
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink: #f3eee3;
+  --surface: #fffaf0;
+  --surface-raised: #e7dfd0;
+  --line: #b7aa98;
+  --text: #122536;
+  --muted: #5f6d73;
+  --teal: #237b78;
+  --teal-deep: #185d5b;
+  --coral: #bb5946;
+  --sand: #725d3d;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -35,6 +49,12 @@ body {
     radial-gradient(circle at 82% 12%, rgb(47 130 133 / 18%), transparent 31rem),
     radial-gradient(circle at 15% 65%, rgb(228 122 97 / 8%), transparent 30rem),
     linear-gradient(145deg, #07131e, #091925 55%, #06111a);
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 82% 12%, rgb(47 130 133 / 12%), transparent 31rem),
+    linear-gradient(145deg, #f3eee3, #fffaf0);
 }
 
 a {
@@ -467,6 +487,23 @@ input {
   color: var(--text);
   font: inherit;
   transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  outline: none;
+  padding: 0.85rem;
+  resize: vertical;
+  background: rgb(7 19 30 / 65%);
+  color: var(--text);
+  font: inherit;
+}
+
+:root[data-theme="light"] input,
+:root[data-theme="light"] textarea {
+  background: rgb(255 255 255 / 70%);
 }
 
 select {
@@ -945,6 +982,48 @@ th {
 .report-content pre {
   overflow-x: auto;
   color: var(--sand);
+}
+
+.profile-tools {
+  display: grid;
+  gap: 1rem;
+}
+
+.profile-tools h2 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.profile-tools label {
+  display: grid;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.pwa-toast {
+  position: fixed;
+  z-index: 20;
+  right: 1rem;
+  bottom: 1rem;
+  width: min(30rem, calc(100% - 2rem));
+  border: 1px solid var(--teal);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: var(--surface);
+  box-shadow: 0 1rem 4rem rgb(0 0 0 / 35%);
+  pointer-events: none;
+}
+
+.pwa-toast p {
+  margin-bottom: 0.75rem;
+}
+
+.pwa-toast > div {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pwa-toast button {
+  pointer-events: auto;
 }
 
 .library-grid h2 {
