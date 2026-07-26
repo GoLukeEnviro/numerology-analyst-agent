@@ -332,7 +332,7 @@ class AuditTrace(_FrozenModel):
 # Bumped when the JSON shape of CalculationResult changes in a way that
 # affects the deterministic hash.
 CALCULATION_RESULT_SCHEMA_VERSION = "calculation-result-v1"
-PROFILE_CALCULATION_RESULT_SCHEMA_VERSION = "profile-calculation-result-v1"
+PROFILE_CALCULATION_RESULT_SCHEMA_VERSION = "profile-calculation-result-v2"
 
 
 class CalculationHashEnvelope(_FrozenModel):
@@ -434,6 +434,26 @@ class NameNumberSet(_FrozenModel):
     variants: tuple[NameNumberVariant, ...] = Field(default_factory=tuple)
 
 
+class CyclePhase(_FrozenModel):
+    """One numbered Pinnacle or Challenge phase with inclusive age boundaries."""
+
+    ordinal: int = Field(..., ge=1, le=4)
+    start_age: int = Field(..., ge=0)
+    end_age: int | None = Field(default=None, ge=0)
+    number: NumberResult
+
+
+class CycleCalculationResult(_FrozenModel):
+    """Personal date cycles and the four lifetime Pinnacle/Challenge phases."""
+
+    as_of_date: date
+    personal_year: NumberResult
+    personal_month: NumberResult
+    personal_day: NumberResult
+    pinnacles: tuple[CyclePhase, ...] = Field(..., min_length=4, max_length=4)
+    challenges: tuple[CyclePhase, ...] = Field(..., min_length=4, max_length=4)
+
+
 class ProfileCalculationResult(_FrozenModel):
     """Complete deterministic profile contract introduced for release 0.1.4."""
 
@@ -450,5 +470,6 @@ class ProfileCalculationResult(_FrozenModel):
     core_name: NameNumberSet
     active_name: NameNumberSet | None = None
     maturity: NumberResult
+    cycles: CycleCalculationResult
     trace: AuditTrace
     deterministic_hash: str = ""

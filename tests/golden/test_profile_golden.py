@@ -23,6 +23,11 @@ class _Expected(BaseModel):
     personality: int
     maturity: int
     active_expression: int | None
+    personal_year: int
+    personal_month: int
+    personal_day: int
+    pinnacles: list[int]
+    challenges: list[int]
 
 
 class _Case(BaseModel):
@@ -65,3 +70,12 @@ def test_complete_profile_golden(case: _Case) -> None:
         None if result.active_name is None else result.active_name.expression.reduced_value
     )
     assert active_expression == case.expected.active_expression
+    assert result.cycles.personal_year.reduced_value == case.expected.personal_year
+    assert result.cycles.personal_month.reduced_value == case.expected.personal_month
+    assert result.cycles.personal_day.reduced_value == case.expected.personal_day
+    assert [phase.number.reduced_value for phase in result.cycles.pinnacles] == (
+        case.expected.pinnacles
+    )
+    assert [phase.number.reduced_value for phase in result.cycles.challenges] == (
+        case.expected.challenges
+    )

@@ -306,3 +306,8 @@ def test_canonicalize_recursively_sorts_nested() -> None:
     result = _canonicalize({"outer": {"z": frozenset({3, 1, 2}), "a": 1}})
     expected: dict[str, object] = {"outer": {"a": 1, "z": [1, 2, 3]}}
     assert result == expected
+
+
+@pytest.mark.unit
+def test_canonicalize_recurses_into_lists() -> None:
+    assert _canonicalize([{"z": 1, "a": 2}]) == [{"a": 2, "z": 1}]

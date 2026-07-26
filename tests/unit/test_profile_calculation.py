@@ -6,8 +6,10 @@ from datetime import date
 
 import pytest
 
-from numerology_domain.enums import YMode
+from numerology_domain.enums import NameBasis, YMode
+from numerology_domain.exceptions import NormalizationError, PolicyError
 from numerology_domain.models import MethodPolicy, PersonInput
+from numerology_engine.numbers import create_number
 from numerology_engine.profile import calculate_profile
 
 
@@ -25,7 +27,7 @@ def person() -> PersonInput:
 def test_complete_reference_profile(person: PersonInput) -> None:
     result = calculate_profile(person, MethodPolicy())
 
-    assert result.schema_version == "profile-calculation-result-v1"
+    assert result.schema_version == "profile-calculation-result-v2"
     assert result.life_path_a.reduced_value == 1
     assert result.life_path_b.reduced_value == 1
     assert result.birthday.reduced_value == 7
@@ -100,3 +102,44 @@ def test_profile_hash_is_deterministic_and_excludes_consent(person: PersonInput)
     assert calculate_profile(person, MethodPolicy()).deterministic_hash == (
         without_consent.deterministic_hash
     )
+
+
+@pytest.mark.unit
+def test_unsupported_or_incomplete_policies_fail_closed() -> None:
+    base = PersonInput(
+        core_name="Y",
+        birth_date=date(1990, 1, 1),
+        as_of_date=date(2026, 7, 26),
+    )
+    with pytest.raises(PolicyError, match="user_fixed"):
+        calculate_profile(base, MethodPolicy(y_mode=YMode.USER_FIXED))
+    with pytest.raises(PolicyError, match="requires active_name"):
+        calculate_profile(base, MethodPolicy(name_basis=NameBasis.ACTIVE_NAME_ONLY))
+
+
+@pytest.mark.unit
+def test_invalid_name_and_negative_number_fail_closed() -> None:
+    with pytest.raises(NormalizationError, match="A-Z"):
+        calculate_profile(
+            PersonInput(
+                core_name="---",
+                birth_date=date(1990, 1, 1),
+                as_of_date=date(2026, 7, 26),
+            ),
+            MethodPolicy(),
+        )
+    with pytest.raises(ValueError, match="must not be negative"):
+        create_number("invalid", -1, policy=MethodPolicy())
+
+
+@pytest.mark.unit
+def test_isolated_y_is_reported_as_ambiguous() -> None:
+    result = calculate_profile(
+        PersonInput(
+            core_name="Y",
+            birth_date=date(1990, 1, 1),
+            as_of_date=date(2026, 7, 26),
+        ),
+        MethodPolicy(),
+    )
+    assert result.trace.disambiguation_required is True

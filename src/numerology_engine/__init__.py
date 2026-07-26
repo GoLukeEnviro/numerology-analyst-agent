@@ -7,6 +7,7 @@ network, no LLM, no global mutable state.
 from __future__ import annotations
 
 from numerology_engine.alphabet import PYTHAGOREAN_V1, VOWELS, letter_value
+from numerology_engine.cycles import calculate_cycles
 from numerology_engine.dates import (
     consistency_check,
     future_warning,
@@ -29,6 +30,7 @@ __all__ = [
     "VOWELS",
     "_canonical_json",
     "build_trace",
+    "calculate_cycles",
     "calculate_life_path",
     "calculate_profile",
     "consistency_check",

@@ -140,6 +140,7 @@ def profile_result_to_payload(result: ProfileCalculationResult) -> dict[str, Any
                 None if result.active_name is None else result.active_name.model_dump(mode="json")
             ),
             "maturity": _number_payload(result.maturity),
+            "cycles": result.cycles.model_dump(mode="json"),
         }
     )
     return payload

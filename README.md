@@ -4,31 +4,28 @@
 
 ---
 
-## Status: Release `0.1.3` — Contract Integrity
+## Status: Entwicklungsstand `0.1.5` — Vollprofil und Zyklen
 
-`0.1.3` ist der aktuelle stabile Release.
+Auf dem stabilen `0.1.3`-Life-Path-Vertrag bauen zwei neue, getrennt
+versionierte Verträge auf:
 
-`0.1.3` stärkt den deterministischen Berechnungsvertrag: Der Hash umfasst
-jetzt den vollständigen fachlich relevanten Input (Schema-Version, Eingaben,
-Policy, Ergebnisse, Trace), `consent_given` ist ausgeschlossen, Sets werden
-kanonisiert, `--as-of-date` ist verpflichtend, und versionierte JSON-Schemas
-liegen im installierten Wheel. Nur Life Path A/B ist enthalten; alle weiteren
-Zahlen folgen in späteren Releases.
+- `0.1.4`: Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-,
+  Persönlichkeits- und Reifezahl, Namenssegmente, aktiver Name und Y-Varianten.
+- `0.1.5`: persönliche Jahre, Monate und Tage sowie vier Pinnacles und Challenges.
 
-**Breaking Changes gegenüber `0.1.0`–`0.1.2`:**
-
-- `--as-of-date` ist nicht mehr optional.
-- Die Hashsemantik wurde geändert — alte Hashwerte sind nicht mit `0.1.3` vergleichbar.
-- `schema_version` ist neu im Calculation-Result-Contract.
+Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
+vollständige Profil verwendet `profile-calculation-result-v2`; sein Hash umfasst
+alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
+`consent_given` bleibt ausdrücklich ausgeschlossen.
 
 Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
 Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
 implementiert einen vertikalen Slice durch alle Schichten — vom Input
 (`PersonInput`) über Normalisierung (`de-direct-v1`) und Rechenkern
 (Life Path A/B) bis hin zur deterministischen JSON-Ausgabe der CLI, Golden
-Tests und CI. **Nur Life Path A/B** ist enthalten; alle weiteren Zahlen
-(Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-,
-Reifezahl, Zyklen, Interpretationen) folgen in späteren Releases.
+Tests und CI. Der aktuelle Entwicklungsstand ergänzt darauf das vollständige
+deterministische Profil und die Zyklen; Interpretationen und HTTP-API folgen
+in den nächsten Umsetzungsschritten.
 
 - **Repository:** `GoLukeEnviro/numerology-analyst-agent`
 - **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`

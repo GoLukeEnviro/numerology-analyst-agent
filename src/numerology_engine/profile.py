@@ -12,59 +12,23 @@ from numerology_domain.enums import NameBasis, YMode
 from numerology_domain.exceptions import NormalizationError, PolicyError
 from numerology_domain.models import (
     AuditTrace,
-    CalculationStep,
     MethodPolicy,
     NameNumberSet,
     NameNumberVariant,
     NameSegmentResult,
     NormalizationStep,
-    NumberResult,
     PersonInput,
     ProfileCalculationResult,
 )
 from numerology_engine.alphabet import VOWELS, letter_value
+from numerology_engine.cycles import calculate_cycles
 from numerology_engine.dates import consistency_check, life_path_a, life_path_b
 from numerology_engine.normalization import normalize_name
+from numerology_engine.numbers import create_number
 from numerology_engine.reduction import reduce_to_single_digit, reduction_chain
 from numerology_engine.trace import build_trace, deterministic_profile_hash
 
 _SEGMENT_PATTERN = re.compile(r"[A-Z]+")
-
-
-def _number(
-    name: str,
-    raw_total: int,
-    *,
-    policy: MethodPolicy,
-    components: dict[str, int] | None = None,
-) -> NumberResult:
-    if raw_total < 0:
-        raise ValueError("raw_total must not be negative")
-    if raw_total == 0:
-        reduced_value = 0
-        is_master = False
-        chain = [0]
-    else:
-        outcome = reduce_to_single_digit(raw_total, master_numbers=policy.master_numbers)
-        reduced_value = outcome.value
-        is_master = outcome.is_master
-        chain = reduction_chain(raw_total, master_numbers=policy.master_numbers)
-    return NumberResult(
-        name=name,
-        raw_total=raw_total,
-        reduced_value=reduced_value,
-        compound_notation="/".join(str(value) for value in chain),
-        is_master=is_master,
-        components={} if components is None else components,
-        steps=(
-            CalculationStep(
-                label=name,
-                inputs=(raw_total,),
-                output=reduced_value,
-                note=" -> ".join(str(value) for value in chain),
-            ),
-        ),
-    )
 
 
 def _classify_y(
@@ -150,7 +114,7 @@ def _name_numbers(
         for segment, raw in zip(segment_texts, segment_raw, strict=True)
     )
     expression_raw = sum(letter_value(letter) for letter in letters)
-    expression = _number(
+    expression = create_number(
         f"{basis}_expression",
         expression_raw,
         policy=policy,
@@ -163,8 +127,8 @@ def _name_numbers(
         policy=policy,
         ambiguous_as_vowel=False,
     )
-    soul = _number(f"{basis}_soul_urge", soul_raw, policy=policy)
-    personality = _number(f"{basis}_personality", personality_raw, policy=policy)
+    soul = create_number(f"{basis}_soul_urge", soul_raw, policy=policy)
+    personality = create_number(f"{basis}_personality", personality_raw, policy=policy)
 
     variants: tuple[NameNumberVariant, ...] = ()
     if ambiguous:
@@ -183,12 +147,12 @@ def _name_numbers(
             NameNumberVariant(
                 label="y_as_vowel",
                 expression=expression,
-                soul_urge=_number(
+                soul_urge=create_number(
                     f"{basis}_soul_urge_y_as_vowel",
                     vowel_soul_raw,
                     policy=policy,
                 ),
-                personality=_number(
+                personality=create_number(
                     f"{basis}_personality_y_as_vowel",
                     vowel_personality_raw,
                     policy=policy,
@@ -218,8 +182,8 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
     life_a = life_path_a(person.birth_date, master_numbers=policy.master_numbers)
     life_b = life_path_b(person.birth_date, master_numbers=policy.master_numbers)
     consistency = consistency_check(life_a, life_b)
-    birthday = _number("birthday", person.birth_date.day, policy=policy)
-    attitude = _number(
+    birthday = create_number("birthday", person.birth_date.day, policy=policy)
+    attitude = create_number(
         "attitude",
         person.birth_date.month + person.birth_date.day,
         policy=policy,
@@ -243,7 +207,7 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
             policy=policy,
         )
 
-    maturity = _number(
+    maturity = create_number(
         "maturity",
         life_a.reduced_value + core.expression.reduced_value,
         policy=policy,
@@ -253,6 +217,7 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
         },
     )
     warnings = (consistency.warning,) if consistency.warning else ()
+    cycles = calculate_cycles(person, policy)
     calculation_steps = (
         *life_a.steps,
         *life_b.steps,
@@ -262,6 +227,11 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
         *core.soul_urge.steps,
         *core.personality.steps,
         *maturity.steps,
+        *cycles.personal_year.steps,
+        *cycles.personal_month.steps,
+        *cycles.personal_day.steps,
+        *(step for phase in cycles.pinnacles for step in phase.number.steps),
+        *(step for phase in cycles.challenges for step in phase.number.steps),
     )
     trace: AuditTrace = build_trace(
         normalization_steps=(*core_normalization, *active_normalization),
@@ -280,6 +250,7 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
         core_name=core,
         active_name=active,
         maturity=maturity,
+        cycles=cycles,
         trace=trace,
     )
     return result.model_copy(update={"deterministic_hash": deterministic_profile_hash(result)})

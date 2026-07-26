@@ -33,7 +33,7 @@ SCHEMA_SPECS: list[tuple[str, type, str]] = [
     ("method-policy-v1.schema.json", MethodPolicy, "MethodPolicy"),
     ("calculation-result-v1.schema.json", CalculationResult, "CalculationResult"),
     (
-        "profile-calculation-result-v1.schema.json",
+        "profile-calculation-result-v2.schema.json",
         ProfileCalculationResult,
         "ProfileCalculationResult",
     ),

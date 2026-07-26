@@ -1,6 +1,6 @@
 # Pythagoreisches Vollprofil V1
 
-Status: verbindliche Methodenspezifikation für `profile-calculation-result-v1`.
+Status: verbindliche Methodenspezifikation für `profile-calculation-result-v2`.
 
 ## Zahlen
 
@@ -13,6 +13,13 @@ Status: verbindliche Methodenspezifikation für `profile-calculation-result-v1`.
 - Persönlichkeitszahl: Werte aller als Konsonant klassifizierten Buchstaben addieren.
 - Reifezahl: reduzierten Lebensweg A und reduzierte Ausdruckszahl des Geburtsnamens addieren
   und erneut reduzieren.
+- Persönliches Jahr: Geburtsmonat, Geburtstag und Ziffernsumme des Jahres von `as_of_date`
+  addieren und reduzieren. Monat und Tag bauen anschließend auf dem jeweils reduzierten
+  Vorgängerwert auf.
+- Pinnacles: aus den reduzierten Geburtskomponenten Monat, Tag und Jahr werden
+  `Monat+Tag`, `Tag+Jahr`, `Pinnacle 1+2` und `Monat+Jahr` gebildet.
+- Challenges: absolute Differenzen `|Monat-Tag|`, `|Tag-Jahr|`, `|Challenge 1-2|`
+  und `|Monat-Jahr|`.
 
 Die Meisterzahlen 11, 22 und 33 werden bei jeder Reduktion gehalten. Ein leerer
 Vokal- oder Konsonantenanteil hat den expliziten Wert 0 und wird nicht interpretiert.

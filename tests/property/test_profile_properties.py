@@ -50,3 +50,23 @@ def test_same_profile_input_is_byte_stable(name: str) -> None:
     assert calculate_profile(person, policy).deterministic_hash == (
         calculate_profile(person, policy).deterministic_hash
     )
+
+
+@pytest.mark.property
+@given(as_of=st.dates(min_value=date(2020, 1, 1), max_value=date(2035, 12, 31)))
+def test_cycle_shape_and_ranges_are_stable(as_of: date) -> None:
+    result = calculate_profile(
+        PersonInput(
+            core_name="Cycle Test",
+            birth_date=date(1990, 1, 1),
+            as_of_date=as_of,
+        ),
+        MethodPolicy(),
+    )
+
+    assert len(result.cycles.pinnacles) == 4
+    assert len(result.cycles.challenges) == 4
+    assert result.cycles.pinnacles[-1].end_age is None
+    assert result.cycles.personal_year.reduced_value in _VALID_REDUCTIONS
+    assert result.cycles.personal_month.reduced_value in _VALID_REDUCTIONS
+    assert result.cycles.personal_day.reduced_value in _VALID_REDUCTIONS
