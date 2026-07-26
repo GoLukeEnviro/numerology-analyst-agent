@@ -4,12 +4,23 @@
 
 ---
 
-## Status: Release `0.1.2` — Packaging-Hardening (Walking Skeleton)
+## Status: Release Candidate `0.1.3` — Contract Integrity
 
-`0.1.2` enthält den funktional unveränderten Rechenkern aus `0.1.0`/`0.1.1`,
-plus die korrigierte Wheel-Paketierung aus `0.1.1` und dynamische
-CLI-Versionsanzeige in `0.1.2`. Nur Life Path A/B ist enthalten; alle weiteren
+`0.1.3` befindet sich in PR #6 und ist noch nicht veröffentlicht.
+Der aktuelle stabile Release ist `0.1.2`.
+
+`0.1.3` stärkt den deterministischen Berechnungsvertrag: Der Hash umfasst
+jetzt den vollständigen fachlich relevanten Input (Schema-Version, Eingaben,
+Policy, Ergebnisse, Trace), `consent_given` ist ausgeschlossen, Sets werden
+kanonisiert, `--as-of-date` ist verpflichtend, und versionierte JSON-Schemas
+liegen im installierten Wheel. Nur Life Path A/B ist enthalten; alle weiteren
 Zahlen folgen in späteren Releases.
+
+**Breaking Changes gegenüber `0.1.0`–`0.1.2`:**
+
+- `--as-of-date` ist nicht mehr optional.
+- Die Hashsemantik wurde geändert — alte Hashwerte sind nicht mit `0.1.3` vergleichbar.
+- `schema_version` ist neu im Calculation-Result-Contract.
 
 Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
 Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
@@ -104,44 +115,36 @@ Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, 
 
 ---
 
-## Quick Start (`0.1.0`)
+## Quick Start (`0.1.3`)
 
 Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-# Abhängigkeiten installieren (inkl. dev-Gruppe)
-uv sync --all-groups
+# Abhängigkeiten installieren (inkl. dev-Gruppe, mit Lock-Vertrag)
+uv sync --locked --all-groups
 
-# Profil berechnen (kanonisches, sortiertes JSON nach stdout)
-uv run python -m numerology_cli.main profile \
+# Profil berechnen (--as-of-date ist verpflichtend seit 0.1.3)
+numerology profile \
     --name "Max Mustermann" \
     --birth 1985-07-25 \
     --as-of-date 2026-07-26
-
-# oder nach `uv sync` auch direkt:
-numerology profile --name "Max Mustermann" --birth 1985-07-25 --as-of-date 2026-07-26
 ```
 
-Der `--as-of-date YYYY-MM-DD`-Parameter (Korrektur 3) ist **verpflichtend** und
-macht den Lauf deterministisch unabhängig vom Tagesdatum der Maschine. Er
-bestimmt z. B. den Referenzrahmen für zukünftige zeitabhängige Berechnungen
-(Personal Years, Pinnacles) und konsistenten Audit-Traces. Geburtsdaten in der
-Zukunft werden abgewiesen (`5ac6ade`).
+`--as-of-date` ist **verpflichtend** (seit `0.1.3`). Der Parameter macht den
+Lauf deterministisch unabhängig vom Tagesdatum der Maschine.
 
-### Beispiel-Output
-
-Life Path A = B = 1 für `1985-07-25`. Die Ausgabe folgt dem neuen Schema
-(`raw_total` / `reduced_value` / `compound_notation` / `karmic_debt`):
+### Beispiel-Output (gekürzt)
 
 ```json
 {
-  "input": { "core_name": "Max Mustermann", "birth_date": "1985-07-25" },
-  "method": {
-    "system": "pythagorean",
-    "version": "v1",
-    "y_mode": "phonetic",
-    "umlaut_policy": "de-direct-v1"
+  "schema_version": "calculation-result-v1",
+  "deterministic_hash": "5ec8117ea20995b8eb9aaa7f539bf2e125844860272de851d684ca777e985258",
+  "input": {
+    "core_name": "Max Mustermann",
+    "birth_date": "1985-07-25",
+    "as_of_date": "2026-07-26"
   },
+  "method": { "system": "pythagorean", "version": "v1" },
   "results": {
     "life_path_a": {
       "raw_total": 37,
@@ -153,35 +156,29 @@ Life Path A = B = 1 für `1985-07-25`. Die Ausgabe folgt dem neuen Schema
       "raw_total": 19,
       "reduced_value": 1,
       "compound_notation": "19/10/1",
-      "karmic_debt": { "number": 19, "origin": "component_sum" },
-      "components": { "month": 7, "day": 7, "year": 5 }
+      "karmic_debt": { "number": 19, "origin": "component_sum" }
     }
   },
   "consistency": { "a_equals_b": true }
 }
 ```
 
-- `raw_total`: ungekürzte Summe vor der Reduktion.
-- `reduced_value`: final reduzierter Wert (1–9 oder Meisterzahl 11/22/33).
-- `compound_notation`: vollständiger Reduktionspfad, z. B. `37/10/1` bzw. `19/10/1`.
-- `karmic_debt`: `null` falls keine karmische Schuld vorliegt, sonst
-  `{ "number": <13|14|16|19>, "origin": "component_sum" | "raw_total" }`.
-  Karmische Schulden sind in 0.1.0 **reines Metadatum** — keine Auswertung,
-  keine Interpretation (Master-Vertrag §3.2).
+- `schema_version`: Version des CalculationResult-Vertrags (seit `0.1.3`).
+- `deterministic_hash`: SHA-256 über das CalculationHashEnvelope (Schema, Input, Policy, Ergebnisse, Trace). `consent_given` ist ausgeschlossen.
 
 ### Quality Gates
 
-Alle Gates müssen grün sein (Kurzbefehl `make all`):
+Alle Gates müssen grün sein:
 
 ```bash
-make all  # = ruff format --check + ruff check + mypy + pytest --cov
-
-# oder einzeln:
+uv lock --check
+uv sync --locked --all-groups
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src tests scripts
 uv run pytest --cov=src/numerology_engine --cov-fail-under=95
 uv run pytest --cov=src --cov-fail-under=85
+uv run python scripts/export_schemas.py --check
 uv run python scripts/generate_examples.py --check
 ```
 
@@ -204,10 +201,14 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 ### Determinismus
 
 - Pure Functions, keine globale State, keine Randomness, keine Zeitabhängigkeit
-  (der CLI-Parameter `--as-of-date` macht zeitabhängige Berechnungen explizit).
+  (der CLI-Parameter `--as-of-date` ist verpflichtend und macht den Lauf
+  reproduzierbar).
 - Immutable Domain-Modelle (pydantic v2, `frozen=True`).
 - Serialisierung immer mit `sort_keys=True` ⇒ identischer Input ergibt
-  byte-identisches JSON und identischen SHA-256-Trace-Hash.
+  byte-identisches JSON und identischen SHA-256-Hash.
+- Der Hash umfasst das CalculationHashEnvelope: Schema-Version, fachlich
+  relevante Eingaben, vollständige Policy, Ergebnisse und Trace.
+  `consent_given` ist ausgeschlossen. Sets/Frozensets werden kanonisiert.
 
 ### Methoden-Policy (V1-Defaults)
 
@@ -223,21 +224,25 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-| Komponente                                                           | Status                                   |
-| -------------------------------------------------------------------- | ---------------------------------------- |
-| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen                         |
-| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend                    |
-| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                             |
-| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                             |
-| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                             |
-| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                             |
-| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend                    |
-| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1              |
-| **Release `0.1.0` Walking Skeleton (Deterministic Core)**            | ✅ **LIVE**                              |
-| Phase 0 (Baseline)                                                   | ✅ im Walking-Skeleton-Release enthalten |
-| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                                |
+| Komponente                                                           | Status                      |
+| -------------------------------------------------------------------- | --------------------------- |
+| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen            |
+| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend       |
+| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                |
+| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                |
+| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                |
+| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                |
+| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend       |
+| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1 |
+| **Release Candidate `0.1.3` Contract Integrity**                        | ⏳ PR #6 offen                           |
+| Release `0.1.2` Packaging-Hardening                                 | ✅ aktueller stabiler Release            |
+| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.2`               |
+| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                   |
+| Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`       |
+| Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`    |
 
-Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` und als GitHub Release veröffentlicht: https://github.com/GoLukeEnviro/numerology-analyst-agent/releases/tag/v0.1.0
+Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` veröffentlicht.
+Release `0.1.3` erscheint nach Merge von PR #6.
 
 ---
 

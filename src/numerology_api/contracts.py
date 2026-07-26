@@ -27,6 +27,7 @@ def result_to_payload(result: CalculationResult) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "claim_type": result.claim_type.value,
         "name": result.name,
+        "schema_version": result.schema_version,
         "deterministic_hash": result.deterministic_hash,
         "input": {
             "core_name": result.input_ref.core_name,

@@ -21,11 +21,12 @@ from numerology_engine.reduction import (
     reduce_to_single_digit,
 )
 from numerology_engine.service import calculate_life_path
-from numerology_engine.trace import build_trace, deterministic_hash, trace_to_sorted_json
+from numerology_engine.trace import _canonical_json, build_trace, deterministic_hash
 
 __all__ = [
     "PYTHAGOREAN_V1",
     "VOWELS",
+    "_canonical_json",
     "build_trace",
     "calculate_life_path",
     "consistency_check",
@@ -39,5 +40,4 @@ __all__ = [
     "recognize_karmic",
     "recognize_master",
     "reduce_to_single_digit",
-    "trace_to_sorted_json",
 ]

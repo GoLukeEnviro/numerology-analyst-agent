@@ -314,10 +314,9 @@ class ConsistencyStatus(_FrozenModel):
 class AuditTrace(_FrozenModel):
     """Deterministic audit trail attached to every calculation result.
 
-    Field order is irrelevant for determinism because serialization always
-    uses ``sort_keys=True`` (Master Contract §2.4; calculation-engineer
-    contract §4). ``deterministic_hash`` is computed over the sorted JSON
-    of the whole trace.
+    The trace is one component of the CalculationHashEnvelope.
+    The calculation hash also covers the schema version, relevant input
+    fields, MethodPolicy and calculated results — not the trace alone.
     """
 
     normalization_steps: tuple[NormalizationStep, ...] = Field(default_factory=tuple)
@@ -327,6 +326,33 @@ class AuditTrace(_FrozenModel):
         default=False,
         description="True iff an ambiguous Y (ADR 0001) or other ambiguity was hit.",
     )
+
+
+# Schema version for the CalculationResult contract (v0.1.3 contract integrity).
+# Bumped when the JSON shape of CalculationResult changes in a way that
+# affects the deterministic hash.
+CALCULATION_RESULT_SCHEMA_VERSION = "calculation-result-v1"
+
+
+class CalculationHashEnvelope(_FrozenModel):
+    """Hash input contract (v0.1.3 contract integrity).
+
+    The deterministic hash is computed over this envelope — NOT over the
+    AuditTrace alone. This guarantees that input_ref, policy, schema_version,
+    and results all contribute to the hash. The hash field itself is excluded.
+    """
+
+    schema_version: str = Field(
+        default=CALCULATION_RESULT_SCHEMA_VERSION,
+        description="Schema version of the CalculationResult shape.",
+    )
+    input_ref: PersonInput
+    policy: MethodPolicy
+    results: dict[str, object] = Field(
+        default_factory=dict,
+        description="Calculation results keyed by name (e.g. life_path_a, life_path_b).",
+    )
+    trace: AuditTrace
 
 
 class CalculationResult(_FrozenModel):
@@ -344,6 +370,10 @@ class CalculationResult(_FrozenModel):
         description="Statement class (Master Contract §2.2).",
     )
     name: str = Field(default="life_path", description="Name of the calculated number.")
+    schema_version: str = Field(
+        default=CALCULATION_RESULT_SCHEMA_VERSION,
+        description="Schema version of this result shape (v0.1.3 contract integrity).",
+    )
     input_ref: PersonInput
     policy: MethodPolicy
     life_path_a: LifePathResult
@@ -352,7 +382,7 @@ class CalculationResult(_FrozenModel):
     trace: AuditTrace
     deterministic_hash: str = Field(
         default="",
-        description="SHA-256 over sorted JSON of the trace; empty until computed.",
+        description="SHA-256 over the CalculationHashEnvelope; empty until computed.",
     )
 
     #: Stable marker so serialization layers never lose the statement class.

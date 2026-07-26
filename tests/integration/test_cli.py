@@ -17,10 +17,8 @@ from numerology_cli.main import app
 runner = CliRunner()
 
 
-def _run(name: str, birth: str, as_of: str | None = None) -> str:
-    args = ["profile", "--name", name, "--birth", birth]
-    if as_of is not None:
-        args.extend(["--as-of-date", as_of])
+def _run(name: str, birth: str, as_of: str) -> str:
+    args = ["profile", "--name", name, "--birth", birth, "--as-of-date", as_of]
     result = runner.invoke(app, args)
     assert result.exit_code == 0, f"CLI failed: {result.output}"
     return result.output
@@ -37,13 +35,22 @@ class TestProfileCommand:
         assert payload["input"]["as_of_date"] == "2026-07-26"
 
     def test_invalid_date_exits_nonzero(self) -> None:
-        result = runner.invoke(app, ["profile", "--name", "X", "--birth", "not-a-date"])
+        result = runner.invoke(
+            app, ["profile", "--name", "X", "--birth", "not-a-date", "--as-of-date", "2026-07-26"]
+        )
+        assert result.exit_code != 0
+
+    def test_missing_as_of_date_exits_nonzero(self) -> None:
+        """v0.1.3: --as-of-date is mandatory for reproducibility."""
+        result = runner.invoke(app, ["profile", "--name", "X", "--birth", "1985-07-25"])
         assert result.exit_code != 0
 
     def test_keys_sorted_in_output(self) -> None:
         out = _run("Max Mustermann", "1985-07-25", as_of="2026-07-26")
+        # v0.1.3: schema_version appears between name and deterministic_hash.
         assert out.index('"audit_trace"') < out.index('"input"')
         assert out.index('"input"') < out.index('"results"')
+        assert '"schema_version"' in out
 
     def test_karmic_debt_and_compound_notation_exposed(self) -> None:
         # Korrektur 1: B's component sum (19) is karmic; notation is exposed.
