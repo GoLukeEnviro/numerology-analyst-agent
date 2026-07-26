@@ -1,4 +1,4 @@
-"""Typer CLI for the Numerology Analyst Agent (Walking Skeleton 0.1.0).
+"""Typer CLI for the Numerology Analyst Agent.
 
 Single command ``profile``:
 
@@ -7,11 +7,15 @@ Single command ``profile``:
 Output is canonical, key-sorted JSON on stdout (determinism contract:
 identical input ⇒ byte-identical output). Errors go to stderr with a
 non-zero exit code.
+
+The CLI version is read dynamically from the installed package metadata to
+avoid hardcoded version drift (Luke's P1 review 2026-07-26).
 """
 
 from __future__ import annotations
 
 from datetime import date
+from importlib.metadata import PackageNotFoundError, version
 
 from pydantic import ValidationError
 import typer
@@ -21,18 +25,35 @@ from numerology_domain.exceptions import NumerologyError
 from numerology_domain.models import MethodPolicy, PersonInput
 from numerology_engine.service import calculate_life_path
 
+
+def _package_version() -> str:
+    """Read the installed package version dynamically.
+
+    Falls back to ``"0.0.0+dev"`` if the package is not installed (e.g., running
+    directly from a source checkout without installation). This eliminates
+    hardcoded version strings in the CLI (Luke's P1 review 2026-07-26).
+    """
+    try:
+        return version("numerology-analyst-agent")
+    except PackageNotFoundError:
+        return "0.0.0+dev"
+
+
+PACKAGE_VERSION = _package_version()
+
 app = typer.Typer(
     add_completion=False,
-    help="Numerology Analyst Agent - deterministic pythagorean core (0.1.0).",
+    help=f"Numerology Analyst Agent - deterministic pythagorean core ({PACKAGE_VERSION}).",
 )
 
 
 @app.callback()
 def _main() -> None:
-    """Numerology Analyst Agent - deterministic pythagorean core (0.1.0).
+    """Numerology Analyst Agent - deterministic pythagorean core.
 
     A no-op root callback so that ``profile`` is exposed as a real subcommand
     (``numerology profile ...``) rather than collapsed onto the root entry.
+    The version is read dynamically from the installed package metadata.
     """
 
 
@@ -88,6 +109,12 @@ def profile(
         raise typer.Exit(code=1) from exc
 
     typer.echo(dump_result_as_json(result))
+
+
+@app.command(name="version")
+def version_cmd() -> None:
+    """Print the installed package version and exit."""
+    typer.echo(PACKAGE_VERSION)
 
 
 if __name__ == "__main__":

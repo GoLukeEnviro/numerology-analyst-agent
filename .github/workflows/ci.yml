@@ -68,9 +68,13 @@ jobs:
 
       - name: Install wheel in fresh venv and smoke-test
         run: |
-          python -m venv /tmp/release-venv
-          /tmp/release-venv/bin/pip install dist/*.whl
+          # --seed ships pip/setuptools into the uv-created venv so that
+          # ``python -m pip install`` works (uv venv is pip-less by default).
+          uv venv --python 3.12 --seed /tmp/release-venv
+          /tmp/release-venv/bin/python -m pip install --upgrade pip
+          /tmp/release-venv/bin/python -m pip install dist/*.whl
           /tmp/release-venv/bin/numerology --help
+          /tmp/release-venv/bin/numerology version
           /tmp/release-venv/bin/numerology profile \
             --name "Max Mustermann" \
             --birth 1985-07-25 \
