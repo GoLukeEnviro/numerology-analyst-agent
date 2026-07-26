@@ -131,3 +131,9 @@ jobs:
 
       - name: Production build
         run: pnpm web:build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @numra/web exec playwright install --with-deps chromium firefox webkit
+
+      - name: Browser tests
+        run: pnpm web:e2e

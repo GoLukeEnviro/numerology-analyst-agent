@@ -1,4 +1,10 @@
-export function App() {
+import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
+
+import type { ProfileCalculationResult } from "./api/types";
+import { AnalysisWizard } from "./features/analysis/AnalysisWizard";
+import { NumberAtlas, type AtlasNumber } from "./features/profile/NumberAtlas";
+
+function HomePage() {
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -83,5 +89,122 @@ export function App() {
         </section>
       </main>
     </div>
+  );
+}
+
+function SiteHeader() {
+  return (
+    <header className="site-header">
+      <a className="brand" href="/" aria-label="Numra Startseite">
+        <span className="brand-mark" aria-hidden="true">N</span>
+        <span>Numra</span>
+      </a>
+      <nav aria-label="Hauptnavigation">
+        <a href="/wissen">Methode</a>
+        <a href="/bibliothek">Bibliothek</a>
+        <a href="/datenschutz">Datenschutz</a>
+      </nav>
+    </header>
+  );
+}
+
+function NewAnalysisPage() {
+  const navigate = useNavigate();
+  const complete = (result: ProfileCalculationResult) => {
+    const id = result.deterministic_hash.slice(0, 12);
+    sessionStorage.setItem(`numra:session:${id}`, JSON.stringify(result));
+    void navigate(`/profil/${id}`);
+  };
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main><AnalysisWizard onComplete={complete} /></main>
+    </div>
+  );
+}
+
+function readSessionProfile(id: string | undefined): ProfileCalculationResult | null {
+  if (id === undefined) return null;
+  const value = sessionStorage.getItem(`numra:session:${id}`);
+  if (value === null) return null;
+  try {
+    return JSON.parse(value) as ProfileCalculationResult;
+  } catch {
+    return null;
+  }
+}
+
+function ProfilePage() {
+  const { id } = useParams();
+  const result = readSessionProfile(id);
+  if (result === null) {
+    return (
+      <div className="app-shell">
+        <SiteHeader />
+        <main className="empty-state">
+          <p className="eyebrow">PROFIL NICHT VERFÜGBAR</p>
+          <h1>Dieser Atlas liegt nicht in deiner aktuellen Sitzung.</h1>
+          <a className="button button-primary" href="/analyse/neu">Neue Analyse</a>
+        </main>
+      </div>
+    );
+  }
+  const numbers: AtlasNumber[] = [
+    { label: "Lebensweg", value: result.life_path_a.reduced_value, notation: result.life_path_a.compound_notation },
+    { label: "Geburtstag", value: result.birthday.reduced_value, notation: result.birthday.compound_notation },
+    { label: "Einstellung", value: result.attitude.reduced_value, notation: result.attitude.compound_notation },
+    { label: "Ausdruck", value: result.core_name.expression.reduced_value, notation: result.core_name.expression.compound_notation },
+    { label: "Seelenstreben", value: result.core_name.soul_urge.reduced_value, notation: result.core_name.soul_urge.compound_notation },
+    { label: "Persönlichkeit", value: result.core_name.personality.reduced_value, notation: result.core_name.personality.compound_notation },
+    { label: "Reife", value: result.maturity.reduced_value, notation: result.maturity.compound_notation },
+  ];
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main className="profile-page">
+        <header className="profile-intro">
+          <div>
+            <p className="eyebrow">DETERMINISTISCHES PROFIL</p>
+            <h1>{result.input_ref.core_name}</h1>
+            <p>Berechnet für den Stand {result.input_ref.as_of_date}. Keine Deutung verändert diese Werte.</p>
+          </div>
+          <div className="profile-seal"><span>Schema</span><strong>V2</strong><small>verifiziert</small></div>
+        </header>
+        <NumberAtlas hash={result.deterministic_hash} numbers={numbers} />
+        <section className="result-section">
+          <div className="section-heading">
+            <div><p className="eyebrow">ZEITLICHE MUSTER</p><h2>Persönliche Zyklen</h2></div>
+          </div>
+          <div className="cycle-strip">
+            <article><span>Jahr</span><strong>{result.cycles.personal_year.reduced_value}</strong></article>
+            <article><span>Monat</span><strong>{result.cycles.personal_month.reduced_value}</strong></article>
+            <article><span>Tag</span><strong>{result.cycles.personal_day.reduced_value}</strong></article>
+          </div>
+          <div className="phase-grid">
+            <div>
+              <h3>Pinnacles</h3>
+              {result.cycles.pinnacles.map((phase) => <p key={phase.ordinal}><span>Phase {phase.ordinal}</span><strong>{phase.number.reduced_value}</strong><small>{phase.start_age}–{phase.end_age ?? "offen"} Jahre</small></p>)}
+            </div>
+            <div>
+              <h3>Challenges</h3>
+              {result.cycles.challenges.map((phase) => <p key={phase.ordinal}><span>Phase {phase.ordinal}</span><strong>{phase.number.reduced_value}</strong><small>{phase.start_age}–{phase.end_age ?? "offen"} Jahre</small></p>)}
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+export function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/analyse/neu" element={<NewAnalysisPage />} />
+        <Route path="/profil/:id" element={<ProfilePage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

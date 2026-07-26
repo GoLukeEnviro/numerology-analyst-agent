@@ -4,6 +4,7 @@
   "packageManager": "pnpm@10.22.0",
   "scripts": {
     "web:build": "pnpm --filter @numra/web build",
+    "web:e2e": "pnpm --filter @numra/web e2e",
     "web:generate-api": "pnpm --filter @numra/web generate:api",
     "web:lint": "pnpm --filter @numra/web lint",
     "web:test": "pnpm --filter @numra/web test",
