@@ -26,13 +26,13 @@ Reifezahl, Zyklen, Interpretationen) folgen in späteren Releases.
 
 Der **Numerology Analyst Agent** ist eine vollständige, reproduzierbare und erweiterbare Plattform, die das bisher uneinheitliche Feld der Numerologie in eine überprüfbare Struktur überführt. Das Projekt besteht aus **fünf voneinander getrennten Ebenen**, jeweils mit eigenen Verträgen, eigener Versionierung und eigener Verantwortung:
 
-| # | Ebene | Kurzbeschreibung |
-|---|-------|------------------|
-| 1 | **Fachmodell** | Numerologie als formal spezifiziertes Fachgebiet (Methoden, Claim-Taxonomie, Evidenzgrade, Positionierung) |
-| 2 | **Rechenkern** | Deterministischer, auditierbarer Berechnungsmotor — kein LLM, kein Netzwerk |
-| 3 | **Wissensmodell** | Versioniertes Wissens- und Interpretationsmodell (Zahlen, Meisterzahlen, Schatten, Gegenhypothesen) |
-| 4 | **Forschungsrahmen** | Empirischer Forschungs- und Evaluierungsrahmen (Hypothesenregister, Nullmodelle, Permutation, Power) |
-| 5 | **App-Schicht** | Anwendungs-, API- und Agentenschicht (CLI, FastAPI, optionaler dünner LLM-Adapter) |
+| #   | Ebene                | Kurzbeschreibung                                                                                           |
+| --- | -------------------- | ---------------------------------------------------------------------------------------------------------- |
+| 1   | **Fachmodell**       | Numerologie als formal spezifiziertes Fachgebiet (Methoden, Claim-Taxonomie, Evidenzgrade, Positionierung) |
+| 2   | **Rechenkern**       | Deterministischer, auditierbarer Berechnungsmotor — kein LLM, kein Netzwerk                                |
+| 3   | **Wissensmodell**    | Versioniertes Wissens- und Interpretationsmodell (Zahlen, Meisterzahlen, Schatten, Gegenhypothesen)        |
+| 4   | **Forschungsrahmen** | Empirischer Forschungs- und Evaluierungsrahmen (Hypothesenregister, Nullmodelle, Permutation, Power)       |
+| 5   | **App-Schicht**      | Anwendungs-, API- und Agentenschicht (CLI, FastAPI, optionaler dünner LLM-Adapter)                         |
 
 Die Verarbeitungs-Pipeline ist: Eingaben → Normalisierung → Methoden-/Policy-Auswahl → deterministischer Rechenkern → auditierbares Ergebnis → Wissensauflösung → Interpretationskomposition → Safety-/Evidenz-/Aussageklassifizierung → CLI / API / Agent / Bericht.
 
@@ -42,7 +42,7 @@ Die Verarbeitungs-Pipeline ist: Eingaben → Normalisierung → Methoden-/Policy
 
 Ausdrücklich **kein**:
 
-- **Kein reines Prompt-Repository** — ein Systemprompt allein reicht nicht. Der bestehende Custom-GPT-Prompt ist *nur eine mögliche Benutzerschnittstelle* und darf weder Berechnungslogik noch Fachwissen duplizieren oder ersetzen.
+- **Kein reines Prompt-Repository** — ein Systemprompt allein reicht nicht. Der bestehende Custom-GPT-Prompt ist _nur eine mögliche Benutzerschnittstelle_ und darf weder Berechnungslogik noch Fachwissen duplizieren oder ersetzen.
 - **Kein einfacher Numerologie-Rechner** — reines Berechnen ohne Wissensmodell, Forschungsrahmen und Safety ist unvollständig.
 - **Keine lose Sammlung esoterischer Texte** — Deutungstexte ohne versioniertes Wissensmodell, Provenienz und Gegenhypothesen sind nicht akzeptabel.
 
@@ -82,14 +82,14 @@ Vollständige Positionierung: `docs/field/scientific-positioning.md` (folgt in P
 
 Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, Schemas, API-Ausgaben, Berichten und Tests sichtbar sein müssen:
 
-| Klasse | Bedeutung |
-|--------|-----------|
-| `input_fact` | Vom Nutzer / Datensatz gelieferte Information |
-| `calculation_fact` | Deterministisch berechnetes Ergebnis |
-| `traditional_claim` | Überlieferte numerologische Bedeutung |
+| Klasse                    | Bedeutung                                        |
+| ------------------------- | ------------------------------------------------ |
+| `input_fact`              | Vom Nutzer / Datensatz gelieferte Information    |
+| `calculation_fact`        | Deterministisch berechnetes Ergebnis             |
+| `traditional_claim`       | Überlieferte numerologische Bedeutung            |
 | `interpretive_hypothesis` | Daraus abgeleitete, korrigierbare Interpretation |
-| `empirical_evidence` | Ergebnis einer statistischen Untersuchung |
-| `practical_suggestion` | Nicht verbindliche Handlungsoption |
+| `empirical_evidence`      | Ergebnis einer statistischen Untersuchung        |
+| `practical_suggestion`    | Nicht verbindliche Handlungsoption               |
 
 ---
 
@@ -108,7 +108,7 @@ Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 uv sync --all-groups
 
 # Profil berechnen (kanonisches, sortiertes JSON nach stdout)
-uv run python -m apps.cli.main profile \
+uv run python -m numerology_cli.main profile \
     --name "Max Mustermann" \
     --birth 1985-07-25 \
     --as-of-date 2026-07-26
@@ -174,7 +174,7 @@ make all  # = ruff format --check + ruff check + mypy + pytest --cov
 # oder einzeln:
 uv run ruff format --check .
 uv run ruff check .
-uv run mypy src apps tests scripts
+uv run mypy src tests scripts
 uv run pytest --cov=src/numerology_engine --cov-fail-under=95
 uv run pytest --cov=src --cov-fail-under=85
 uv run python scripts/generate_examples.py --check
@@ -189,12 +189,12 @@ PersonInput → MethodPolicy → Normalizer (de-direct-v1) → Life Path A/B
 
 Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
-| Paket                    | Verantwortung                                                |
-|--------------------------|--------------------------------------------------------------|
-| `numerology_domain`      | Verträge: `PersonInput`, `MethodPolicy`, `CalculationResult` |
-| `numerology_engine`      | Deterministischer Rechenkern (pure functions, kein Netzwerk) |
-| `numerology_api`         | Dünner JSON-Adapter (KEIN FastAPI im Skeleton)               |
-| `apps/cli`               | Typer-CLI mit `profile`-Command                              |
+| Paket               | Verantwortung                                                |
+| ------------------- | ------------------------------------------------------------ |
+| `numerology_domain` | Verträge: `PersonInput`, `MethodPolicy`, `CalculationResult` |
+| `numerology_engine` | Deterministischer Rechenkern (pure functions, kein Netzwerk) |
+| `numerology_api`    | Dünner JSON-Adapter (KEIN FastAPI im Skeleton)               |
+| `numerology_cli`    | Typer-CLI mit `profile`-Command                              |
 
 ### Determinismus
 
@@ -218,35 +218,35 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-| Komponente | Status |
-|------------|--------|
-| Plan-Konsolidierung V1.1 | ✅ abgeschlossen |
-| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend |
-| `PROJECT_CHARTER.md` | ✅ vorhanden |
-| `ROADMAP.md` (15 Phasen, 0–14) | ✅ vorhanden |
-| `docs/audit/gap-analysis.md` | ✅ vorhanden |
-| `docs/audit/implementation-plan.md` | ✅ vorhanden |
-| Methoden-ADRs `docs/adr/0001`–`0004` | ✅ vorhanden, bindend |
-| `.github/agents/*` (6 Agent-Verträge) | ✅ Plan-Konsolidierung V1.1 |
-| **Release `0.1.0` Walking Skeleton (Deterministic Core)** | ✅ **LIVE** |
-| Phase 0 (Baseline) | ✅ im Walking-Skeleton-Release enthalten |
-| Phasen 1–14 (Vollausbau) | ⏳ folgen |
+| Komponente                                                           | Status                                   |
+| -------------------------------------------------------------------- | ---------------------------------------- |
+| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen                         |
+| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend                    |
+| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                             |
+| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                             |
+| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                             |
+| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                             |
+| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend                    |
+| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1              |
+| **Release `0.1.0` Walking Skeleton (Deterministic Core)**            | ✅ **LIVE**                              |
+| Phase 0 (Baseline)                                                   | ✅ im Walking-Skeleton-Release enthalten |
+| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                                |
 
-Release `0.1.0` wird nach PR-Merge als GitHub-Release getaggt.
+Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` und als GitHub Release veröffentlicht: https://github.com/GoLukeEnviro/numerology-analyst-agent/releases/tag/v0.1.0
 
 ---
 
 ## Dokumentation
 
-| Dokument | Zweck |
-|----------|-------|
-| `PROJECT_CHARTER.md` | Was und Warum von V1 (verbindlich) |
-| `ROADMAP.md` | 15 Phasen (0–14) mit Gates, Commits, Aufwand, Delegation |
-| `docs/v1-minimal-scope.md` | Scope von Release 0.1.0 Deterministic Core (vorhanden, bindend) |
-| `docs/governance/master-implementation-contract.md` | Normativer Master-Vertrag (vorhanden, bindend) |
-| `docs/adr/` | 4 ADRs zu Methodenentscheidungen (vorhanden, bindend) |
-| `docs/audit/` | Repository-Baseline, Gap-Analyse, Übersetzungsplan |
-| `docs/field/` | Fachgebiet, Claim-Taxonomie, wissenschaftliche Positionierung (folgt) |
+| Dokument                                            | Zweck                                                                 |
+| --------------------------------------------------- | --------------------------------------------------------------------- |
+| `PROJECT_CHARTER.md`                                | Was und Warum von V1 (verbindlich)                                    |
+| `ROADMAP.md`                                        | 15 Phasen (0–14) mit Gates, Commits, Aufwand, Delegation              |
+| `docs/v1-minimal-scope.md`                          | Scope von Release 0.1.0 Deterministic Core (vorhanden, bindend)       |
+| `docs/governance/master-implementation-contract.md` | Normativer Master-Vertrag (vorhanden, bindend)                        |
+| `docs/adr/`                                         | 4 ADRs zu Methodenentscheidungen (vorhanden, bindend)                 |
+| `docs/audit/`                                       | Repository-Baseline, Gap-Analyse, Übersetzungsplan                    |
+| `docs/field/`                                       | Fachgebiet, Claim-Taxonomie, wissenschaftliche Positionierung (folgt) |
 
 Agentenverträge: siehe `.github/agents/`.
 

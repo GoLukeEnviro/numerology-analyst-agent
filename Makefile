@@ -15,8 +15,8 @@ lint: ## Lint with ruff (format check + check)
 	uv run ruff format --check .
 	uv run ruff check .
 
-typecheck: ## Strict mypy on src, apps, tests
-	uv run mypy src apps tests
+typecheck: ## Strict mypy on src, tests
+	uv run mypy src tests scripts
 
 test: ## Run the full test suite
 	uv run pytest
