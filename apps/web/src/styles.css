@@ -469,6 +469,16 @@ input {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
+select {
+  min-height: 3.4rem;
+  border: 1px solid var(--line);
+  border-radius: 0.55rem;
+  padding: 0.7rem 0.85rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
 input:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px rgb(85 185 177 / 12%);
@@ -815,6 +825,88 @@ th {
   padding: 8rem 0;
 }
 
+.local-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+
+.local-actions p {
+  margin: 0;
+  color: var(--teal);
+}
+
+.library-page,
+.settings-page {
+  min-height: 75vh;
+  padding: clamp(4rem, 9vw, 8rem) 0;
+}
+
+.library-page > h1,
+.settings-page > h1 {
+  max-width: none;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+}
+
+.library-tools {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0;
+  grid-template-columns: minmax(0, 2fr) minmax(12rem, 1fr);
+}
+
+.library-tools label,
+.settings-card label:not(.button) {
+  display: grid;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+
+.library-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.library-grid article,
+.settings-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  background: rgb(18 37 54 / 56%);
+}
+
+.library-grid h2 {
+  font-size: 2rem;
+}
+
+.library-grid button {
+  display: block;
+  margin-top: 1.5rem;
+}
+
+.settings-card {
+  max-width: 52rem;
+  margin-bottom: 1rem;
+}
+
+.danger-zone {
+  border-color: rgb(228 122 97 / 55%);
+}
+
+.file-button {
+  cursor: pointer;
+}
+
+.file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
 .reveal {
   opacity: 0;
   animation: reveal-up 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -931,7 +1023,9 @@ th {
   .review-grid,
   .number-grid,
   .cycle-strip,
-  .phase-grid {
+  .phase-grid,
+  .library-tools,
+  .library-grid {
     grid-template-columns: 1fr;
   }
 

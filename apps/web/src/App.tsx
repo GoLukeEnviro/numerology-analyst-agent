@@ -1,8 +1,11 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 import type { ProfileCalculationResult } from "./api/types";
 import { AnalysisWizard } from "./features/analysis/AnalysisWizard";
 import { NumberAtlas, type AtlasNumber } from "./features/profile/NumberAtlas";
+import { VaultLockedError, parseEncryptedArchive } from "./storage/crypto";
+import { localProfiles, type LocalProfile } from "./storage/repository";
 
 function HomePage() {
   return (
@@ -111,7 +114,7 @@ function SiteHeader() {
 function NewAnalysisPage() {
   const navigate = useNavigate();
   const complete = (result: ProfileCalculationResult) => {
-    const id = result.deterministic_hash.slice(0, 12);
+    const id = result.deterministic_hash.slice(0, 16);
     sessionStorage.setItem(`numra:session:${id}`, JSON.stringify(result));
     void navigate(`/profil/${id}`);
   };
@@ -136,14 +139,29 @@ function readSessionProfile(id: string | undefined): ProfileCalculationResult | 
 
 function ProfilePage() {
   const { id } = useParams();
-  const result = readSessionProfile(id);
+  const [result, setResult] = useState(() => readSessionProfile(id));
+  const [loading, setLoading] = useState(result === null);
+  const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (result !== null || id === undefined) return;
+    void localProfiles
+      .getProfile(id)
+      .then((saved) => setResult(saved?.profile ?? null))
+      .catch((error: unknown) =>
+        setMessage(error instanceof VaultLockedError ? error.message : "Das Profil konnte nicht geladen werden."),
+      )
+      .finally(() => setLoading(false));
+  }, [id, result]);
+  if (loading) {
+    return <div className="app-shell"><SiteHeader /><main className="empty-state"><p>Lokales Profil wird geladen …</p></main></div>;
+  }
   if (result === null) {
     return (
       <div className="app-shell">
         <SiteHeader />
         <main className="empty-state">
           <p className="eyebrow">PROFIL NICHT VERFÜGBAR</p>
-          <h1>Dieser Atlas liegt nicht in deiner aktuellen Sitzung.</h1>
+          <h1>{message || "Dieser Atlas ist nicht lokal verfügbar."}</h1>
           <a className="button button-primary" href="/analyse/neu">Neue Analyse</a>
         </main>
       </div>
@@ -170,6 +188,23 @@ function ProfilePage() {
           </div>
           <div className="profile-seal"><span>Schema</span><strong>V2</strong><small>verifiziert</small></div>
         </header>
+        <div className="local-actions">
+          <button
+            className="button button-quiet"
+            type="button"
+            onClick={() => {
+              void localProfiles
+                .saveProfile(result, true)
+                .then(() => setMessage("Profil dauerhaft nur auf diesem Gerät gespeichert."))
+                .catch((error: unknown) =>
+                  setMessage(error instanceof Error ? error.message : "Speichern fehlgeschlagen."),
+                );
+            }}
+          >
+            Lokal speichern
+          </button>
+          {message && <p role="status">{message}</p>}
+        </div>
         <NumberAtlas hash={result.deterministic_hash} numbers={numbers} />
         <section className="result-section">
           <div className="section-heading">
@@ -196,13 +231,118 @@ function ProfilePage() {
   );
 }
 
+function LibraryPage() {
+  const [profiles, setProfiles] = useState<LocalProfile[]>([]);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"name" | "updated">("updated");
+  const [error, setError] = useState("");
+  useEffect(() => {
+    void localProfiles
+      .listProfiles({ query, sort })
+      .then(setProfiles)
+      .catch((reason: unknown) =>
+        setError(reason instanceof Error ? reason.message : "Bibliothek nicht verfügbar."),
+      );
+  }, [query, sort]);
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main className="library-page">
+        <p className="eyebrow">NUR AUF DIESEM GERÄT</p>
+        <h1>Deine Bibliothek</h1>
+        <div className="library-tools">
+          <label><span>Profile durchsuchen</span><input value={query} onChange={(event) => setQuery(event.target.value)} /></label>
+          <label><span>Sortierung</span><select value={sort} onChange={(event) => setSort(event.target.value as "name" | "updated")}><option value="updated">Zuletzt geändert</option><option value="name">Name</option></select></label>
+        </div>
+        {error && <p className="notice notice-warning" role="alert">{error} <a href="/einstellungen">Tresor entsperren</a></p>}
+        {!error && profiles.length === 0 && <p>Es sind noch keine Profile lokal gespeichert.</p>}
+        <div className="library-grid">
+          {profiles.map((profile) => (
+            <article key={profile.id}>
+              <p className="eyebrow">{profile.protected ? "GESCHÜTZT" : "LOKAL"}</p>
+              <h2><a href={`/profil/${profile.id}`}>{profile.name}</a></h2>
+              <small>{new Date(profile.updatedAt).toLocaleDateString("de-DE")}</small>
+              <button type="button" className="expert-toggle" onClick={() => void localProfiles.deleteProfile(profile.id).then(() => setProfiles((current) => current.filter((item) => item.id !== profile.id)))}>Löschen</button>
+            </article>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function SettingsPage() {
+  const [passphrase, setPassphrase] = useState("");
+  const [message, setMessage] = useState("");
+  const handle = (action: () => Promise<unknown>) => {
+    void action().then(() => setMessage("Aktion erfolgreich.")).catch((error: unknown) => setMessage(error instanceof Error ? error.message : "Aktion fehlgeschlagen."));
+  };
+  const exportData = () =>
+    handle(async () => {
+      const archive = await localProfiles.exportAll(passphrase);
+      const url = URL.createObjectURL(new Blob([JSON.stringify(archive)], { type: "application/json" }));
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `numra-export-${new Date().toISOString().slice(0, 10)}.json`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    });
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main className="settings-page">
+        <p className="eyebrow">LOKALER DATENSCHUTZ</p><h1>Einstellungen</h1>
+        <section className="settings-card">
+          <h2>Passphraseschutz</h2>
+          <p>Der Schlüssel bleibt ausschließlich im Arbeitsspeicher und wird nach 15 Minuten Inaktivität verworfen.</p>
+          <label><span>Passphrase (mindestens 12 Zeichen)</span><input type="password" value={passphrase} onChange={(event) => setPassphrase(event.target.value)} /></label>
+          <div className="hero-actions">
+            <button className="button button-primary" type="button" onClick={() => handle(() => localProfiles.unlock(passphrase))}>Entsperren</button>
+            <button className="button button-quiet" type="button" onClick={() => handle(() => localProfiles.enableProtection(passphrase))}>Für leere Bibliothek aktivieren</button>
+            <button className="button button-quiet" type="button" onClick={() => { localProfiles.lock(); setMessage("Tresor gesperrt."); }}>Sperren</button>
+          </div>
+        </section>
+        <section className="settings-card">
+          <h2>Verschlüsselter Export und Import</h2>
+          <p>Das Archiv enthält alle lokalen Numra-Daten und ist mit der oben eingegebenen Passphrase geschützt.</p>
+          <div className="hero-actions">
+            <button className="button button-quiet" type="button" onClick={exportData}>Archiv exportieren</button>
+            <label className="button button-quiet file-button">Archiv importieren<input type="file" accept="application/json,.json" onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) handle(async () => {
+                const parsed: unknown = JSON.parse(await file.text());
+                await localProfiles.importAll(parseEncryptedArchive(parsed), passphrase);
+              });
+            }} /></label>
+          </div>
+        </section>
+        <section className="settings-card danger-zone"><h2>Alle lokalen Daten löschen</h2><p>Diese Aktion entfernt Profile, Berechnungen, Berichte, Gespräche, Notizen und den Tresorschlüssel von diesem Gerät.</p><button className="button button-quiet" type="button" onClick={() => handle(() => localProfiles.deleteAllLocalData())}>Unwiderruflich lokal löschen</button></section>
+        {message && <p role="status" className="notice">{message}</p>}
+      </main>
+    </div>
+  );
+}
+
 export function App() {
+  useEffect(() => {
+    const activity = () => localProfiles.touch();
+    const timer = window.setInterval(() => localProfiles.autoLockIfIdle(), 30_000);
+    window.addEventListener("pointerdown", activity);
+    window.addEventListener("keydown", activity);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("pointerdown", activity);
+      window.removeEventListener("keydown", activity);
+    };
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/analyse/neu" element={<NewAnalysisPage />} />
         <Route path="/profil/:id" element={<ProfilePage />} />
+        <Route path="/bibliothek" element={<LibraryPage />} />
+        <Route path="/einstellungen" element={<SettingsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
