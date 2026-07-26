@@ -55,9 +55,11 @@ Auf dem eigenen Rechner:
 ssh -L 8080:127.0.0.1:8080 ALIAS
 ```
 
-Danach ist Numra unter `http://localhost:8080` erreichbar. Die Origin in
+Danach ist Numra unter `http://localhost:8080` oder
+`http://127.0.0.1:8080` erreichbar. Die Origin-Liste in
 `/etc/numra/numra.env` muss für dieses Staging
-`NUMRA_ALLOWED_ORIGINS=http://localhost:8080` bleiben.
+`NUMRA_ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080`
+bleiben.
 
 ## Diagnose ohne Nutzdaten
 

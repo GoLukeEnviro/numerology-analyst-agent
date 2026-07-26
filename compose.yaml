@@ -48,7 +48,7 @@ services:
       - /tmp
     environment:
       NUMRA_ENVIRONMENT: production
-      NUMRA_ALLOWED_ORIGINS: ${NUMRA_ALLOWED_ORIGINS:-http://localhost:8080}
+      NUMRA_ALLOWED_ORIGINS: ${NUMRA_ALLOWED_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}
       NUMRA_MAX_REQUEST_BODY_BYTES: "65536"
       NUMRA_LLM_ENABLED: ${NUMRA_LLM_ENABLED:-false}
       NUMRA_DEEPSEEK_API_KEY: ${NUMRA_DEEPSEEK_API_KEY:-}

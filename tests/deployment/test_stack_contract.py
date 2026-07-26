@@ -30,6 +30,23 @@ def test_only_gateway_is_published_on_loopback() -> None:
     assert "ports" not in redis
 
 
+def test_private_staging_accepts_both_browser_loopback_origins() -> None:
+    compose = (ROOT / "compose.yaml").read_text(encoding="utf-8")
+    example_env = (ROOT / "deploy" / "numra.env.example").read_text(encoding="utf-8")
+    guide = (ROOT / "deploy" / "README.md").read_text(encoding="utf-8")
+    allowed_origins = (
+        "NUMRA_ALLOWED_ORIGINS="
+        "http://localhost:8080,http://127.0.0.1:8080"
+    )
+
+    assert (
+        "${NUMRA_ALLOWED_ORIGINS:-"
+        "http://localhost:8080,http://127.0.0.1:8080}"
+    ) in compose
+    assert allowed_origins in example_env
+    assert allowed_origins in guide
+
+
 def test_containers_are_hardened_and_redis_is_ephemeral() -> None:
     services = _compose()["services"]
     assert isinstance(services, dict)
