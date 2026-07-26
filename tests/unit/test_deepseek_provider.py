@@ -12,7 +12,7 @@ from numerology_agent.deepseek import DeepSeekProvider, DeepSeekSettings
 
 
 @pytest.mark.anyio
-async def test_deepseek_uses_structured_low_temperature_contract() -> None:
+async def test_deepseek_uses_v4_pro_structured_thinking_contract() -> None:
     captured: dict[str, object] = {}
 
     def handler(request: httpx.Request) -> httpx.Response:
@@ -40,7 +40,8 @@ async def test_deepseek_uses_structured_low_temperature_contract() -> None:
     assert captured["top_p"] == 1
     assert captured["max_tokens"] == 8192
     assert captured["response_format"] == {"type": "json_object"}
-    assert captured["thinking"] == {"type": "enabled", "level": "high"}
+    assert captured["thinking"] == {"type": "enabled"}
+    assert captured["reasoning_effort"] == "high"
     messages = cast(list[dict[str, Any]], captured["messages"])
     assert isinstance(messages[1]["content"], str)
     assert result.provider_fingerprint == "fp-1"

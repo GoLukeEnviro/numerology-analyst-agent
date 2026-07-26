@@ -34,6 +34,32 @@ Für aktiviertes LLM muss `NUMRA_RATE_LIMIT_HMAC_SECRET` mindestens 32 zufällig
 Bytes enthalten, zum Beispiel erzeugt mit `openssl rand -hex 32`. Der
 DeepSeek-Schlüssel wird nie in Git, Compose oder ein Image geschrieben.
 
+## DeepSeek lokal unter Windows aktivieren
+
+Die maskierte Einrichtung schreibt den API-Key und ein automatisch erzeugtes
+256-Bit-HMAC-Secret ausschließlich nach `deploy/numra.env.local`. Diese Datei
+wird von Git ignoriert:
+
+```powershell
+.\deploy\scripts\configure-local-llm.ps1
+docker compose --env-file deploy/numra.env.local up -d --build --force-recreate api gateway
+```
+
+Anschließend prüft der Ende-zu-Ende-Smoke-Test Berechnung, Pseudonymisierung,
+DeepSeek V4 Pro und die validierte Berichtsausgabe. Der Test verursacht einen
+echten Provider-Aufruf und verbraucht entsprechend Tokens:
+
+```powershell
+.\deploy\scripts\deepseek-smoke.ps1
+```
+
+Für den normalen lokalen Betrieb ohne DeepSeek ist keine Secret-Datei nötig.
+Zum Zurückschalten werden die Container ohne `--env-file` neu erstellt:
+
+```powershell
+docker compose up -d --force-recreate api gateway
+```
+
 ## Stack validieren und starten
 
 ```sh

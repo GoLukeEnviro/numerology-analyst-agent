@@ -28,8 +28,13 @@ interface Quota {
   followUps: number;
 }
 
-function quotaKey(hash: string): string {
-  return `numra:llm-quota:v1:${hash}`;
+function quotaKey(hash: string, date = new Date()): string {
+  const localDay = [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getDate()).padStart(2, "0"),
+  ].join("-");
+  return `numra:llm-quota:v1:${localDay}:${hash}`;
 }
 
 function readQuota(hash: string): Quota {

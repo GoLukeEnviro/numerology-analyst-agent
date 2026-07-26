@@ -32,10 +32,17 @@ und Safety-Validierung zurückgegeben. Leere oder ungültige Antworten werden
 genau einmal wiederholt. Request-Bodies und Provider-Ausgaben dürfen niemals
 protokolliert werden.
 
+Der OpenAI-kompatible V4-Pro-Aufruf verwendet JSON Output, maximal 8.192
+Ausgabetokens, `thinking.type=enabled` und `reasoning_effort=high`. Die
+vereinbarte Sampling-Konfiguration `temperature=0.2` und `top_p=1` wird als
+Provenienz geführt und aus Kompatibilitätsgründen gesendet. Laut offizieller
+DeepSeek-Dokumentation werden beide Sampling-Parameter im Thinking-Modus
+ignoriert; die wirksame Steuerung ist dort `reasoning_effort=high`.
+
 ## Kontingente
 
-- ein Bericht pro lokalem Profil und Gerät,
-- zwei Rückfragen pro lokalem Profil und Gerät,
+- ein Bericht pro lokalem Profil, Gerät und Tag,
+- zwei Rückfragen pro lokalem Profil, Gerät und Tag,
 - zusätzlich 20 Provider-Aufrufe pro pseudonymisierter IP und Tag.
 
 Redis erhält ausschließlich HMAC-Schlüssel mit Ablaufzeit. Roh-IP-Adressen,

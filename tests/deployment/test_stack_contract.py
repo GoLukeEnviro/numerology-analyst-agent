@@ -34,15 +34,9 @@ def test_private_staging_accepts_both_browser_loopback_origins() -> None:
     compose = (ROOT / "compose.yaml").read_text(encoding="utf-8")
     example_env = (ROOT / "deploy" / "numra.env.example").read_text(encoding="utf-8")
     guide = (ROOT / "deploy" / "README.md").read_text(encoding="utf-8")
-    allowed_origins = (
-        "NUMRA_ALLOWED_ORIGINS="
-        "http://localhost:8080,http://127.0.0.1:8080"
-    )
+    allowed_origins = "NUMRA_ALLOWED_ORIGINS=http://localhost:8080,http://127.0.0.1:8080"
 
-    assert (
-        "${NUMRA_ALLOWED_ORIGINS:-"
-        "http://localhost:8080,http://127.0.0.1:8080}"
-    ) in compose
+    assert ("${NUMRA_ALLOWED_ORIGINS:-http://localhost:8080,http://127.0.0.1:8080}") in compose
     assert allowed_origins in example_env
     assert allowed_origins in guide
 
@@ -99,3 +93,26 @@ def test_production_operations_are_documented_without_public_launch_shortcuts() 
     assert "127.0.0.1:8080" in guide
     assert "ssh -L 8080:127.0.0.1:8080" in guide
     assert "Kein öffentlicher Launch" in guide
+
+
+def test_local_deepseek_activation_keeps_secrets_out_of_git() -> None:
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    configure_path = ROOT / "deploy" / "scripts" / "configure-local-llm.ps1"
+    smoke_path = ROOT / "deploy" / "scripts" / "deepseek-smoke.ps1"
+    assert configure_path.is_file()
+    assert smoke_path.is_file()
+    configure = configure_path.read_text(encoding="utf-8")
+    smoke = smoke_path.read_text(encoding="utf-8")
+    guide = (ROOT / "deploy" / "README.md").read_text(encoding="utf-8")
+
+    assert "deploy/*.env.local" in gitignore
+    assert "Read-Host" in configure
+    assert "-MaskInput" in configure
+    assert "RandomNumberGenerator" in configure
+    assert "NUMRA_LLM_ENABLED=true" in configure
+    assert "NUMRA_DEEPSEEK_MODEL=deepseek-v4-pro" in configure
+    assert "/api/v1/profiles/calculate" in smoke
+    assert "/api/v1/analyses/report" in smoke
+    assert "NUMRA_DEEPSEEK_API_KEY=" not in smoke
+    assert "configure-local-llm.ps1" in guide
+    assert "deepseek-smoke.ps1" in guide

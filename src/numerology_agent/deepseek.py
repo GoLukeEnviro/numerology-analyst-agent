@@ -57,7 +57,8 @@ class DeepSeekProvider:
             ],
             "temperature": 0.2,
             "top_p": 1,
-            "thinking": {"type": "enabled", "level": "high"},
+            "thinking": {"type": "enabled"},
+            "reasoning_effort": "high",
             "max_tokens": 8192,
             "response_format": {"type": "json_object"},
         }

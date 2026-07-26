@@ -6,6 +6,8 @@ import type { AnalysisReport, ProfileCalculationResult } from "../../api/types";
 import { ReportExperience } from "./ReportExperience";
 
 afterEach(() => {
+  localStorage.clear();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -117,5 +119,57 @@ describe("ReportExperience", () => {
     expect(
       screen.getByRole("alert"),
     ).toHaveTextContent(/Internetverbindung erforderlich/i);
+  });
+
+  it("resets the local report quota on the next calendar day", async () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-07-25T12:00:00+02:00"));
+    const report = {
+      schema_version: "analysis-report-v1",
+      summary: "Tagesbericht",
+      sections: [],
+      limitations: [],
+      suggestions: [],
+      provenance: {
+        provider: "deepseek",
+        model: "deepseek-v4-pro",
+        temperature: 0.2,
+        top_p: 1,
+        thinking: "enabled/high",
+        prompt_version: "numra-report-de-v1",
+        knowledge_bundle: "numra-knowledge-de-v1",
+        calculation_hash: "d".repeat(64),
+        provider_fingerprint: "test",
+        prompt_tokens: 10,
+        completion_tokens: 10,
+      },
+    } satisfies AnalysisReport;
+    const profile = {
+      deterministic_hash: "d".repeat(64),
+    } as ProfileCalculationResult;
+    const first = render(
+      <ReportExperience
+        profile={profile}
+        profileId="profile-daily-quota"
+        requestReport={vi.fn().mockResolvedValue(report)}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
+    await userEvent.click(screen.getByRole("button", { name: /Bericht erzeugen/i }));
+    await screen.findByText("Tagesbericht");
+    first.unmount();
+
+    vi.setSystemTime(new Date("2026-07-26T12:00:00+02:00"));
+    render(
+      <ReportExperience
+        profile={profile}
+        profileId="profile-daily-quota"
+        requestReport={vi.fn().mockResolvedValue(report)}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
+    expect(screen.getByRole("button", { name: /Bericht erzeugen/i })).toBeEnabled();
   });
 });
