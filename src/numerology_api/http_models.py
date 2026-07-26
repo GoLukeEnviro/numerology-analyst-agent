@@ -6,7 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from numerology_domain.models import MethodPolicy, PersonInput
+from numerology_agent.models import AnalysisReport
+from numerology_domain.models import MethodPolicy, PersonInput, ProfileCalculationResult
 
 
 class _HttpModel(BaseModel):
@@ -18,6 +19,20 @@ class ProfileCalculationRequest(_HttpModel):
 
     person: PersonInput
     policy: MethodPolicy
+
+
+class AnalysisReportRequest(_HttpModel):
+    consent: Literal[True]
+    device_id: str = Field(min_length=16, max_length=128, pattern=r"^[A-Za-z0-9._:-]+$")
+    profile: ProfileCalculationResult
+
+
+class AnalysisFollowUpRequest(_HttpModel):
+    consent: Literal[True]
+    device_id: str = Field(min_length=16, max_length=128, pattern=r"^[A-Za-z0-9._:-]+$")
+    profile: ProfileCalculationResult
+    report: AnalysisReport
+    question: str = Field(min_length=1, max_length=500)
 
 
 class FieldError(_HttpModel):
@@ -45,8 +60,8 @@ class LiveStatus(_HttpModel):
 class ReadyStatus(_HttpModel):
     status: Literal["ready"] = "ready"
     engine: Literal["ready"] = "ready"
-    redis: Literal["not_configured"] = "not_configured"
-    provider: Literal["disabled"] = "disabled"
+    redis: Literal["not_configured", "ready"] = "not_configured"
+    provider: Literal["disabled", "ready"] = "disabled"
 
 
 class LlmMeta(_HttpModel):

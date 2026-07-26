@@ -1,4 +1,8 @@
-import type { ProfileCalculationResult } from "../api/types";
+import type {
+  AnalysisFollowUp,
+  AnalysisReport,
+  ProfileCalculationResult,
+} from "../api/types";
 import {
   type EncryptedArchive,
   type EncryptedPayload,
@@ -161,6 +165,54 @@ export class LocalProfileRepository {
     );
   }
 
+  async saveReport(
+    profileId: string,
+    report: AnalysisReport,
+    optIn: boolean,
+  ): Promise<void> {
+    if (!optIn) throw new Error("Opt-in ist vor dauerhafter Speicherung erforderlich.");
+    if ((await this.database.reports.where("profileId").equals(profileId).count()) >= 1) {
+      throw new Error("Pro lokalem Profil kann nur einen Bericht gespeichert werden.");
+    }
+    await this.database.reports.add({
+      id: `report:${profileId}`,
+      profileId,
+      createdAt: Date.now(),
+      payload: await this.encodePayload(report),
+    });
+  }
+
+  async getReport(profileId: string): Promise<AnalysisReport | null> {
+    const record = await this.database.reports.where("profileId").equals(profileId).first();
+    return record === undefined
+      ? null
+      : this.decodePayload<AnalysisReport>(record.payload);
+  }
+
+  async saveFollowUp(
+    profileId: string,
+    followUp: AnalysisFollowUp,
+    optIn: boolean,
+  ): Promise<void> {
+    if (!optIn) throw new Error("Opt-in ist vor dauerhafter Speicherung erforderlich.");
+    if ((await this.database.threads.where("profileId").equals(profileId).count()) >= 2) {
+      throw new Error("Pro lokalem Profil können nur zwei Rückfragen gespeichert werden.");
+    }
+    await this.database.threads.add({
+      id: crypto.randomUUID(),
+      profileId,
+      updatedAt: Date.now(),
+      payload: await this.encodePayload(followUp),
+    });
+  }
+
+  async listFollowUps(profileId: string): Promise<AnalysisFollowUp[]> {
+    const records = await this.database.threads.where("profileId").equals(profileId).sortBy("updatedAt");
+    return Promise.all(
+      records.map(async (record) => this.decodePayload<AnalysisFollowUp>(record.payload)),
+    );
+  }
+
   async deleteAllLocalData(): Promise<void> {
     await this.database.transaction(
       "rw",
@@ -238,6 +290,18 @@ export class LocalProfileRepository {
       protected: record.protected,
       profile,
     };
+  }
+
+  private async encodePayload(value: unknown): Promise<string | EncryptedPayload> {
+    const protectedPayload = await this.isProtectionEnabled();
+    if (protectedPayload && !this.vault.isEnabled()) throw new VaultLockedError();
+    return protectedPayload ? this.vault.encrypt(value) : JSON.stringify(value);
+  }
+
+  private async decodePayload<T>(payload: string | EncryptedPayload): Promise<T> {
+    return typeof payload === "string"
+      ? (JSON.parse(payload) as T)
+      : this.vault.decrypt<T>(payload);
   }
 }
 

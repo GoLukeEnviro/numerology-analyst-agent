@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { calculateProfile } from "./client";
-import type { ProfileCalculationRequest } from "./types";
+import { calculateProfile, generateReport } from "./client";
+import type { AnalysisReportRequest, ProfileCalculationRequest } from "./types";
 
 const request: ProfileCalculationRequest = {
   person: {
@@ -64,6 +64,29 @@ describe("calculateProfile", () => {
         code: "REQUEST_VALIDATION_FAILED",
         correlationId: "corr-1",
       }),
+    );
+  });
+});
+
+describe("generateReport", () => {
+  it("sends the explicit consent and generated analysis contract", async () => {
+    const analysisRequest = {
+      consent: true,
+      device_id: "device-contract-1234",
+      profile: { deterministic_hash: "a".repeat(64) },
+    } as unknown as AnalysisReportRequest;
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ schema_version: "analysis-report-v1" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await generateReport(analysisRequest, fetcher);
+
+    expect(fetcher).toHaveBeenCalledWith(
+      "/api/v1/analyses/report",
+      expect.objectContaining({ method: "POST", body: JSON.stringify(analysisRequest) }),
     );
   });
 });

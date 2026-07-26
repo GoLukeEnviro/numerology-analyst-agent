@@ -150,5 +150,6 @@ async def test_openapi_contains_only_v1_public_routes(client: AsyncClient) -> No
     schema = (await client.get("/openapi.json")).json()
 
     assert "/api/v1/profiles/calculate" in schema["paths"]
-    assert "/api/v1/analyses/report" not in schema["paths"]
+    assert "/api/v1/analyses/report" in schema["paths"]
+    assert "/api/v1/analyses/follow-up" in schema["paths"]
     assert "ProblemDetails" in schema["components"]["schemas"]

@@ -1,6 +1,297 @@
 {
   "components": {
     "schemas": {
+      "AnalysisClaim": {
+        "additionalProperties": false,
+        "properties": {
+          "calculation_ref": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Calculation Ref",
+            "type": "string"
+          },
+          "claim_type": {
+            "$ref": "#/components/schemas/ClaimType"
+          },
+          "knowledge_ref": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Knowledge Ref",
+            "type": "string"
+          },
+          "number": {
+            "maximum": 99.0,
+            "minimum": 0.0,
+            "title": "Number",
+            "type": "integer"
+          },
+          "text": {
+            "maxLength": 1200,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_type",
+          "text",
+          "calculation_ref",
+          "knowledge_ref",
+          "number"
+        ],
+        "title": "AnalysisClaim",
+        "type": "object"
+      },
+      "AnalysisFollowUp": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisClaim"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-follow-up-v1",
+            "default": "analysis-follow-up-v1",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "claims",
+          "limitations",
+          "provenance"
+        ],
+        "title": "AnalysisFollowUp",
+        "type": "object"
+      },
+      "AnalysisFollowUpRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileCalculationResult"
+          },
+          "question": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "report": {
+            "$ref": "#/components/schemas/AnalysisReport"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile",
+          "report",
+          "question"
+        ],
+        "title": "AnalysisFollowUpRequest",
+        "type": "object"
+      },
+      "AnalysisProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "calculation_hash": {
+            "title": "Calculation Hash",
+            "type": "string"
+          },
+          "completion_tokens": {
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "knowledge_bundle": {
+            "title": "Knowledge Bundle",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "prompt_tokens": {
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "prompt_version": {
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Fingerprint"
+          },
+          "temperature": {
+            "title": "Temperature",
+            "type": "number"
+          },
+          "thinking": {
+            "title": "Thinking",
+            "type": "string"
+          },
+          "top_p": {
+            "title": "Top P",
+            "type": "number"
+          }
+        },
+        "required": [
+          "provider",
+          "model",
+          "temperature",
+          "top_p",
+          "thinking",
+          "prompt_version",
+          "knowledge_bundle",
+          "calculation_hash",
+          "provider_fingerprint",
+          "prompt_tokens",
+          "completion_tokens"
+        ],
+        "title": "AnalysisProvenance",
+        "type": "object"
+      },
+      "AnalysisReport": {
+        "additionalProperties": false,
+        "properties": {
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-report-v1",
+            "default": "analysis-report-v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisSection"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggestions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "sections",
+          "limitations",
+          "suggestions",
+          "provenance"
+        ],
+        "title": "AnalysisReport",
+        "type": "object"
+      },
+      "AnalysisReportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileCalculationResult"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile"
+        ],
+        "title": "AnalysisReportRequest",
+        "type": "object"
+      },
+      "AnalysisSection": {
+        "additionalProperties": false,
+        "properties": {
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisClaim"
+            },
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Claims",
+            "type": "array"
+          },
+          "title": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "claims"
+        ],
+        "title": "AnalysisSection",
+        "type": "object"
+      },
       "AuditTrace": {
         "additionalProperties": false,
         "description": "Deterministic audit trail attached to every calculation result.\n\nThe trace is one component of the CalculationHashEnvelope.\nThe calculation hash also covers the schema version, relevant input\nfields, MethodPolicy and calculated results — not the trace alone.",
@@ -906,14 +1197,20 @@
             "type": "string"
           },
           "provider": {
-            "const": "disabled",
             "default": "disabled",
+            "enum": [
+              "disabled",
+              "ready"
+            ],
             "title": "Provider",
             "type": "string"
           },
           "redis": {
-            "const": "not_configured",
             "default": "not_configured",
+            "enum": [
+              "not_configured",
+              "ready"
+            ],
             "title": "Redis",
             "type": "string"
           },
@@ -983,6 +1280,128 @@
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/analyses/follow-up": {
+      "post": {
+        "operationId": "analysis_follow_up_api_v1_analyses_follow_up_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisFollowUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisFollowUp"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Follow Up",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
+    "/api/v1/analyses/report": {
+      "post": {
+        "operationId": "analysis_report_api_v1_analyses_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Report",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
     "/api/v1/health/live": {
       "get": {
         "operationId": "live_api_v1_health_live_get",

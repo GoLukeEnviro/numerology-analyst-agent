@@ -4,6 +4,40 @@
  */
 
 export interface paths {
+    "/api/v1/analyses/follow-up": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Analysis Follow Up */
+        post: operations["analysis_follow_up_api_v1_analyses_follow_up_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/analyses/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Analysis Report */
+        post: operations["analysis_report_api_v1_analyses_report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/health/live": {
         parameters: {
             query?: never;
@@ -76,6 +110,109 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AnalysisClaim */
+        AnalysisClaim: {
+            /** Calculation Ref */
+            calculation_ref: string;
+            claim_type: components["schemas"]["ClaimType"];
+            /** Knowledge Ref */
+            knowledge_ref: string;
+            /** Number */
+            number: number;
+            /** Text */
+            text: string;
+        };
+        /** AnalysisFollowUp */
+        AnalysisFollowUp: {
+            /** Answer */
+            answer: string;
+            /** Claims */
+            claims: components["schemas"]["AnalysisClaim"][];
+            /** Limitations */
+            limitations: string[];
+            provenance: components["schemas"]["AnalysisProvenance"];
+            /**
+             * Schema Version
+             * @default analysis-follow-up-v1
+             * @constant
+             */
+            schema_version: "analysis-follow-up-v1";
+        };
+        /** AnalysisFollowUpRequest */
+        AnalysisFollowUpRequest: {
+            /**
+             * Consent
+             * @constant
+             */
+            consent: true;
+            /** Device Id */
+            device_id: string;
+            profile: components["schemas"]["ProfileCalculationResult"];
+            /** Question */
+            question: string;
+            report: components["schemas"]["AnalysisReport"];
+        };
+        /** AnalysisProvenance */
+        AnalysisProvenance: {
+            /** Calculation Hash */
+            calculation_hash: string;
+            /** Completion Tokens */
+            completion_tokens: number;
+            /** Knowledge Bundle */
+            knowledge_bundle: string;
+            /** Model */
+            model: string;
+            /** Prompt Tokens */
+            prompt_tokens: number;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Provider */
+            provider: string;
+            /** Provider Fingerprint */
+            provider_fingerprint: string | null;
+            /** Temperature */
+            temperature: number;
+            /** Thinking */
+            thinking: string;
+            /** Top P */
+            top_p: number;
+        };
+        /** AnalysisReport */
+        AnalysisReport: {
+            /** Limitations */
+            limitations: string[];
+            provenance: components["schemas"]["AnalysisProvenance"];
+            /**
+             * Schema Version
+             * @default analysis-report-v1
+             * @constant
+             */
+            schema_version: "analysis-report-v1";
+            /** Sections */
+            sections: components["schemas"]["AnalysisSection"][];
+            /** Suggestions */
+            suggestions: string[];
+            /** Summary */
+            summary: string;
+        };
+        /** AnalysisReportRequest */
+        AnalysisReportRequest: {
+            /**
+             * Consent
+             * @constant
+             */
+            consent: true;
+            /** Device Id */
+            device_id: string;
+            profile: components["schemas"]["ProfileCalculationResult"];
+        };
+        /** AnalysisSection */
+        AnalysisSection: {
+            /** Claims */
+            claims: components["schemas"]["AnalysisClaim"][];
+            /** Title */
+            title: string;
+        };
         /**
          * AuditTrace
          * @description Deterministic audit trail attached to every calculation result.
@@ -635,15 +772,15 @@ export interface components {
             /**
              * Provider
              * @default disabled
-             * @constant
+             * @enum {string}
              */
-            provider: "disabled";
+            provider: "disabled" | "ready";
             /**
              * Redis
              * @default not_configured
-             * @constant
+             * @enum {string}
              */
-            redis: "not_configured";
+            redis: "not_configured" | "ready";
             /**
              * Status
              * @default ready
@@ -708,6 +845,108 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    analysis_follow_up_api_v1_analyses_follow_up_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalysisFollowUpRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisFollowUp"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    analysis_report_api_v1_analyses_report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalysisReportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisReport"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Service Unavailable */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     live_api_v1_health_live_get: {
         parameters: {
             query?: never;

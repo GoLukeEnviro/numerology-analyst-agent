@@ -3,6 +3,7 @@ import "fake-indexeddb/auto";
 import { afterEach, describe, expect, it } from "vitest";
 
 import type { ProfileCalculationResult } from "../api/types";
+import type { AnalysisFollowUp, AnalysisReport } from "../api/types";
 import { NumraDatabase, migrateLegacyProfile } from "./database";
 import { MemoryVault, VaultLockedError } from "./crypto";
 import { LocalProfileRepository } from "./repository";
@@ -101,5 +102,22 @@ describe("LocalProfileRepository", () => {
 
     expect(migrated.schemaVersion).toBe(2);
     expect(migrated.protected).toBe(false);
+  });
+
+  it("enforces one local report and two local follow-ups per profile", async () => {
+    const state = repository();
+    const saved = await state.repository.saveProfile(profile("Quota Name", "q"), true);
+    const report = { schema_version: "analysis-report-v1" } as AnalysisReport;
+    const followUp = { schema_version: "analysis-follow-up-v1" } as AnalysisFollowUp;
+
+    await state.repository.saveReport(saved.id, report, true);
+    await expect(state.repository.saveReport(saved.id, report, true)).rejects.toThrow(/einen Bericht/);
+    await state.repository.saveFollowUp(saved.id, followUp, true);
+    await state.repository.saveFollowUp(saved.id, followUp, true);
+    expect(await state.repository.getReport(saved.id)).toEqual(report);
+    expect(await state.repository.listFollowUps(saved.id)).toHaveLength(2);
+    await expect(state.repository.saveFollowUp(saved.id, followUp, true)).rejects.toThrow(
+      /zwei Rückfragen/,
+    );
   });
 });

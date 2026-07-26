@@ -21,6 +21,17 @@ _FORBIDDEN_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     ),
     ("identity_assertion", re.compile(r"\bdu bist\b", re.IGNORECASE)),
     ("prediction", re.compile(r"\bdu wirst\b", re.IGNORECASE)),
+    (
+        "prompt_injection",
+        re.compile(
+            r"\b(ignoriere|ignore).{0,40}\b(anweisungen|instructions|system[\s-]?prompt)\b",
+            re.IGNORECASE,
+        ),
+    ),
+)
+_PROMPT_INJECTION_PATTERN = re.compile(
+    r"\b(ignoriere|ignore).{0,40}\b(anweisungen|instructions|system[\s-]?prompt)\b",
+    re.IGNORECASE,
 )
 
 
@@ -41,3 +52,9 @@ def assert_claims_safe(claims: tuple[InterpretationClaim, ...]) -> None:
         if claim.claim_type is ClaimType.CALCULATION_FACT:
             raise SafetyError("calculation_fact is reserved for deterministic engine output")
         assert_text_safe(claim.text)
+
+
+def assert_prompt_safe(text: str) -> None:
+    """Reject instruction-override attempts before any provider call."""
+    if _PROMPT_INJECTION_PATTERN.search(text):
+        raise SafetyError("prompt_injection: unsafe user prompt detected")

@@ -877,6 +877,76 @@ th {
   background: rgb(18 37 54 / 56%);
 }
 
+.report-experience {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: clamp(4rem, 9vw, 8rem) 0;
+}
+
+.report-experience > header h1 {
+  max-width: 12ch;
+  font-size: clamp(3.5rem, 8vw, 7rem);
+}
+
+.provider-consent,
+.report-content > article,
+.follow-up-box {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-top: 1.5rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  background: rgb(18 37 54 / 56%);
+}
+
+.provider-consent dl {
+  display: grid;
+  gap: 0;
+  margin: 2rem 0;
+}
+
+.provider-consent dl div {
+  display: grid;
+  border-top: 1px solid var(--line);
+  padding: 1rem 0;
+  grid-template-columns: 10rem 1fr;
+}
+
+.provider-consent dt,
+.report-claim small {
+  color: var(--muted);
+}
+
+.provider-consent dd {
+  margin: 0;
+}
+
+.provider-consent .check-row {
+  margin: 1rem 0;
+}
+
+.report-summary {
+  color: var(--sand);
+  font-family: "Newsreader", Georgia, serif;
+  font-size: clamp(1.6rem, 4vw, 2.7rem);
+  line-height: 1.3;
+}
+
+.report-claim {
+  border-top: 1px solid var(--line);
+  padding: 1.25rem 0;
+}
+
+.follow-up-box label {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.report-content pre {
+  overflow-x: auto;
+  color: var(--sand);
+}
+
 .library-grid h2 {
   font-size: 2rem;
 }

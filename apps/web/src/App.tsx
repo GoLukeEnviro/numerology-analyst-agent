@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, useNavigate, useParams } from "react-rout
 import type { ProfileCalculationResult } from "./api/types";
 import { AnalysisWizard } from "./features/analysis/AnalysisWizard";
 import { NumberAtlas, type AtlasNumber } from "./features/profile/NumberAtlas";
+import { ReportExperience } from "./features/report/ReportExperience";
 import { VaultLockedError, parseEncryptedArchive } from "./storage/crypto";
 import { localProfiles, type LocalProfile } from "./storage/repository";
 
@@ -204,6 +205,7 @@ function ProfilePage() {
             Lokal speichern
           </button>
           {message && <p role="status">{message}</p>}
+          <a className="button button-primary" href={`/profil/${id}/bericht`}>Reflexionsbericht</a>
         </div>
         <NumberAtlas hash={result.deterministic_hash} numbers={numbers} />
         <section className="result-section">
@@ -226,6 +228,37 @@ function ProfilePage() {
             </div>
           </div>
         </section>
+      </main>
+    </div>
+  );
+}
+
+function ReportPage() {
+  const { id } = useParams();
+  const [profile, setProfile] = useState(() => readSessionProfile(id));
+  const [message, setMessage] = useState("");
+  useEffect(() => {
+    if (profile !== null || id === undefined) return;
+    void localProfiles
+      .getProfile(id)
+      .then((saved) => setProfile(saved?.profile ?? null))
+      .catch((error: unknown) =>
+        setMessage(error instanceof Error ? error.message : "Profil konnte nicht geladen werden."),
+      );
+  }, [id, profile]);
+  return (
+    <div className="app-shell">
+      <SiteHeader />
+      <main>
+        {profile !== null && id !== undefined ? (
+          <ReportExperience profile={profile} profileId={id} />
+        ) : (
+          <section className="empty-state">
+            <p className="eyebrow">PROFIL ERFORDERLICH</p>
+            <h1>{message || "Öffne oder speichere zuerst ein Profil."}</h1>
+            <a className="button button-primary" href="/bibliothek">Zur Bibliothek</a>
+          </section>
+        )}
       </main>
     </div>
   );
@@ -341,6 +374,7 @@ export function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/analyse/neu" element={<NewAnalysisPage />} />
         <Route path="/profil/:id" element={<ProfilePage />} />
+        <Route path="/profil/:id/bericht" element={<ReportPage />} />
         <Route path="/bibliothek" element={<LibraryPage />} />
         <Route path="/einstellungen" element={<SettingsPage />} />
         <Route path="*" element={<HomePage />} />
