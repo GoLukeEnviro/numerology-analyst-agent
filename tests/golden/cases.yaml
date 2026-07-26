@@ -1,0 +1,159 @@
+# Golden Cases for Life Path A/B (Walking Skeleton 0.1.0).
+#
+# Each case pins the EXACT expected Life Path A and Life Path B values plus
+# the master/karmic flags and the consistency expectation. Values were
+# derived by hand from the pythagorean reduction rules (Master Contract
+# §3.2) and cross-checked; they are the reference, not the code's output.
+#
+# Korrektur 1: karmic debt is exposed as an object {number, origin} or null,
+# attached to the *methodically defined unreduced core value* (raw_total).
+# compound_notation shows the full reduction path as slash-notation.
+#
+# Korrektur 2: every person case carries an explicit as_of_date so the suite
+# is fully deterministic (birth_date <= as_of_date is enforced by the model).
+#
+# `synthetic: true` marks cases invented for this test suite (no real
+# person implied). Dates use canonical ISO form YYYY-MM-DD.
+
+version: "1"
+method:
+  system: pythagorean
+  version: v1
+  date_method: both
+
+cases:
+  - id: standard-1985-07-25
+    synthetic: true
+    core_name: "Max Mustermann"
+    birth_date: "1985-07-25"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 1+9+8+5+0+7+2+5 = 37 -> 3+7 = 10 -> 1+0 = 1   (raw 37, not karmic)
+      B: month 7 | day 7 | year 1+9+8+5=23 -> 5 | sum 7+7+5 = 19 -> 10 -> 1
+      B raw (component sum) 19 IS a karmic debt (19/1) -> flagged.
+    expected:
+      life_path_a:
+        { value: 1, intermediate: 37, is_master: false,
+          raw_total: 37, compound_notation: "37/10/1", karmic_debt: null }
+      life_path_b:
+        { value: 1, intermediate: 19, is_master: false,
+          raw_total: 19, compound_notation: "19/10/1",
+          karmic_debt: { number: 19, origin: "component_sum" },
+          components: { month: 7, day: 7, year: 5 } }
+      a_equals_b: true
+
+  - id: master-11-via-day-29
+    synthetic: true
+    core_name: "Test Person"
+    birth_date: "2000-12-29"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 2+0+0+0+1+2+2+9 = 16 -> 7   (raw 16, karmic 16/7)
+      B: month 1+2=3 | day 2+9=11 (master, held) | year 2+0+0+0=2 | sum 3+11+2 = 16 -> 7
+      B raw (component sum) 16 IS a karmic debt (16/7) -> flagged.
+    expected:
+      life_path_a:
+        { value: 7, intermediate: 16, is_master: false,
+          raw_total: 16, compound_notation: "16/7",
+          karmic_debt: { number: 16, origin: "total_sum" } }
+      life_path_b:
+        { value: 7, intermediate: 16, is_master: false,
+          raw_total: 16, compound_notation: "16/7",
+          karmic_debt: { number: 16, origin: "component_sum" },
+          components: { month: 3, day: 11, year: 2 } }
+      a_equals_b: true
+
+  - id: master-22-via-year-1993
+    synthetic: true
+    core_name: "Year Master"
+    birth_date: "1993-01-01"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 1+9+9+3+0+1+0+1 = 24 -> 6   (raw 24, not karmic)
+      B: month 1 | day 1 | year 1+9+9+3=22 (master, held) | sum 1+1+22 = 24 -> 6
+      B raw (component sum) 24 not karmic => null.
+    expected:
+      life_path_a:
+        { value: 6, intermediate: 24, is_master: false,
+          raw_total: 24, compound_notation: "24/6", karmic_debt: null }
+      life_path_b:
+        { value: 6, intermediate: 24, is_master: false,
+          raw_total: 24, compound_notation: "24/6", karmic_debt: null,
+          components: { month: 1, day: 1, year: 22 } }
+      a_equals_b: true
+
+  - id: divergence-a-vs-b
+    synthetic: true
+    core_name: "Divergence Case"
+    birth_date: "1980-09-04"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 1+9+8+0+0+9+0+4 = 31 -> 4
+      B: month 9 | day 4 | year 1+9+8+0=18 -> 9 | sum 9+4+9 = 22 (master, held)
+      => A=4, B=22 -> consistency warning
+    expected:
+      life_path_a:
+        { value: 4, intermediate: 31, is_master: false,
+          raw_total: 31, compound_notation: "31/4", karmic_debt: null }
+      life_path_b:
+        { value: 22, intermediate: 22, is_master: true,
+          raw_total: 22, compound_notation: "22", karmic_debt: null,
+          components: { month: 9, day: 4, year: 9 } }
+      a_equals_b: false
+
+  - id: leap-day-2020-02-29
+    synthetic: true
+    core_name: "Leap Day"
+    birth_date: "2020-02-29"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 2+0+2+0+0+2+2+9 = 17 -> 8
+      B: month 2 | day 2+9=11 (master) | year 2+0+2+0=4 | sum 2+11+4 = 17 -> 8
+    expected:
+      life_path_a:
+        { value: 8, intermediate: 17, is_master: false,
+          raw_total: 17, compound_notation: "17/8", karmic_debt: null }
+      life_path_b:
+        { value: 8, intermediate: 17, is_master: false,
+          raw_total: 17, compound_notation: "17/8", karmic_debt: null,
+          components: { month: 2, day: 11, year: 4 } }
+      a_equals_b: true
+
+  - id: old-date-1900-01-01
+    synthetic: true
+    core_name: "Old Date"
+    birth_date: "1900-01-01"
+    as_of_date: "2026-07-26"
+    derivation: |
+      A: 1+9+0+0+0+1+0+1 = 12 -> 3   (raw 12, not karmic)
+      B: month 1 | day 1 | year 1+9+0+0=10 -> 1 | sum 1+1+1 = 3
+    expected:
+      life_path_a:
+        { value: 3, intermediate: 12, is_master: false,
+          raw_total: 12, compound_notation: "12/3", karmic_debt: null }
+      life_path_b:
+        { value: 3, intermediate: 3, is_master: false,
+          raw_total: 3, compound_notation: "3", karmic_debt: null,
+          components: { month: 1, day: 1, year: 1 } }
+      a_equals_b: true
+
+  - id: umlaut-name-normalization
+    synthetic: true
+    core_name: "Müller-Lüdenscheidt"
+    birth_date: "1985-07-25"
+    as_of_date: "2026-07-26"
+    derivation: |
+      Name normalizes (de-direct-v1) to calculation_name "MULLER-LUDENSCHEIDT".
+      Life Path uses the date only (A=B=1 as in the standard case).
+      B raw (component sum) 19 IS a karmic debt (19/1) -> flagged.
+    expected:
+      calculation_name: "MULLER-LUDENSCHEIDT"
+      life_path_a:
+        { value: 1, intermediate: 37, is_master: false,
+          raw_total: 37, compound_notation: "37/10/1", karmic_debt: null }
+      life_path_b:
+        { value: 1, intermediate: 19, is_master: false,
+          raw_total: 19, compound_notation: "19/10/1",
+          karmic_debt: { number: 19, origin: "component_sum" },
+          components: { month: 7, day: 7, year: 5 } }
+      a_equals_b: true

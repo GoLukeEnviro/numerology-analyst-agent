@@ -1,11 +1,24 @@
 # Numerology Analyst Agent
 
-> Auditierbare Domänenplattform für numerologische Berechnung, strukturierte Deutung, Forschung und agentische Nutzung.
+> **Auditierbare Domänenplattform für numerologische Berechnung** — deterministischer Rechenkern, versionierte Wissenspakete, empirischer Forschungsrahmen, optionale Agenten-Schicht. **Kein Chatbot, kein simpler Rechner, keine Esoterik-Sammlung.**
 
-**Status:** Plan-Phase (Plan-Konsolidierung V1.1, Stand 2026-07-25). Implementierung von V1 noch nicht gestartet.
-**Quelle der Wahrheit:** `NUMEROLOGIE_ANALYST_AGENT_MASTER_IMPLEMENTIERUNGSPROMPT.md` (extern)
-**Repository:** `GoLukeEnviro/numerology-analyst-agent`
-**Geplantes Release:** `0.1.0 Deterministic Core` (pythagoreischer Standard, ~2–4 Wochen ab Implementierungsstart)
+---
+
+## Status: Release `0.1.0` — Walking Skeleton (Deterministic Core)
+
+Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
+Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
+implementiert einen vertikalen Slice durch alle Schichten — vom Input
+(`PersonInput`) über Normalisierung (`de-direct-v1`) und Rechenkern
+(Life Path A/B) bis hin zur deterministischen JSON-Ausgabe der CLI, Golden
+Tests und CI. **Nur Life Path A/B** ist enthalten; alle weiteren Zahlen
+(Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-,
+Reifezahl, Zyklen, Interpretationen) folgen in späteren Releases.
+
+- **Repository:** `GoLukeEnviro/numerology-analyst-agent`
+- **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`
+- **Methoden-ADRs:** `docs/adr/0001`–`docs/adr/0004` (bindend)
+- **Roadmap:** `ROADMAP.md` (15 Phasen, 0–14, mit Gates)
 
 ---
 
@@ -86,17 +99,120 @@ Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, 
 
 ---
 
-## V1-Scope — ausschließlich pythagoreischer Standard
+## Quick Start (`0.1.0`)
 
-Version 1 implementiert **ausschließlich** einen klar definierten pythagoreischen Standard (Methodenversion `pythagorean-v1`):
+Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 
-- Kernberechnungen: Lebensweg (Methoden A + B), Geburtstags-, Einstellungs-, Ausdrucks-/Schicksals-, Seelenstreben-, Persönlichkeits-, Reifezahl
-- Meisterzahlen 11, 22, 33; verstärkte Doppelzahlen wie 44/8
-- Karmische Schuldenzahlen 13/4, 14/5, 16/7, 19/1
-- Persönliche Jahre, Monate, Tage; Pinnacles; Challenges
-- Nachvollziehbare Rechenspur (Audit-Trace) für jedes Ergebnis
+```bash
+# Abhängigkeiten installieren (inkl. dev-Gruppe)
+uv sync --all-groups
 
-Offene Spezifikationspunkte (Y-Regel, Umlaute, Akzente, Mehrfachnamen, Geburtsname) werden in Phase 3 als Gate-Bedingung geklärt — sie werden nicht erfunden.
+# Profil berechnen (kanonisches, sortiertes JSON nach stdout)
+uv run python -m apps.cli.main profile \
+    --name "Max Mustermann" \
+    --birth 1985-07-25 \
+    --as-of-date 2026-07-26
+
+# oder nach `uv sync` auch direkt:
+numerology profile --name "Max Mustermann" --birth 1985-07-25 --as-of-date 2026-07-26
+```
+
+Der `--as-of-date YYYY-MM-DD`-Parameter (Korrektur 3) ist **verpflichtend** und
+macht den Lauf deterministisch unabhängig vom Tagesdatum der Maschine. Er
+bestimmt z. B. den Referenzrahmen für zukünftige zeitabhängige Berechnungen
+(Personal Years, Pinnacles) und konsistenten Audit-Traces. Geburtsdaten in der
+Zukunft werden abgewiesen (`5ac6ade`).
+
+### Beispiel-Output
+
+Life Path A = B = 1 für `1985-07-25`. Die Ausgabe folgt dem neuen Schema
+(`raw_total` / `reduced_value` / `compound_notation` / `karmic_debt`):
+
+```json
+{
+  "input": { "core_name": "Max Mustermann", "birth_date": "1985-07-25" },
+  "method": {
+    "system": "pythagorean",
+    "version": "v1",
+    "y_mode": "phonetic",
+    "umlaut_policy": "de-direct-v1"
+  },
+  "results": {
+    "life_path_a": {
+      "raw_total": 37,
+      "reduced_value": 1,
+      "compound_notation": "37/10/1",
+      "karmic_debt": null
+    },
+    "life_path_b": {
+      "raw_total": 19,
+      "reduced_value": 1,
+      "compound_notation": "19/10/1",
+      "karmic_debt": { "number": 19, "origin": "component_sum" },
+      "components": { "month": 7, "day": 7, "year": 5 }
+    }
+  },
+  "consistency": { "a_equals_b": true }
+}
+```
+
+- `raw_total`: ungekürzte Summe vor der Reduktion.
+- `reduced_value`: final reduzierter Wert (1–9 oder Meisterzahl 11/22/33).
+- `compound_notation`: vollständiger Reduktionspfad, z. B. `37/10/1` bzw. `19/10/1`.
+- `karmic_debt`: `null` falls keine karmische Schuld vorliegt, sonst
+  `{ "number": <13|14|16|19>, "origin": "component_sum" | "raw_total" }`.
+  Karmische Schulden sind in 0.1.0 **reines Metadatum** — keine Auswertung,
+  keine Interpretation (Master-Vertrag §3.2).
+
+### Quality Gates
+
+Alle Gates müssen grün sein (Kurzbefehl `make all`):
+
+```bash
+make all  # = ruff format --check + ruff check + mypy + pytest --cov
+
+# oder einzeln:
+uv run ruff format --check .
+uv run ruff check .
+uv run mypy src apps tests scripts
+uv run pytest --cov=src/numerology_engine --cov-fail-under=95
+uv run pytest --cov=src --cov-fail-under=85
+uv run python scripts/generate_examples.py --check
+```
+
+### Architektur (`0.1.0`-Scope)
+
+```
+PersonInput → MethodPolicy → Normalizer (de-direct-v1) → Life Path A/B
+            → CalculationTrace → JSON (CLI) → Golden tests → CI
+```
+
+Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
+
+| Paket                    | Verantwortung                                                |
+|--------------------------|--------------------------------------------------------------|
+| `numerology_domain`      | Verträge: `PersonInput`, `MethodPolicy`, `CalculationResult` |
+| `numerology_engine`      | Deterministischer Rechenkern (pure functions, kein Netzwerk) |
+| `numerology_api`         | Dünner JSON-Adapter (KEIN FastAPI im Skeleton)               |
+| `apps/cli`               | Typer-CLI mit `profile`-Command                              |
+
+### Determinismus
+
+- Pure Functions, keine globale State, keine Randomness, keine Zeitabhängigkeit
+  (der CLI-Parameter `--as-of-date` macht zeitabhängige Berechnungen explizit).
+- Immutable Domain-Modelle (pydantic v2, `frozen=True`).
+- Serialisierung immer mit `sort_keys=True` ⇒ identischer Input ergibt
+  byte-identisches JSON und identischen SHA-256-Trace-Hash.
+
+### Methoden-Policy (V1-Defaults)
+
+- System: `pythagorean` v1
+- Y-Regel: `phonetic` (ADR 0001) — im 0.1.0-Scope nur als Policy-Feld
+  modelliert (Life Path hängt nicht vom Namen ab).
+- Umlaute: `de-direct-v1` (Ä→A, Ö→O, Ü→U, ß→SS; ADR 0002)
+- Namensbasis: `both_separate` (ADR 0004)
+- Meisterzahlen: 11, 22, 33 (werden gehalten, nicht weiter reduziert)
+- Karmische Schulden (13/14/16/19): nur Metadatum, keine Auswertung in 0.1.0
 
 ---
 
@@ -104,30 +220,19 @@ Offene Spezifikationspunkte (Y-Regel, Umlaute, Akzente, Mehrfachnamen, Geburtsna
 
 | Komponente | Status |
 |------------|--------|
-| Master-Prompt (extern) | ✅ Quelle der Wahrheit |
+| Plan-Konsolidierung V1.1 | ✅ abgeschlossen |
+| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend |
 | `PROJECT_CHARTER.md` | ✅ vorhanden |
 | `ROADMAP.md` (15 Phasen, 0–14) | ✅ vorhanden |
 | `docs/audit/gap-analysis.md` | ✅ vorhanden |
 | `docs/audit/implementation-plan.md` | ✅ vorhanden |
+| Methoden-ADRs `docs/adr/0001`–`0004` | ✅ vorhanden, bindend |
 | `.github/agents/*` (6 Agent-Verträge) | ✅ Plan-Konsolidierung V1.1 |
-| Phase 0 (Baseline) | ⏳ noch ausstehend (`repository-baseline.md`) |
-| Phasen 1–14 | ⏳ nicht gestartet |
+| **Release `0.1.0` Walking Skeleton (Deterministic Core)** | ✅ **LIVE** |
+| Phase 0 (Baseline) | ✅ im Walking-Skeleton-Release enthalten |
+| Phasen 1–14 (Vollausbau) | ⏳ folgen |
 
-Implementierung beginnt nach Freigabe von Milestone M1 (Phasen 0–4).
-
----
-
-## Quick Start
-
-> Quick Start wird mit Release `0.1.0 Deterministic Core` bereitgestellt. Aktuell liegen nur Plan-Dokumente vor.
-
-Vorgesehen (folgt):
-
-```bash
-uv sync --all-groups
-uv run pytest
-uv run numerology calculate profile --name "Max Mustermann" --date 1985-03-12
-```
+Release `0.1.0` wird nach PR-Merge als GitHub-Release getaggt.
 
 ---
 
