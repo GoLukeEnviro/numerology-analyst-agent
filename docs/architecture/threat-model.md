@@ -49,9 +49,9 @@ Framework Mode und die Ausführung von Server Actions. Numra verwendet nur den
 deklarativen `BrowserRouter` im statischen Vite-Client, besitzt keine
 React-Server-Komponenten und keine Server Actions. Die Registry nennt eine
 behobene Version, die dort am 2026-07-26 noch nicht veröffentlicht ist. Nur
-diese Advisory-ID wird deshalb in CI befristet ignoriert; alle übrigen hohen
-Funde bleiben build-blockierend. Die Ausnahme ist bei jedem Router-Update zu
-entfernen beziehungsweise neu zu prüfen.
+diese Advisory-ID wird deshalb im expliziten CI-Auditbefehl befristet
+ignoriert; alle übrigen hohen Funde bleiben build-blockierend. Die Ausnahme ist
+bei jedem Router-Update zu entfernen beziehungsweise neu zu prüfen.
 
 ## Datenschutzprinzipien
 

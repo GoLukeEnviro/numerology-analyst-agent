@@ -70,3 +70,9 @@ curl --fail --silent http://127.0.0.1:8080/api/v1/health/ready
 
 Gateway-Access-Logs und Uvicorn-Access-Logs sind deaktiviert. Fehlerdiagnose
 verwendet Status, Healthchecks und Korrelations-IDs, nie Request-Bodies.
+
+Domain, HTTPS, Commit-SHA-Releases, Rollback und verschlüsselte
+Konfigurationsbackups sind in
+[`docs/operations/launch-checklist.md`](../docs/operations/launch-checklist.md)
+beschrieben. Die dortigen externen Launch-Gates dürfen nicht übersprungen
+werden.

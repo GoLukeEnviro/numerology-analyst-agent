@@ -160,6 +160,12 @@ jobs:
       - name: Validate Compose model
         run: docker compose config --quiet
 
+      - name: Validate deployment shell syntax
+        run: |
+          for file in deploy/scripts/*.sh; do
+            sh -n "$file"
+          done
+
       - name: Build pinned images
         run: docker compose build
 

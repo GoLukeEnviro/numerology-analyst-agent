@@ -1,10 +1,12 @@
-# Numerology Analyst Agent
+# Numra – Numerologie nachvollziehbar
 
-> **Auditierbare Domänenplattform für numerologische Berechnung** — deterministischer Rechenkern, versionierte Wissenspakete, empirischer Forschungsrahmen, optionale Agenten-Schicht. **Kein Chatbot, kein simpler Rechner, keine Esoterik-Sammlung.**
+> **Installierbare, lokale-first Numerologie-PWA mit auditierbarem Rechenkern** —
+> deterministische Berechnung, versioniertes Wissen, klare Aussageklassen und
+> optionaler, fail-closed validierter LLM-Bericht.
 
 ---
 
-## Status: Entwicklungsstand `0.1.5` — Vollprofil und Zyklen
+## Status: Produktionskandidat – öffentlicher Launch extern gesperrt
 
 Auf dem stabilen `0.1.3`-Life-Path-Vertrag bauen zwei neue, getrennt
 versionierte Verträge auf:
@@ -18,14 +20,23 @@ vollständige Profil verwendet `profile-calculation-result-v2`; sein Hash umfass
 alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
 `consent_given` bleibt ausdrücklich ausgeschlossen.
 
-Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
-Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
-implementiert einen vertikalen Slice durch alle Schichten — vom Input
-(`PersonInput`) über Normalisierung (`de-direct-v1`) und Rechenkern
-(Life Path A/B) bis hin zur deterministischen JSON-Ausgabe der CLI, Golden
-Tests und CI. Der aktuelle Entwicklungsstand ergänzt darauf das vollständige
-deterministische Profil und die Zyklen; Interpretationen und HTTP-API folgen
-in den nächsten Umsetzungsschritten.
+Der Branch `codex/numra-pwa` implementiert den vollständigen vertikalen
+Produktschnitt:
+
+- React/Vite/TypeScript-PWA mit Dark/Light Theme und Offline-Lesezugriff
+- lokale Profile, Berichte, Rückfragen und Notizen in IndexedDB
+- optionaler PBKDF2-/AES-GCM-Passphraseschutz sowie Export/Import
+- clientseitiger PDF-Export und Expertenansicht
+- FastAPI für Vollprofil, Zyklen, Health/Meta und optionale LLM-Analyse
+- versioniertes Wissen, regelbasierte Interpretation und Safety-Gates
+- DeepSeek-Adapter ohne Klarname oder vollständiges Geburtsdatum
+- Redis ausschließlich für flüchtige, HMAC-pseudonymisierte Quoten
+- gehärteter Docker-/Nginx-Stack mit Commit-SHA-Release und Rollback
+
+Der öffentliche Launch bleibt gesperrt, bis ein VPS eindeutig zugeordnet,
+Domain und DNS bereitgestellt, Betreiberangaben ergänzt, HTTPS aktiviert und
+die rechtlichen Launch-Gates bestätigt wurden. Die deterministische Anwendung
+bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist.
 
 - **Repository:** `GoLukeEnviro/numerology-analyst-agent`
 - **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`
@@ -88,7 +99,8 @@ Das Projekt **darf nicht**:
 - fehlende Evidenz als Beleg für spirituelle Wahrheit umdeuten,
 - medizinische oder psychologische Diagnosen ableiten.
 
-Vollständige Positionierung: `docs/field/scientific-positioning.md` (folgt in Phase 1).
+Die Nutzeransicht unter `/wissen`, das Threat Model und die versionierten
+Wissenspakete dokumentieren diese Positionierung.
 
 ### Sechs Aussageklassen
 
@@ -111,7 +123,7 @@ Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, 
 
 ---
 
-## Quick Start (`0.1.3`)
+## Quick Start
 
 Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 
@@ -128,6 +140,37 @@ numerology profile \
 
 `--as-of-date` ist **verpflichtend** (seit `0.1.3`). Der Parameter macht den
 Lauf deterministisch unabhängig vom Tagesdatum der Maschine.
+
+### PWA und API lokal
+
+Voraussetzungen: Node.js gemäß `.node-version`, pnpm 10.22 und Python 3.12.
+
+```bash
+pnpm install --frozen-lockfile
+uv sync --locked --all-groups
+
+# Terminal 1
+uv run uvicorn numerology_api.app:app --reload --port 8000
+
+# Terminal 2
+pnpm --filter @numra/web dev
+```
+
+Die PWA läuft anschließend unter `http://localhost:5173`.
+
+### Produktionsnaher Container-Smoke
+
+```bash
+docker compose config --quiet
+docker compose build
+docker compose up -d --wait
+curl --fail http://127.0.0.1:8080/api/v1/health/ready
+docker compose down
+```
+
+Deployment, privates SSH-Staging und Launch-Gates stehen in
+[`deploy/README.md`](deploy/README.md) und
+[`docs/operations/launch-checklist.md`](docs/operations/launch-checklist.md).
 
 ### Beispiel-Output (gekürzt)
 
@@ -172,10 +215,20 @@ uv sync --locked --all-groups
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src tests scripts
+uv run pip-audit
 uv run pytest --cov=src/numerology_engine --cov-fail-under=95
 uv run pytest --cov=src --cov-fail-under=85
 uv run python scripts/export_schemas.py --check
+uv run python scripts/export_openapi.py --check
 uv run python scripts/generate_examples.py --check
+pnpm audit --audit-level high --ignore GHSA-qwww-vcr4-c8h2
+pnpm web:lint
+pnpm web:typecheck
+pnpm web:test
+pnpm web:build
+pnpm web:check-build
+pnpm web:e2e
+docker compose config --quiet
 ```
 
 ### Architektur (`0.1.0`-Scope)
@@ -191,8 +244,12 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 | ------------------- | ------------------------------------------------------------ |
 | `numerology_domain` | Verträge: `PersonInput`, `MethodPolicy`, `CalculationResult` |
 | `numerology_engine` | Deterministischer Rechenkern (pure functions, kein Netzwerk) |
-| `numerology_api`    | Dünner JSON-Adapter (KEIN FastAPI im Skeleton)               |
+| `numerology_api`    | Zustandslose FastAPI-Grenze und versionierte HTTP-Verträge    |
 | `numerology_cli`    | Typer-CLI mit `profile`-Command                              |
+| `numerology_knowledge` | Versioniertes deutsches Wissenspaket                      |
+| `numerology_interpretation` | Regelbasierte, referenzierte Interpretation          |
+| `numerology_safety` | Claims-, Sprach- und Prompt-Injection-Gates                   |
+| `numerology_agent`  | Optionaler pseudonymisierter LLM-Provider-Adapter             |
 
 ### Determinismus
 
