@@ -113,7 +113,7 @@
     "life_path_b": 1,
     "warning": ""
   },
-  "deterministic_hash": "65ec7f3e8e3e4a056a4cd8ba48027684003cc043c58ca041d03d64fbfb81c2b3",
+  "deterministic_hash": "5ec8117ea20995b8eb9aaa7f539bf2e125844860272de851d684ca777e985258",
   "input": {
     "active_name": null,
     "as_of_date": "2026-07-26",
@@ -251,5 +251,6 @@
       ],
       "value": 1
     }
-  }
+  },
+  "schema_version": "calculation-result-v1"
 }
