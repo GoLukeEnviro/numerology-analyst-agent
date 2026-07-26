@@ -35,6 +35,9 @@ jobs:
       - name: Verify exported JSON schemas
         run: uv run python scripts/export_schemas.py --check
 
+      - name: Verify OpenAPI contract
+        run: uv run python scripts/export_openapi.py --check
+
       - name: Ruff format check
         run: uv run ruff format --check .
 
@@ -111,6 +114,11 @@ jobs:
 
       - name: Install locked frontend dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Verify generated API types
+        run: |
+          pnpm web:generate-api
+          git diff --exit-code -- apps/web/src/api/schema.d.ts
 
       - name: Lint
         run: pnpm web:lint
