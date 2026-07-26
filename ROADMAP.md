@@ -2,9 +2,9 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-07-25 (V1.1 — Lukes Review vom 2026-07-25 eingearbeitet)
+> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
 > **Sprache:** Deutsch
-> **Status:** Phase 0 IN PROGRESS — Planartefakte V1.1 erstellt, Repository-Baseline und Implementierung 0.1.0 ausstehend
+> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger deterministischer Profilkern (0.1.4) ausstehend
 
 Diese Roadmap übersetzt die **15 Phasen (0–14)** des Master-Vertrags in eine
 strukturierte, nachvollziehbare Abfolge. Pro Phase: Ziel, Aufgaben, Gate,
@@ -47,15 +47,17 @@ Commit-Message, Abhängigkeiten, Aufwandsschätzung, Delegations-Empfehlung, Ris
 
 | Release | Titel | Phasen | Ziel | Zeitrahmen |
 |----------|-------|--------|------|------------|
-| **0.1.0** | Deterministic Core | 0–4 | Governance + Tooling + Methodenspec + Rechenkern + CLI-Basis + Tests | ~2–4 Wochen |
-| **0.2.0** | Knowledge and Interpretation | 5–6 | Wissensmodell + regelbasierte Interpretation | später |
-| **0.3.0** | Interfaces and Agent | 8, 9, 10 | Safety + Core CLI/API (ohne Forschung) + Mock-Provider + Agent-Adapter | später |
-| **0.4.0** | Research Preview | 7 | Forschungs-/Meta-Analyse-Rahmen — **explizit als Preview, nicht als wissenschaftliche Validierung** | später |
+| **0.1.3** | Contract Integrity | 0–4 | Governance + Tooling + Methodenspec + Rechenkern (Life Path A/B) + CLI-Basis + Tests | ✅ **LIVE** |
+| **0.1.4** | Complete Core Profile | 4 (erweitert) | Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl + Namenssegmentierung + Y-Klassifikation | ⏳ als nächstes |
+| **0.1.5** | Deterministic Cycles | 4 (erweitert) | Persönliche Jahre/Monate/Tage, Pinnacles, Challenges | ⏳ folgt |
+| **0.2.0** | Knowledge and Interpretation | 5–6 | Wissensmodell + regelbasierte Interpretation + Safety Minimum | ⏳ folgt |
+| **0.3.0** | Interfaces, Safety and Agent | 8, 9, 10 | Vollständiges Safety-Subsystem + FastAPI + CLI-Erweiterung + Mock-Agent | ⏳ folgt |
+| **0.4.0** | Research Preview | 7 | Forschungs-/Meta-Analyse-Rahmen — **explizit als Preview, nicht als wissenschaftliche Validierung** | ⏳ folgt |
 
 **Phasen 11–14** (Evaluation, Doku, Committee, Release) werden in die
 jeweiligen Releases eingebettet, sie sind **kein eigener Release**.
 
-→ Details zu 0.1.0 siehe `docs/v1-minimal-scope.md` (Vorgabe Luke).
+→ Details zu 0.1.3 siehe `docs/releases/v0.1.3.md` und `docs/audit/repository-baseline-v0.1.3.md`.
 
 ### Warum die Trennung
 
@@ -100,31 +102,24 @@ jeweiligen Releases eingebettet, sie sind **kein eigener Release**.
 
 ## Phase 0 — Reality Check und Baseline
 
-**Status:** IN PROGRESS — Planartefakte V1.1 erstellt (`PROJECT_CHARTER.md`,
-`ROADMAP.md`, `docs/audit/gap-analysis.md`, `docs/audit/implementation-plan.md`,
-`.planning/notes/master-plan-defaults.md`). Repository-Baseline
-(`docs/audit/repository-baseline.md`) und Initial-Commit auf Implementierungs-
-branch stehen noch aus.
+**Status:** ✅ ABGESCHLOSSEN — Foundation Release 0.1.3 (Contract Integrity) ist LIVE.
+Repository-Baseline (`docs/audit/repository-baseline-v0.1.3.md`) und
+Current-State-Dokument (`docs/audit/current-state-v0.1.3.md`) sind erstellt.
 
 **Ziel:** Verifizierter Ist-Zustand, dokumentierte Baseline, klarer Scope für alle Folgemonate.
 
-**Aufgaben:**
-- Repository-Zustand inventarisieren.
-- Vorhandene Inhalte sichern.
-- Aktuelle Architektur bewerten.
-- Gap-Analyse erstellen.
-- Arbeitsbranch anlegen.
-- Baseline-Commit identifizieren.
+**Erreicht:**
+- Repository-Zustand inventariert (66 Dateien, 3 Tags, 4 PRs).
+- Aktuelle Architektur dokumentiert (5 Pakete, 3 Schemas, 118 Tests).
+- Gap-Analyse aktualisiert (aktuelle Gap-Matrix nach v0.1.3).
+- Release-Sequenz ADR 0006 dokumentiert.
+- Package-Layout ADR 0005 dokumentiert.
 
-**Dateien (Master-Vertrag):**
-- `docs/audit/repository-baseline.md` *(ausstehend)*
-- `docs/audit/gap-analysis.md` ✅ V1.1
-- `docs/audit/implementation-plan.md` ✅ V1.1
-
-**Gate:**
-- Keine uncommitted Änderungen verloren.
-- Remote und Branch dokumentiert.
-- Tatsächlicher Dateibestand nachvollziehbar.
+**Dateien:**
+- `docs/audit/repository-baseline-v0.1.3.md` ✅
+- `docs/audit/current-state-v0.1.3.md` ✅
+- `docs/audit/gap-analysis.md` ✅ (aktualisiert)
+- `docs/audit/implementation-plan.md` ✅ (aktualisiert)
 
 **Commit-Message:**
 `chore: audit repository baseline and define implementation scope`
@@ -205,7 +200,7 @@ Evidenzgrade konsistent. Governance braucht ADR-Template.
 uv sync --all-groups
 uv run ruff format --check .
 uv run ruff check .
-uv run mypy src apps
+uv run mypy src tests scripts
 uv run pytest
 uv run mkdocs build --strict
 ```

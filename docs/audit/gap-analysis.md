@@ -1,11 +1,15 @@
 # Gap-Analyse — Numerology Analyst Agent
 
 > **Dokumenttyp:** Audit / Lückenanalyse
-> **Stand:** 2026-07-25 (V1.1 — Lukes Review vom 2026-07-25 eingearbeitet)
+> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
 > **Sprache:** Deutsch
-> **Status:** Phase 0 IN PROGRESS — Planartefakte V1.1 erstellt, Repository-Baseline ausstehend
+> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger Profilkern (0.1.4) ausstehend
 
-## 1. Verifizierter Ist-Zustand
+## 1. Historische Baseline (25. Juli 2026)
+
+> Die folgende Baseline beschreibt den Zustand **vor** der Implementierung von v0.1.3.
+> Sie dient als Referenz für die Entwicklung des Projekts. Der aktuelle Ist-Zustand
+> nach v0.1.3 steht in Abschnitt 2.
 
 > Laut Session-Memory hat eine Vorgängersession fälschlich behauptet, 51 Dateien,
 > Roadmap, Gap-Analyse, Committee-Pack, Archiv und Manifest erstellt zu haben.
@@ -63,7 +67,42 @@ Diese Session erstellt **ausschließlich** die 5 Plan-Dokumente gemäß Auftrag:
 
 ---
 
-## 2. Soll-Zustand (Master-Prompt-Vision)
+## 2. Aktueller Ist-Zustand nach v0.1.3 (26. Juli 2026)
+
+### Was existiert (verifiziert)
+
+- **66 getrackte Dateien** in 5 Paketen (`numerology_domain`, `numerology_engine`, `numerology_cli`, `numerology_api`, Tests).
+- **3 Tags:** `v0.1.0`, `v0.1.2`, `v0.1.3`.
+- **4 gemergte PRs:** #5 (Branch Protection), #6 (Contract Integrity), #7 (Release-Doku), #8 (Release-Notes-Archiv).
+- **1 CI-Workflow** mit 2 Jobs: `Quality Gates` (ruff, mypy, pytest + coverage) und `Package Smoke` (Wheel-Build + Fresh-Venv-Install).
+- **Vollständige Toolchain:** `uv`, `ruff`, `mypy strict`, `pytest`, `hypothesis`, `coverage`.
+- **Typer-CLI** mit 2 Befehlen: `numerology version`, `numerology profile`.
+- **3 versionierte JSON-Schemas** im Wheel: `person-input-v1`, `calculation-result-v1`, `method-policy-v1`.
+- **118 Tests** in 4 Kategorien: Unit, Property, Golden, Integration.
+- **Core-Coverage:** 95,73 % (`numerology_engine`).
+- **Gesamt-Coverage:** 92,58 % (`src`).
+- **Deterministischer Rechenkern:** Life Path A + B, Meisterzahlen 11/22/33, karmische Marker 13/14/16/19, Normalisierung `de-direct-v1`, Audit-Trace, versionierter Hash-Envelope.
+- **Verpflichtendes `as_of_date`** (kein `date.today()`-Fallback).
+- **Branch Protection** und Required Checks aktiv.
+- **Release Notes** unter `docs/releases/v0.1.3.md`.
+
+### Was NICHT existiert (nach v0.1.3)
+
+- Keine Namenszahlen (Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl).
+- Keine Namenssegmentierung oder Y-Klassifikation.
+- Keine Zyklen (persönliches Jahr/Monat/Tag, Pinnacles, Challenges).
+- Kein Wissensmodell (`numerology_knowledge/`).
+- Keine Interpretation (`numerology_interpretation/`).
+- Kein Safety-Subsystem (`numerology_safety/`).
+- Keine FastAPI.
+- Kein Agent (`numerology_agent/`).
+- Kein Forschungsrahmen (`numerology_research/`).
+- Keine MkDocs-Dokumentation.
+- Kein Committee-Prozess.
+
+---
+
+## 3. Soll-Zustand (Master-Prompt-Vision)
 
 Das vollständige V1-System umfasst laut Master-Prompt:
 
@@ -88,7 +127,7 @@ Pro Kategorie: **Ist** / **Soll** / **Gap** / **Priorität** / **kritische Block
 
 - **P0 (blockierend)** — Phase X kann nicht starten, solange nicht gelöst.
 - **P1 (hoch)** — Blockiert Folgemonate, aber Phase kann starten.
-- **P2 (mittel)** — Vor Release 0.1.0 zu lösen.
+- **P2 (mittel)** — Vor Release 0.1.4 zu lösen.
 - **P3 (niedrig)** — Schönheit / Polishing vor Release.
 
 ---
@@ -97,11 +136,11 @@ Pro Kategorie: **Ist** / **Soll** / **Gap** / **Priorität** / **kritische Block
 
 | Feld | Wert |
 |------|------|
-| **Ist** | Keine Governance-Dokumente. Keine Claim-Taxonomie. Kein ADR-System. Kein Committee-Modell. |
-| **Soll** | `GOVERNANCE.md`, `docs/field/claim-taxonomy.md`, `docs/field/evidence-grading.md`, ADRs `0001` bis `0004`, `docs/committee/review-model.md`. |
-| **Gap** | 100 % der Governance-Artefakte fehlen. |
-| **Priorität** | **P0** (blockiert Phase 1 + Phase 13). |
-| **Blocker** | Keine Claim-Taxonomie = keine scharfe Aussageklassen-Trennung = Phasen 5/6 fallen durch Gate. |
+| **Ist** | ADRs `0001`–`0006` vorhanden. Claim-Taxonomie in Domain-Modellen (`enums.py`). Kein separates `GOVERNANCE.md`. Kein Committee-Modell. |
+| **Soll** | `GOVERNANCE.md`, `docs/field/claim-taxonomy.md`, `docs/field/evidence-grading.md`, ADRs `0001`–`0004`, `docs/committee/review-model.md`. |
+| **Gap** | ADR-System etabliert. Claim-Taxonomie als Enum vorhanden. Governance-Dokumente und Committee-Modell fehlen noch. |
+| **Priorität** | **P2** (für 0.2.0/0.3.0). |
+| **Blocker** | Keine für 0.1.4. Committee wird erst für 1.0.0 benötigt. |
 
 ---
 
@@ -109,11 +148,11 @@ Pro Kategorie: **Ist** / **Soll** / **Gap** / **Priorität** / **kritische Block
 
 | Feld | Wert |
 |------|------|
-| **Ist** | Kein `pyproject.toml`, kein `uv.lock`, kein Makefile, kein `.gitignore`, keine `.pre-commit-config.yaml`, keine GitHub Actions. |
+| **Ist** | `pyproject.toml`, `uv.lock`, `.gitignore`, `ruff`, `mypy strict`, `pytest`, `hypothesis`, `coverage`, GitHub Actions CI (2 Jobs). Kein Makefile, keine pre-commit, kein MkDocs. |
 | **Soll** | Vollständige Toolchain: uv, ruff, mypy strict, pytest, hypothesis, coverage, pre-commit, Makefile, 4 GitHub-Workflows (ci, security, docs, release), MkDocs-Material. |
-| **Gap** | 100 % Tooling fehlt. |
-| **Priorität** | **P0** (blockiert Phase 2 + alle Code-Phasen). |
-| **Blocker** | Keine reproduzierbare Toolchain = kein deterministischer Rechenkern = keine byte-stabilen Ergebnisse. |
+| **Gap** | Basistoolchain vollständig. Makefile, pre-commit, MkDocs, Security/Docs/Release-Workflows fehlen. |
+| **Priorität** | **P2** (für 0.2.0/0.3.0). |
+| **Blocker** | Keine für 0.1.4. Bestehende Toolchain ist ausreichend. |
 
 ---
 
@@ -121,11 +160,11 @@ Pro Kategorie: **Ist** / **Soll** / **Gap** / **Priorität** / **kritische Block
 
 | Feld | Wert |
 |------|------|
-| **Ist** | Keine Methodenspezifikation. Keine Dokumentation zu Buchstabenbelegung, Reduktion, Y-Regel, Umlauten, Datumsalgorithmen. |
+| **Ist** | ADRs `0001`–`0004` dokumentieren Y-Regel, Umlaute, Mehrfachnamen, Core/Active-Name. Normalisierung `de-direct-v1` implementiert. Keine vollständige Methodenspezifikation in `docs/methods/`. |
 | **Soll** | `docs/methods/pythagorean-v1.md`, `normalization.md`, `reductions.md`, `names.md`, `dates.md`, `cycles.md`, `compatibility.md`. Methodenversion `pythagorean-v1`. |
-| **Gap** | 100 % Spezifikation fehlt. **OFFEN-Punkte aus PROJECT_CHARTER §6 ungelöst:** Y-Regel, Umlaute, Akzente, Mehrfachnamen, Geburtsname. |
-| **Priorität** | **P0** (blockiert Phase 3 + Phase 4). |
-| **Blocker** | Ohne Spezifikation kann der Rechenkern nicht deterministisch implementiert werden. OFFEN-Punkte sind harte Gate-Bedingung. |
+| **Gap** | ADR-Entscheidungen vorhanden. Vollständige Methodenspezifikation fehlt (Welle 2). |
+| **Priorität** | **P1** (für Welle 2 vor 0.1.4-Implementierung). |
+| **Blocker** | Keine neue Berechnung ohne vollständige Spec. Bestehende Life-Path-Berechnung ist durch ADRs abgedeckt. |
 
 ---
 
@@ -133,11 +172,11 @@ Pro Kategorie: **Ist** / **Soll** / **Gap** / **Priorität** / **kritische Block
 
 | Feld | Wert |
 |------|------|
-| **Ist** | Keine einzige Python-Datei. Keine `numerology_engine`-Pakete. Keine Berechnung, kein Trace, keine Service-Fassade. |
+| **Ist** | `src/numerology_engine/` mit normalization, reduction, alphabet, dates, trace, service. Life Path A + B, Meisterzahlen, karmische Marker. Coverage 95,73 %. **Keine** Namenszahlen, keine Zyklen. |
 | **Soll** | `src/numerology_engine/` mit normalization, reduction, alphabet, names, dates, cycles, compatibility, trace, service. Coverage ≥ 95 %. Byte-stabile Ergebnisse. Golden Cases. Property-Based Tests. |
-| **Gap** | 100 % Rechenkern fehlt. |
-| **Priorität** | **P0** (blockiert Phase 4 + indirekt 5, 6, 7, 8, 9, 10, 11). |
-| **Blocker** | Größte Einzelphase (XL). Ohne Phase 4 kein Release möglich. |
+| **Gap** | Life-Path-Kern vollständig. Namenszahlen, Zyklen, Compatibility fehlen. |
+| **Priorität** | **P0** für 0.1.4 (Namenszahlen), **P1** für 0.1.5 (Zyklen). |
+| **Blocker** | Ohne Namenszahlen kein vollständiges Profil (0.1.4). |
 
 ---
 
@@ -355,16 +394,22 @@ Diese Punkte sind **nicht erfindbar** — sie müssen in Phase 3 von Luke
   Phase 8) kommt in 0.3.0; der Research-Endpunkt `/v1/research/smoke`
   (Phase 7) erst in 0.4.0.
 
-### P0-Blocker für 0.1.0 (reduzierter Satz)
+### P0-Blocker für 0.1.4 (Complete Core Profile)
 
-1. **Governance** (P0): Phase 1 muss zuerst — Claim-Taxonomie ist Frame für Methodenspec.
-2. **Tooling** (P0): Phase 2 muss zuerst — keine Toolchain = kein deterministischer Kern.
-3. **Methodenspec** (P0): Phase 3 muss zuerst — OFFEN-Punkte 1–5 sind harte Gate-Bedingung.
-4. **Rechenkern** (P0): Phase 4 (XL) — Kernstück von 0.1.0.
-5. **Tests Core** (P0): Ohne Tests kein Determinismus-Nachweis für 0.1.0.
+1. **Methodenspezifikation (P1):** Vollständige Spec für Namenszahlen, Y-Klassifikation, Segmentierung muss vor Implementierung stehen (Welle 2).
+2. **Rechenkern-Namenszahlen (P0):** Namenssegmentierung, Y-Klassifikation, Ausdrucks-/Seelenstreben-/Persönlichkeits-/Reifezahl müssen implementiert werden.
+3. **Tests Core (P0):** Golden Cases, Unit-Tests, Property-Tests für alle neuen Zahlen.
+4. **Legacy-Kompatibilität (P0):** Bestehender `0.1.3`-Vertrag darf nicht still verändert werden.
 
-Die übrigen Kategorien (3.5–3.14 außer 3.4) sind für 0.1.0 **nicht blockierend**.
+### Bereits geschlossene P0-Blocker (durch v0.1.3)
+
+- ✅ **Tooling:** `pyproject.toml`, `uv.lock`, ruff, mypy strict, pytest, hypothesis, CI vorhanden.
+- ✅ **Rechenkern-Basis:** Life Path A + B, Meisterzahlen, karmische Marker, Audit-Trace, Hash-Envelope.
+- ✅ **Tests Core:** 118 Tests, Core-Coverage 95,73 %, Gesamt-Coverage 92,58 %.
+- ✅ **CLI-Basis:** `numerology version`, `numerology profile` mit verpflichtendem `--as-of-date`.
+- ✅ **Schemas:** 3 versionierte JSON-Schemas im Wheel, Drift-Check in CI.
+- ✅ **Branch Protection:** Required Checks aktiv.
 
 ---
 
-*End of Gap-Analyse — Numerology Analyst Agent V1.1 (Stand 2026-07-25)*
+*Ende der Gap-Analyse — Numerology Analyst Agent V1.2 (Stand 2026-07-26)*

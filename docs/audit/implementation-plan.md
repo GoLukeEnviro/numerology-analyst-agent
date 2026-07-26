@@ -1,9 +1,9 @@
 # Implementation Plan — Numerology Analyst Agent
 
 > **Dokumenttyp:** Übersetzungsplan Master-Prompt → ausführbare Schritte
-> **Stand:** 2026-07-25
+> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
 > **Sprache:** Deutsch
-> **Status:** Phase 0 IN PROGRESS — Planartefakte V1.1 erstellt, Implementierung 0.1.0 ausstehend
+> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger Profilkern (0.1.4) ausstehend
 
 Dieses Dokument übersetzt den Master-Prompt in einen ausführbaren Plan.
 **Nicht** die Roadmap (Phasen liegen in `ROADMAP.md`) — sondern die
@@ -15,33 +15,39 @@ Akzeptanzkriterien.
 
 ## 1. Recommended Milestone-Reihenfolge
 
-Vier Milestones, streng sequenziell. Kein automatischer Übergang — jeder
-Milestone braucht **menschliche Freigabe** durch Luke (Principal).
+Sechs Releases, streng sequenziell. Kein automatischer Übergang — jeder
+Release braucht **menschliche Freigabe** durch Luke (Principal).
 
 ```mermaid
 graph LR
-    M1[M1: Release 0.1.0 Deterministic Core<br/>Phasen 0-4<br/>~2-4 Wochen]
-    M2[M2: Release 0.2.0 Knowledge + Interpretation<br/>Phasen 5-6]
-    M3[M3: Release 0.3.0 Interfaces + Agent<br/>Phasen 8-10]
-    M4[M4: Release 0.4.0 Research Preview<br/>Phase 7]
+    M13[M0: Release 0.1.3 Contract Integrity<br/>✅ LIVE]
+    M14[M1: Release 0.1.4 Complete Core Profile<br/>Namenszahlen + Segmentierung]
+    M15[M2: Release 0.1.5 Deterministic Cycles<br/>Pinnacles + Challenges]
+    M2[M3: Release 0.2.0 Knowledge + Interpretation<br/>Phasen 5-6]
+    M3[M4: Release 0.3.0 Interfaces + Agent<br/>Phasen 8-10]
+    M4[M5: Release 0.4.0 Research Preview<br/>Phase 7]
 
-    M1 -->|Milestone-Review 0.1.0| M2
+    M13 -->|abgeschlossen| M14
+    M14 -->|Milestone-Review 0.1.4| M15
+    M15 -->|Milestone-Review 0.1.5| M2
     M2 -->|Milestone-Review 0.2.0| M3
     M3 -->|Milestone-Review 0.3.0| M4
     M4 -->|Milestone-Review 0.4.0| RELEASE[Vollstaendige Plattform V1]
 ```
 
-> **Hinweis (V1.1):** Phasen 11–14 (Evaluation, Doku, Committee, Release) werden IN die jeweiligen Releases eingebettet, nicht als separate Meilensteine geführt. Milestone-Reviews sind zusätzlich zu den normalen PR-Reviews (siehe „Branch- und PR-Modell").
+> **Hinweis (V1.2):** Phasen 11–14 (Evaluation, Doku, Committee, Release) werden IN die jeweiligen Releases eingebettet, nicht als separate Meilensteine geführt. Milestone-Reviews sind zusätzlich zu den normalen PR-Reviews.
 
-Release 0.1.0 (Phasen 0–4) — Deterministic Core, ~2–4 Wochen.
+Release 0.1.3 (Phasen 0–4, reduziert) — Contract Integrity, ✅ LIVE.
+Release 0.1.4 (Phase 4, erweitert) — Complete Core Profile, ⏳ als nächstes.
 
 ### Warum diese Reihenfolge
 
-- **M1 vor M2:** Ohne Methodenspec (Phase 3) kein deterministischer Rechenkern.
-- **M2 vor M3:** Ohne Rechenkern (Phase 4) keine Interpretation, keine
-  Forschungsfeatures, keine API.
-- **M3 vor M4:** Ohne fertige Features keine vollständige Testmatrix.
-- **M4 = Release:** Committee + GitHub-Finalisierung schließen ab.
+- **0.1.3 vor 0.1.4:** Life-Path-Kern + Tooling + CI + Branch Protection mussten zuerst stehen.
+- **0.1.4 vor 0.1.5:** Namenszahlen sind Grundlage für Zyklen (Reifezahl).
+- **0.1.5 vor 0.2.0:** Zyklen sind Teil des vollständigen Profils, das die Interpretation braucht.
+- **0.2.0 vor 0.3.0:** Ohne Wissensmodell und Interpretation keine sinnvolle API.
+- **0.3.0 vor 0.4.0:** Ohne fertige Features keine vollständige Testmatrix.
+- **0.4.0 = Research Preview:** Hypothesen prüfbar machen, nicht bestätigen.
 
 ---
 
@@ -129,7 +135,7 @@ graph TD
 
 1. `git checkout main && git pull` → `uv sync --all-groups` läuft ohne Fehler.
 2. `uv run ruff format --check . && uv run ruff check .` → grün.
-3. `uv run mypy src apps` → grün (strict).
+3. `uv run mypy src tests scripts` → grün (strict).
 4. `uv run pytest` → grün (echte Tests für implementierten Scope, keine Platzhalter-Tests).
 5. `uv run mkdocs build --strict` → grün.
 6. `docs/methods/pythagorean-v1.md` existiert mit Pseudocode für alle
