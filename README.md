@@ -4,7 +4,12 @@
 
 ---
 
-## Status: Release `0.1.0` — Walking Skeleton (Deterministic Core)
+## Status: Release `0.1.2` — Packaging-Hardening (Walking Skeleton)
+
+`0.1.2` enthält den funktional unveränderten Rechenkern aus `0.1.0`/`0.1.1`,
+plus die korrigierte Wheel-Paketierung aus `0.1.1` und dynamische
+CLI-Versionsanzeige in `0.1.2`. Nur Life Path A/B ist enthalten; alle weiteren
+Zahlen folgen in späteren Releases.
 
 Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
 Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
