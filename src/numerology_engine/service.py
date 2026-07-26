@@ -72,5 +72,6 @@ def calculate_life_path(person: PersonInput, policy: MethodPolicy) -> Calculatio
         trace=trace,
     )
 
-    # 5. Stamp the deterministic hash (computed over the canonical trace).
-    return result.model_copy(update={"deterministic_hash": deterministic_hash(trace)})
+    # 5. Stamp the deterministic hash (computed over the full hash envelope,
+    #    not just the trace — v0.1.3 contract integrity).
+    return result.model_copy(update={"deterministic_hash": deterministic_hash(result)})

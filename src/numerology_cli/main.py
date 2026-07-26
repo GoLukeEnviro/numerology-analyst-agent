@@ -77,17 +77,17 @@ def profile(
     active_name: str | None = typer.Option(
         None, "--active-name", help="Currently used name (optional)."
     ),
-    as_of: str | None = typer.Option(
-        None,
+    as_of: str = typer.Option(
+        ...,
         "--as-of-date",
-        help="Evaluation date YYYY-MM-DD (default: today). birth must be <= as_of.",
+        help="Required evaluation date as YYYY-MM-DD. birth must be <= as_of.",
     ),
 ) -> None:
     """Compute the Life Path (A + B) profile and emit canonical JSON."""
-    # Korrektur 2 + 3: the domain core never calls date.today(); the CLI
-    # defaults as_of_date here at its own boundary so tests stay deterministic.
+    # as_of_date is mandatory (v0.1.3 contract integrity): the CLI must be
+    # fully reproducible; date.today() would break determinism.
     try:
-        as_of_date = _parse_birth(as_of) if as_of else date.today()
+        as_of_date = _parse_birth(as_of)
         person = PersonInput(
             core_name=name,
             birth_date=_parse_birth(birth),
