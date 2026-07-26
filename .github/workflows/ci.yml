@@ -115,6 +115,18 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
 
+      - name: Install uv for browser API
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python 3.12 for browser API
+        run: uv python install 3.12
+
+      - name: Install locked API runtime for browser tests
+        run: uv sync --locked --no-dev
+
       - name: Install locked frontend dependencies
         run: pnpm install --frozen-lockfile
 
