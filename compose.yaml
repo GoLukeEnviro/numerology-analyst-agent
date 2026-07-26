@@ -1,0 +1,108 @@
+name: numra
+
+services:
+  gateway:
+    image: numra-web:${NUMRA_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+      - /var/run
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/api/v1/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - edge
+      - backend
+
+  api:
+    image: numra-api:${NUMRA_IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+    environment:
+      NUMRA_ENVIRONMENT: production
+      NUMRA_ALLOWED_ORIGINS: ${NUMRA_ALLOWED_ORIGINS:-http://localhost:8080}
+      NUMRA_MAX_REQUEST_BODY_BYTES: "65536"
+      NUMRA_LLM_ENABLED: ${NUMRA_LLM_ENABLED:-false}
+      NUMRA_DEEPSEEK_API_KEY: ${NUMRA_DEEPSEEK_API_KEY:-}
+      NUMRA_DEEPSEEK_BASE_URL: ${NUMRA_DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      NUMRA_DEEPSEEK_MODEL: ${NUMRA_DEEPSEEK_MODEL:-deepseek-v4-pro}
+      NUMRA_RATE_LIMIT_HMAC_SECRET: ${NUMRA_RATE_LIMIT_HMAC_SECRET:-}
+      NUMRA_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/health/ready', timeout=3)"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - backend
+
+  redis:
+    image: redis:8.2-alpine@sha256:a7859ed111db3c1f5404a973a4747505d559fb5ca32d37e447afc0ef845a2103
+    user: "999:1000"
+    restart: unless-stopped
+    init: true
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /data
+    command:
+      - redis-server
+      - --save
+      - ""
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - 64mb
+      - --maxmemory-policy
+      - allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - backend
+
+networks:
+  edge:
+  backend:
+    internal: true
