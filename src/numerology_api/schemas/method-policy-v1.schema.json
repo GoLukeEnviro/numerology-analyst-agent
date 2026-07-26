@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "DateMethod": {
+      "description": "Life Path reduction strategy.\n\n``BOTH`` runs A and B and emits a consistency warning when they\ndiverge (Master Contract §3.2, V1 minimal scope).",
+      "enum": [
+        "sum_all_digits",
+        "component_then_sum",
+        "both"
+      ],
+      "title": "DateMethod",
+      "type": "string"
+    },
+    "Locale": {
+      "description": "Locale for normalization policy selection.\n\nV1 ships only ``DE``; other locales are extension points.",
+      "enum": [
+        "de",
+        "en"
+      ],
+      "title": "Locale",
+      "type": "string"
+    },
+    "MethodSystem": {
+      "description": "Numerological method systems.\n\nV1 implements only ``PYTHAGOREAN``. Other systems are documented\nextension points (Master Contract §3.1) and must never be silently\nmixed (calculation-engineer agent contract §4).",
+      "enum": [
+        "pythagorean",
+        "chaldean",
+        "kabbalistic"
+      ],
+      "title": "MethodSystem",
+      "type": "string"
+    },
+    "NameBasis": {
+      "description": "Two-level name model selector (ADR 0004).\n\nThere is intentionally no ``MIXED`` or ``WEIGHTED`` value: silently\nfusing ``core_name`` and ``active_name`` would violate the statement\nclass separation (Master Contract §2.2).",
+      "enum": [
+        "core_name_only",
+        "active_name_only",
+        "both_separate"
+      ],
+      "title": "NameBasis",
+      "type": "string"
+    },
+    "UmlautPolicy": {
+      "description": "German umlaut / semantic normalization policy (ADR 0002).\n\n``DE_DIRECT_V1`` is the V1 default for ``locale=de``. The two policies\nmust never be mixed within a single calculation (ADR 0002 §7).",
+      "enum": [
+        "de-direct-v1",
+        "de-expanded-v1"
+      ],
+      "title": "UmlautPolicy",
+      "type": "string"
+    },
+    "YMode": {
+      "description": "Y classification policy (ADR 0001).\n\n``PHONETIC`` is the V1 canonical default for ``pythagorean-v1``.",
+      "enum": [
+        "phonetic",
+        "always_vowel",
+        "always_consonant",
+        "user_fixed"
+      ],
+      "title": "YMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Explicit method configuration (Master Contract §6.2).\n\nNo silent defaults: every policy dimension relevant to 0.1.0 is an\nexplicit field with a documented canonical default. Mixing\nincompatible policies (e.g. two umlaut policies) is rejected.",
+  "properties": {
+    "system": {
+      "$ref": "#/$defs/MethodSystem",
+      "default": "pythagorean"
+    },
+    "version": {
+      "default": "v1",
+      "description": "Method version tag.",
+      "title": "Version",
+      "type": "string"
+    },
+    "y_mode": {
+      "$ref": "#/$defs/YMode",
+      "default": "phonetic",
+      "description": "Y classification (ADR 0001)."
+    },
+    "umlaut_policy": {
+      "$ref": "#/$defs/UmlautPolicy",
+      "default": "de-direct-v1",
+      "description": "Umlaut/accent normalization (ADR 0002)."
+    },
+    "name_basis": {
+      "$ref": "#/$defs/NameBasis",
+      "default": "both_separate",
+      "description": "core_name vs active_name selection (ADR 0004)."
+    },
+    "date_method": {
+      "$ref": "#/$defs/DateMethod",
+      "default": "both",
+      "description": "Life Path A/B selection (Master Contract §3.2)."
+    },
+    "locale": {
+      "$ref": "#/$defs/Locale",
+      "default": "de",
+      "description": "Normalization locale."
+    },
+    "master_numbers": {
+      "default": [
+        11,
+        22,
+        33
+      ],
+      "description": "Numbers held as-is during reduction.",
+      "items": {
+        "type": "integer"
+      },
+      "title": "Master Numbers",
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "title": "MethodPolicy",
+  "type": "object"
+}

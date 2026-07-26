@@ -1,0 +1,66 @@
+{
+  "$defs": {
+    "Locale": {
+      "description": "Locale for normalization policy selection.\n\nV1 ships only ``DE``; other locales are extension points.",
+      "enum": [
+        "de",
+        "en"
+      ],
+      "title": "Locale",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Person input contract (Master Contract §6.1).\n\nThe Walking Skeleton (0.1.0) only consumes ``core_name`` and\n``birth_date`` for the Life Path calculation, but the full contract is\nmodelled here so later name-based numbers (Expression, Soul Urge,\nPersonality, Maturity - Phase 4+) can reuse the same input without a\nbreaking migration.\n\n* ``core_name`` - full birth name (authoritative for the core profile,\n  ADR 0004 §1). Required.\n* ``active_name`` - currently used name, optional. When present and\n  different from ``core_name`` it triggers the supplementary profile\n  (ADR 0004 §2). Never silently merged with ``core_name``.\n* ``birth_date`` - calendar date of birth. The Life Path A/B\n  calculations operate exclusively on this field.\n* ``as_of_date`` - explicit evaluation date for deterministic tests.\n  MUST be >= ``birth_date`` for a person profile (Korrektur 3); the\n  domain core never calls ``date.today()`` - the CLI defaults this at\n  its own boundary (Korrektur 2). General date analysis (later) will\n  not carry this constraint.",
+  "properties": {
+    "core_name": {
+      "description": "Full birth name (authoritative).",
+      "minLength": 1,
+      "title": "Core Name",
+      "type": "string"
+    },
+    "birth_date": {
+      "description": "Calendar date of birth (YYYY-MM-DD).",
+      "format": "date",
+      "title": "Birth Date",
+      "type": "string"
+    },
+    "as_of_date": {
+      "description": "Explicit evaluation date for deterministic tests. birth_date must be <= as_of_date for a person profile.",
+      "format": "date",
+      "title": "As Of Date",
+      "type": "string"
+    },
+    "active_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Currently used name; optional supplementary profile basis.",
+      "title": "Active Name"
+    },
+    "locale": {
+      "$ref": "#/$defs/Locale",
+      "default": "de",
+      "description": "Normalization locale selector."
+    },
+    "consent_given": {
+      "default": false,
+      "description": "Whether the data subject consented to processing.",
+      "title": "Consent Given",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "core_name",
+    "birth_date",
+    "as_of_date"
+  ],
+  "title": "PersonInput",
+  "type": "object"
+}
