@@ -60,4 +60,5 @@ class MetaResponse(_HttpModel):
     method_system: Literal["pythagorean"] = "pythagorean"
     method_version: Literal["v1"] = "v1"
     profile_schema_version: str
+    knowledge_bundle: str
     llm: LlmMeta = Field(default_factory=LlmMeta)

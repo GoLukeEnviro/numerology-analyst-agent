@@ -43,6 +43,9 @@ packages = [
     "src/numerology_engine",
     "src/numerology_api",
     "src/numerology_cli",
+    "src/numerology_knowledge",
+    "src/numerology_interpretation",
+    "src/numerology_safety",
 ]
 
 [tool.uv]
@@ -85,7 +88,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["numerology_domain", "numerology_engine", "numerology_api", "numerology_cli"]
+known-first-party = ["numerology_domain", "numerology_engine", "numerology_api", "numerology_cli", "numerology_knowledge", "numerology_interpretation", "numerology_safety"]
 force-sort-within-sections = true
 
 [tool.ruff.format]
@@ -96,7 +99,7 @@ indent-style = "space"
 [tool.mypy]
 python_version = "3.12"
 mypy_path = "src"
-packages = ["numerology_domain", "numerology_engine", "numerology_api", "numerology_cli"]
+packages = ["numerology_domain", "numerology_engine", "numerology_api", "numerology_cli", "numerology_knowledge", "numerology_interpretation", "numerology_safety"]
 strict = true
 warn_return_any = true
 disallow_any_generics = true

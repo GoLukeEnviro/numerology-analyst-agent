@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "ClaimType": {
+      "description": "Statement classes (Master Contract §2.2).\n\nEvery artifact in the system is tagged with exactly one claim type so\nthat symbolic tradition, deterministic calculation, interpretive\nhypothesis and empirical evidence can never be silently conflated.",
+      "enum": [
+        "input_fact",
+        "calculation_fact",
+        "traditional_claim",
+        "interpretive_hypothesis",
+        "empirical_evidence",
+        "practical_suggestion"
+      ],
+      "title": "ClaimType",
+      "type": "string"
+    },
+    "InterpretationClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "claim_type": {
+          "$ref": "#/$defs/ClaimType"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "calculation_ref": {
+          "title": "Calculation Ref",
+          "type": "string"
+        },
+        "knowledge_ref": {
+          "title": "Knowledge Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_type",
+        "text",
+        "calculation_ref",
+        "knowledge_ref"
+      ],
+      "title": "InterpretationClaim",
+      "type": "object"
+    },
+    "InterpretationSection": {
+      "additionalProperties": false,
+      "properties": {
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        },
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "claims": {
+          "items": {
+            "$ref": "#/$defs/InterpretationClaim"
+          },
+          "title": "Claims",
+          "type": "array"
+        },
+        "counter_hypotheses": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Counter Hypotheses",
+          "type": "array"
+        }
+      },
+      "required": [
+        "subject",
+        "number",
+        "title",
+        "claims",
+        "counter_hypotheses"
+      ],
+      "title": "InterpretationSection",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "default": "interpretation-result-v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "knowledge_bundle": {
+      "title": "Knowledge Bundle",
+      "type": "string"
+    },
+    "calculation_hash": {
+      "title": "Calculation Hash",
+      "type": "string"
+    },
+    "scientific_position": {
+      "title": "Scientific Position",
+      "type": "string"
+    },
+    "sections": {
+      "items": {
+        "$ref": "#/$defs/InterpretationSection"
+      },
+      "title": "Sections",
+      "type": "array"
+    }
+  },
+  "required": [
+    "knowledge_bundle",
+    "calculation_hash",
+    "scientific_position",
+    "sections"
+  ],
+  "title": "InterpretationResult",
+  "type": "object"
+}

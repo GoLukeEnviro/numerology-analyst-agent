@@ -378,6 +378,10 @@
             "title": "Api Version",
             "type": "string"
           },
+          "knowledge_bundle": {
+            "title": "Knowledge Bundle",
+            "type": "string"
+          },
           "llm": {
             "$ref": "#/components/schemas/LlmMeta"
           },
@@ -404,7 +408,8 @@
         },
         "required": [
           "package_version",
-          "profile_schema_version"
+          "profile_schema_version",
+          "knowledge_bundle"
         ],
         "title": "MetaResponse",
         "type": "object"

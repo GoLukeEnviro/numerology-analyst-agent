@@ -30,6 +30,7 @@ from numerology_domain.models import (
     ProfileCalculationResult,
 )
 from numerology_engine.profile import calculate_profile
+from numerology_knowledge.loader import load_knowledge_bundle
 
 _CORRELATION_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 _PROBLEM_BASE = "https://numra.app/problems"
@@ -180,6 +181,7 @@ def create_app(settings: ApiSettings | None = None) -> FastAPI:
         return MetaResponse(
             package_version=_package_version(),
             profile_schema_version=PROFILE_CALCULATION_RESULT_SCHEMA_VERSION,
+            knowledge_bundle=load_knowledge_bundle().bundle_id,
         )
 
     @api.post(

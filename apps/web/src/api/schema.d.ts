@@ -309,6 +309,8 @@ export interface components {
              * @constant
              */
             api_version: "v1";
+            /** Knowledge Bundle */
+            knowledge_bundle: string;
             llm?: components["schemas"]["LlmMeta"];
             /**
              * Method System
