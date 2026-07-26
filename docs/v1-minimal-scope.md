@@ -1,87 +1,104 @@
-# V1 Minimal Scope — Release `0.1.0 Deterministic Core`
+# V1 Minimal Scope — Release `0.1.3 Contract Integrity` (erreicht) / `0.1.4 Complete Core Profile` (nächstes Ziel)
 
 > **Dokumenttyp:** Operativer Release-Scope (Schmaler Zuschnitt des Master-Vertrags)
-> **Version:** 1.0
-> **Eingereicht am:** 2026-07-25
-> **Status:** Bindend — Auslöser: Lukes Review-Fazit (Architektur richtig, V1-Zuschnitt falsch)
+> **Version:** 1.1
+> **Stand:** 2026-07-26 (aktualisiert nach v0.1.3)
+> **Status:** Release `0.1.3` ist LIVE. Release `0.1.4` ist das nächste Ziel.
 > **Beziehung:** Leitet ab aus `docs/governance/master-implementation-contract.md`. Der Master-Vertrag bleibt die North-Star-Plattform-Roadmap; dieses Dokument definiert die schmale operative Release-Roadmap.
 
 ---
 
 ## 1. Warum dieses Dokument
 
-Lukes Review-Fazit (bindend): Die langfristige Plattform-Architektur (5 Ebenen, 15 Phasen 0–14 im Master-Vertrag) bleibt als **North-Star** erhalten. Sie ist aber nicht das operative Release-Ziel. Stattdessen wird eine **schmalere operative Release-Roadmap** eingeführt (`0.1.0 → 0.4.0`), mit der `0.1.0` als „Deterministic Core" eine realistische Größenordnung von **2–4 Wochen** hat — nicht die 14–16 Wochen des Master-Vertrags.
+Lukes Review-Fazit (bindend): Die langfristige Plattform-Architektur (5 Ebenen, 15 Phasen 0–14 im Master-Vertrag) bleibt als **North-Star** erhalten. Sie ist aber nicht das operative Release-Ziel. Stattdessen wird eine **schmalere operative Release-Roadmap** eingeführt (`0.1.3 → 0.4.0`), mit der `0.1.3` als „Contract Integrity" den ersten stabilen Meilenstein darstellt.
 
-Die North-Star (Phase 5–14 des Master-Vertrags) wird nicht gelöscht, sondern auf die Releases `0.2.0`, `0.3.0`, `0.4.0` und später verteilt. Was in `0.1.0` NICHT enthalten ist, ist nicht abgelehnt — es ist nur auf später verschoben.
+Die North-Star (Phase 5–14 des Master-Vertrags) wird nicht gelöscht, sondern auf die Releases `0.2.0`, `0.3.0`, `0.4.0` und später verteilt. Was in `0.1.3` NICHT enthalten ist, ist nicht abgelehnt — es ist nur auf später verschoben.
 
 ---
 
-## 2. Ziel von Release `0.1.0`
+## 2. Ziel von Release `0.1.3` (erreicht)
 
 **Ein vollständig funktionierender, auditierbarer Numerologie-Kern mit CLI.**
 
 Konkret:
 
 - Eine Person kann über eine CLI mit Name + Geburtsdatum eingegeben werden.
-- Der pythagoreische Rechenkern berechnet die kanonischen Kernzahlen deterministisch.
+- Der pythagoreische Rechenkern berechnet Life Path A + B deterministisch.
 - Jede Berechnung hat einen nachvollziehbaren Audit-Trace.
 - Alle Ergebnisse sind JSON-strukturiert und schema-validiert.
-- Tests (Unit, Property, Golden) decken den Kern mit ≥ 90 % Coverage ab.
+- Tests (Unit, Property, Golden) decken den Kern mit ≥ 95 % Coverage ab.
 - CI läuft sauber (Ruff, Mypy strict, Pytest).
 
-**Was `0.1.0` NICHT ist:** kein vollständiges Wissenspaket, keine freie Interpretation, keine API, kein Agent, kein Forschungsrahmen, kein Committee-Prozess. Diese sind spätere Releases.
+**Was `0.1.3` NICHT ist:** kein vollständiges Profil (fehlende Namenszahlen), kein Wissenspaket, keine freie Interpretation, keine API, kein Agent, kein Forschungsrahmen, kein Committee-Prozess. Diese sind spätere Releases.
+
+---
+
+## 3. Ziel von Release `0.1.4` (nächstes Ziel)
+
+**Vollständiges deterministisches Personenprofil ohne Interpretation und ohne Zyklen.**
+
+Konkret:
+
+- Geburtstagszahl, Einstellungszahl, Ausdruckszahl, Seelenstrebenzahl, Persönlichkeitszahl, Reifezahl.
+- Namenssegmentierung (Mehrfachnamen, Bindestriche, Apostrophe).
+- Y-Klassifikation (duale Ausgabe bei Mehrdeutigkeit).
+- Core Name und Active Name getrennt.
+- Profilservice, CLI-Erweiterung, neue Schemas.
+- Legacy-Life-Path-Vertrag bleibt unverändert.
 
 ---
 
 ## 3. Realistische Größenordnung
 
-- **2–4 Wochen** Vollzeit-Äquivalent (nicht 14–16 Wochen).
-- Ein einziger, fokussierter PR (oder wenige) — kein 14-Phasen-Commit-Stream.
-- Die 15 Phasen (0–14) des Master-Vertrags werden hier **nicht 1:1 abgearbeitet**, sondern die Phasen 0–4 (Audit, Tooling, Methodenspezifikation, Rechenkern) werden zu einem schmalen Release-Zuschnitt konsolidiert; Phasen 5–14 gehen in spätere Releases.
+- **0.1.3 (erreicht):** ~1 Woche für Contract Integrity (Life Path A/B + Tooling + CI + Tests).
+- **0.1.4 (nächstes Ziel):** ~1–2 Wochen für Complete Core Profile (alle Namenszahlen + Segmentierung).
+- Die 15 Phasen (0–14) des Master-Vertrags werden hier **nicht 1:1 abgearbeitet**, sondern in operative Releases konsolidiert.
 
 ---
 
-## 4. Enthalten in `0.1.0` (aus Lukes Review)
+## 4. Enthalten in `0.1.3` (erreicht)
 
-Diese Liste ist abschließend. Nicht gelistete Bestandteile gehören nicht in `0.1.0`.
+Diese Liste beschreibt den tatsächlichen Umfang von Release `0.1.3`.
 
 ### 4.1 Governance & Spezifikation
 
 - [x] Master-Vertrag im Repository (`docs/governance/master-implementation-contract.md`)
 - [x] README und Minimal-Scope (dieses Dokument)
-- [x] Pythagoreische Methodenspezifikation (`docs/methods/pythagorean-v1.md`)
+- [x] ADRs `0001`–`0006` (Y-Regel, Umlaute, Mehrfachnamen, Core/Active-Name, Package-Layout, Release-Sequenz)
 - [x] Die sechs Aussageklassen als Domain-Modelle (`input_fact`, `calculation_fact`, `traditional_claim`, `interpretive_hypothesis`, `empirical_evidence`, `practical_suggestion`)
 - [x] Explizite Normalisierungspolicy:
   - `y_mode = phonetic` (siehe ADR 0001)
   - `de-direct-v1` für Umlaute (siehe ADR 0002)
 - [x] Methoden-Policy als Domain-Typ (`MethodPolicy`), keine stillen Defaults
 
-### 4.2 Deterministische Berechnungen
+### 4.2 Deterministische Berechnungen (0.1.3)
 
 - [x] Lebenswegzahl — Methode A (Gesamtdigit) und Methode B (Komponenten)
-- [x] Geburtstagszahl
-- [x] Einstellungszahl
-- [x] Ausdruckszahl
-- [x] Seelenstrebenzahl
-- [x] Persönlichkeitszahl
-- [x] Reifezahl
+- [ ] Geburtstagszahl → **0.1.4**
+- [ ] Einstellungszahl → **0.1.4**
+- [ ] Ausdruckszahl → **0.1.4**
+- [ ] Seelenstrebenzahl → **0.1.4**
+- [ ] Persönlichkeitszahl → **0.1.4**
+- [ ] Reifezahl → **0.1.4**
 
-> Zyklusmodelle (Pinnacles, Challenges, persönliche Jahre/Monate/Tage) sind **NICHT** in `0.1.0` enthalten — siehe North-Star Phase 3/4, aber außerhalb des schmalen Kerns. OFFEN: ob `0.1.0` einen Platzhalter-Hook für Zyklen hinterlässt (siehe Abschnitt 9).
+> Zyklusmodelle (Pinnacles, Challenges, persönliche Jahre/Monate/Tage) sind **NICHT** in `0.1.3` oder `0.1.4` enthalten — siehe `0.1.5`.
 
-### 4.3 Verträge & Auditierbarkeit
+### 4.3 Verträge & Auditierbarkeit (0.1.3)
 
 - [x] Audit-Trace für jede Berechnung (jeder Reduktionsschritt, jede Transformation)
-- [x] JSON-Schemas (`schemas/person-input.schema.json`, `schemas/calculation-result.schema.json`)
-- [x] Deterministischer Hash des Berechnungsvertrags
-- [x] Konsistenzprüfung: `Ausdrucks-Rohsumme = Vokalsumme + Konsonantensumme`
+- [x] JSON-Schemas (`person-input-v1.schema.json`, `calculation-result-v1.schema.json`, `method-policy-v1.schema.json`)
+- [x] Deterministischer Hash-Envelope des Berechnungsvertrags
+- [x] Schema-Version im Calculation-Result-Contract
+- [x] Verpflichtendes `as_of_date` (kein `date.today()`-Fallback)
+- [ ] Konsistenzprüfung: `Ausdrucks-Rohsumme = Vokalsumme + Konsonantensumme` → **0.1.4**
 
-### 4.4 Schnittstellen
+### 4.4 Schnittstellen (0.1.3)
 
-- [x] **CLI** (Typer) — mindestens `numerology calculate profile` und `numerology methods list`
+- [x] **CLI** (Typer) — `numerology profile` und `numerology version`
 - [x] JSON-Output, schema-validiert
-- [x] **KEINE** FastAPI/HTTP-API in `0.1.0` (siehe `0.3.0`)
+- [x] **KEINE** FastAPI/HTTP-API in `0.1.3` (siehe `0.3.0`)
 
-### 4.5 Qualitätssicherung
+### 4.5 Qualitätssicherung (0.1.3)
 
 - [x] Golden Tests (kanonische Testfälle mit erwarteten Ergebnissen)
 - [x] Unit-Tests für jede Berechnung
@@ -89,31 +106,35 @@ Diese Liste ist abschließend. Nicht gelistete Bestandteile gehören nicht in `0
 - [x] Ruff (Format + Check)
 - [x] Mypy strict
 - [x] Pytest mit Coverage
-- [x] Basis-CI (GitHub Actions): `ruff format --check`, `ruff check`, `mypy src`, `pytest --cov`
-- [x] Core-Coverage **90–95 %** (unter der 95-%-Schwelle des Master-Vertrags, da `0.1.0` nur ein Teilsystem ist und die 95-%-Schwelle dem vollständigen Release vorbehalten bleibt)
+- [x] CI (GitHub Actions): `Quality Gates` (ruff, mypy, pytest + cov) + `Package Smoke` (Wheel-Build + Fresh-Venv-Install)
+- [x] Core-Coverage **≥ 95 %** (erreicht: 95,73 %)
+- [x] Gesamt-Coverage **≥ 85 %** (erreicht: 92,58 %)
+- [x] Schema-Drift-Check in CI
+- [x] Lockfile-Check in CI
 
-### 4.6 Tooling
+### 4.6 Tooling (0.1.3)
 
 - [x] `pyproject.toml` mit `uv`, Ruff, Mypy strict, Pytest, Hypothesis
 - [x] `uv.lock` committed
-- [x] Paketstruktur: `numerology_domain`, `numerology_engine`, `apps/cli` (nur die für `0.1.0` nötigen Pakete — keine Attrappenpakete)
+- [x] Paketstruktur: `numerology_domain`, `numerology_engine`, `numerology_cli`, `numerology_api` (nur die für `0.1.3` nötigen Pakete — keine Attrappenpakete)
 
 ---
 
-## 5. NICHT enthalten in `0.1.0` (aus Lukes Review)
+## 5. NICHT enthalten in `0.1.3` (erreicht) — auf spätere Releases verschoben
 
-Explizit **auf später verschoben** (nicht abgelehnt):
-
-- [ ] **Vollständiges Wissenspaket** (`knowledge/de/pythagorean-v1/*.yaml` mit allen Archetypen, Schatten, Entwicklungs­aufgaben) → `0.2.0 Knowledge`
+- [ ] **Geburtstagszahl, Einstellungszahl, Ausdruckszahl, Seelenstrebenzahl, Persönlichkeitszahl, Reifezahl** → `0.1.4 Complete Core Profile`
+- [ ] **Namenssegmentierung und Y-Klassifikation** → `0.1.4`
+- [ ] **Core Name / Active Name getrennt** → `0.1.4`
+- [ ] **Zyklusmodelle** (Pinnacles, Challenges, persönliche Jahre/Monate/Tage) → `0.1.5 Deterministic Cycles`
+- [ ] **Vollständiges Wissenspaket** (`knowledge/de/pythagorean-v1/*.yaml`) → `0.2.0 Knowledge`
 - [ ] **Freie Interpretation** (regelbasierte Komposition, Spannungsmodell, Gegenhypothesen) → `0.2.0 Knowledge`
-- [ ] **FastAPI** (`apps/api`) → `0.3.0 Interfaces`
-- [ ] **Agent** (`numerology_agent`, LLM-Adapter) → `0.3.0 Interfaces + Agent`
-- [ ] **Research Framework** (Hypothesenregister, Nullmodelle, Permutation, DuckDB, Parquet) → `0.4.0 Research Preview`
-- [ ] **Committee-Prozess** (`docs/committee/`) → `0.4.0` oder später
-- [ ] **DuckDB, Polars, Parquet** → `0.4.0 Research Preview`
-- [ ] **Zyklusmodelle** (Pinnacles, Challenges, persönliche Jahre) → `0.2.0` oder `0.3.0` (OFFEN, siehe Abschnitt 9)
-- [ ] **Safety-Subsystem** (`numerology_safety/` mit Minderjährigenschutz, Krisenunterbrechung, Claims-Validator) → `0.3.0` (Minimum-Notation in `0.1.0`: Geburtsdatum wird validiert, kein Minderjährigen-Check als Release-Blocker)
-- [ ] **MkDocs-Material-Dokumentation** in voller Breite → `0.2.0` (`0.1.0` hat Markdown-Dateien, aber kein `mkdocs build --strict` als Release-Blocker)
+- [ ] **Safety Minimum** (Claims-Validator, Minderjährigenmodus) → `0.2.0`
+- [ ] **FastAPI** → `0.3.0 Interfaces`
+- [ ] **Vollständiges Safety-Subsystem** (Privacy, Crisis, PII) → `0.3.0`
+- [ ] **Agent** (`numerology_agent`, LLM-Adapter) → `0.3.0`
+- [ ] **Research Framework** (Hypothesenregister, Nullmodelle, Permutation) → `0.4.0 Research Preview`
+- [ ] **Committee-Prozess** → `0.4.0` oder später
+- [ ] **MkDocs-Material-Dokumentation** → `0.2.0` oder später
 
 ---
 
@@ -163,7 +184,7 @@ Jede dieser Aussagen ist mit einem technischen Nachweis zu belegen. „Ich glaub
 
 - [ ] **AC-8:** `uv run ruff format --check .` → grün.
 - [ ] **AC-9:** `uv run ruff check .` → grün.
-- [ ] **AC-10:** `uv run mypy src apps` → grün (strict).
+- [ ] **AC-10:** `uv run mypy src tests scripts` → grün (strict).
 - [ ] **AC-11:** `uv run pytest --cov=src --cov-fail-under=90` → grün (Core-Coverage 90–95 %).
 - [ ] **AC-12:** `uv run python scripts/validate_schemas.py` → grün.
 - [ ] **AC-13:** Identische Eingabe + Policy erzeugen byte-identisches JSON (Property-Based Test mit Hypothesis, ≥ 100 Beispiele).
