@@ -4,7 +4,10 @@
 
 ---
 
-## Status: Release `0.1.3` — Contract Integrity (Walking Skeleton)
+## Status: Release Candidate `0.1.3` — Contract Integrity
+
+`0.1.3` befindet sich in PR #6 und ist noch nicht veröffentlicht.
+Der aktuelle stabile Release ist `0.1.2`.
 
 `0.1.3` stärkt den deterministischen Berechnungsvertrag: Der Hash umfasst
 jetzt den vollständigen fachlich relevanten Input (Schema-Version, Eingaben,
@@ -14,6 +17,7 @@ liegen im installierten Wheel. Nur Life Path A/B ist enthalten; alle weiteren
 Zahlen folgen in späteren Releases.
 
 **Breaking Changes gegenüber `0.1.0`–`0.1.2`:**
+
 - `--as-of-date` ist nicht mehr optional.
 - Die Hashsemantik wurde geändert — alte Hashwerte sind nicht mit `0.1.3` vergleichbar.
 - `schema_version` ist neu im Calculation-Result-Contract.
@@ -116,8 +120,8 @@ Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, 
 Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-# Abhängigkeiten installieren (inkl. dev-Gruppe)
-uv sync --all-groups
+# Abhängigkeiten installieren (inkl. dev-Gruppe, mit Lock-Vertrag)
+uv sync --locked --all-groups
 
 # Profil berechnen (--as-of-date ist verpflichtend seit 0.1.3)
 numerology profile \
@@ -135,11 +139,25 @@ Lauf deterministisch unabhängig vom Tagesdatum der Maschine.
 {
   "schema_version": "calculation-result-v1",
   "deterministic_hash": "5ec8117ea20995b8eb9aaa7f539bf2e125844860272de851d684ca777e985258",
-  "input": { "core_name": "Max Mustermann", "birth_date": "1985-07-25", "as_of_date": "2026-07-26" },
+  "input": {
+    "core_name": "Max Mustermann",
+    "birth_date": "1985-07-25",
+    "as_of_date": "2026-07-26"
+  },
   "method": { "system": "pythagorean", "version": "v1" },
   "results": {
-    "life_path_a": { "raw_total": 37, "reduced_value": 1, "compound_notation": "37/10/1", "karmic_debt": null },
-    "life_path_b": { "raw_total": 19, "reduced_value": 1, "compound_notation": "19/10/1", "karmic_debt": { "number": 19, "origin": "component_sum" } }
+    "life_path_a": {
+      "raw_total": 37,
+      "reduced_value": 1,
+      "compound_notation": "37/10/1",
+      "karmic_debt": null
+    },
+    "life_path_b": {
+      "raw_total": 19,
+      "reduced_value": 1,
+      "compound_notation": "19/10/1",
+      "karmic_debt": { "number": 19, "origin": "component_sum" }
+    }
   },
   "consistency": { "a_equals_b": true }
 }
@@ -206,22 +224,22 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-| Komponente                                                           | Status                                   |
-| -------------------------------------------------------------------- | ---------------------------------------- |
-| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen                         |
-| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend                    |
-| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                             |
-| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                             |
-| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                             |
-| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                             |
-| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend                    |
-| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1              |
-| **Release `0.1.3` Contract Integrity**                               | ✅ **LIVE** (PR #6)                      |
-| Release `0.1.2` Packaging-Hardening                                 | ✅ abgelöst durch `0.1.3`               |
-| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.3`               |
-| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                                |
-| Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`                    |
-| Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`                 |
+| Komponente                                                           | Status                      |
+| -------------------------------------------------------------------- | --------------------------- |
+| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen            |
+| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend       |
+| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                |
+| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                |
+| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                |
+| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                |
+| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend       |
+| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1 |
+| **Release Candidate `0.1.3` Contract Integrity**                        | ⏳ PR #6 offen                           |
+| Release `0.1.2` Packaging-Hardening                                 | ✅ aktueller stabiler Release            |
+| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.2`               |
+| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                   |
+| Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`       |
+| Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`    |
 
 Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` veröffentlicht.
 Release `0.1.3` erscheint nach Merge von PR #6.
