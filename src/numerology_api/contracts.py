@@ -14,7 +14,12 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from numerology_domain.models import CalculationResult, LifePathResult
+from numerology_domain.models import (
+    CalculationResult,
+    LifePathResult,
+    NumberResult,
+    ProfileCalculationResult,
+)
 
 
 def result_to_payload(result: CalculationResult) -> dict[str, Any]:
@@ -99,6 +104,51 @@ def dump_result_as_json(result: CalculationResult, *, indent: int = 2) -> str:
     """
     return json.dumps(
         result_to_payload(result),
+        sort_keys=True,
+        ensure_ascii=False,
+        indent=indent,
+    )
+
+
+def _number_payload(number: NumberResult) -> dict[str, Any]:
+    return number.model_dump(mode="json")
+
+
+def profile_result_to_payload(result: ProfileCalculationResult) -> dict[str, Any]:
+    """Project the complete-profile contract into the stable public JSON shape."""
+    legacy_view = CalculationResult(
+        claim_type=result.claim_type,
+        name=result.name,
+        schema_version=result.schema_version,
+        input_ref=result.input_ref,
+        policy=result.policy,
+        life_path_a=result.life_path_a,
+        life_path_b=result.life_path_b,
+        consistency=result.consistency,
+        trace=result.trace,
+        deterministic_hash=result.deterministic_hash,
+    )
+    payload = result_to_payload(legacy_view)
+    results = payload["results"]
+    assert isinstance(results, dict)
+    results.update(
+        {
+            "birthday": _number_payload(result.birthday),
+            "attitude": _number_payload(result.attitude),
+            "core_name": result.core_name.model_dump(mode="json"),
+            "active_name": (
+                None if result.active_name is None else result.active_name.model_dump(mode="json")
+            ),
+            "maturity": _number_payload(result.maturity),
+        }
+    )
+    return payload
+
+
+def dump_profile_as_json(result: ProfileCalculationResult, *, indent: int = 2) -> str:
+    """Serialize a complete profile as canonical, key-sorted UTF-8 JSON."""
+    return json.dumps(
+        profile_result_to_payload(result),
         sort_keys=True,
         ensure_ascii=False,
         indent=indent,

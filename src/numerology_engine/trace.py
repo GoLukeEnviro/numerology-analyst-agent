@@ -29,6 +29,7 @@ from numerology_domain.models import (
     CalculationHashEnvelope,
     CalculationResult,
     PersonInput,
+    ProfileCalculationResult,
 )
 
 
@@ -108,6 +109,15 @@ def deterministic_hash(result: CalculationResult) -> str:
     )
     raw: dict[str, Any] = envelope.model_dump(mode="json")
     # Replace the full PersonInput with only calculation-relevant fields.
+    raw["input_ref"] = _calculation_input_ref(result.input_ref)
+    canonicalized = _canonicalize(raw)
+    assert isinstance(canonicalized, dict)
+    return hashlib.sha256(_canonical_json(canonicalized).encode("utf-8")).hexdigest()
+
+
+def deterministic_profile_hash(result: ProfileCalculationResult) -> str:
+    """Hash every calculation-relevant field of a complete profile result."""
+    raw: dict[str, Any] = result.model_dump(mode="json", exclude={"deterministic_hash"})
     raw["input_ref"] = _calculation_input_ref(result.input_ref)
     canonicalized = _canonicalize(raw)
     assert isinstance(canonicalized, dict)

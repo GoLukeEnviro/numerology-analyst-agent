@@ -14,6 +14,7 @@ from numerology_engine.dates import (
     life_path_b,
 )
 from numerology_engine.normalization import normalize_name
+from numerology_engine.profile import calculate_profile
 from numerology_engine.reduction import (
     digit_sum,
     recognize_karmic,
@@ -29,6 +30,7 @@ __all__ = [
     "_canonical_json",
     "build_trace",
     "calculate_life_path",
+    "calculate_profile",
     "consistency_check",
     "deterministic_hash",
     "digit_sum",

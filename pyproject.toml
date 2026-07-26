@@ -1,7 +1,7 @@
 [project]
 name = "numerology-analyst-agent"
-version = "0.1.3"
-description = "Numerology Analyst Agent — deterministic pythagorean calculation core (Contract Integrity 0.1.3)."
+version = "0.1.4"
+description = "Numra — deterministic pythagorean complete-profile calculation core."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }

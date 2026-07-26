@@ -23,6 +23,7 @@ from numerology_domain.models import (
     CalculationResult,
     MethodPolicy,
     PersonInput,
+    ProfileCalculationResult,
 )
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "src" / "numerology_api" / "schemas"
@@ -31,6 +32,11 @@ SCHEMA_SPECS: list[tuple[str, type, str]] = [
     ("person-input-v1.schema.json", PersonInput, "PersonInput"),
     ("method-policy-v1.schema.json", MethodPolicy, "MethodPolicy"),
     ("calculation-result-v1.schema.json", CalculationResult, "CalculationResult"),
+    (
+        "profile-calculation-result-v1.schema.json",
+        ProfileCalculationResult,
+        "ProfileCalculationResult",
+    ),
 ]
 
 

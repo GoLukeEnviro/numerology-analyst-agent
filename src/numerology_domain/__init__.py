@@ -29,6 +29,7 @@ from numerology_domain.models import (
     CALCULATION_RESULT_SCHEMA_VERSION,
     KARMIC_DEBTS,
     MASTER_NUMBERS,
+    PROFILE_CALCULATION_RESULT_SCHEMA_VERSION,
     PYTHAGOREAN_V1_VERSION,
     AuditTrace,
     CalculationHashEnvelope,
@@ -39,7 +40,9 @@ from numerology_domain.models import (
     LifePathResult,
     MethodPolicy,
     NormalizationStep,
+    NumberResult,
     PersonInput,
+    ProfileCalculationResult,
     ReductionOutcome,
 )
 
@@ -65,6 +68,7 @@ __all__ = [  # noqa: RUF022
     "ValidationError",
     # Constants
     "CALCULATION_RESULT_SCHEMA_VERSION",
+    "PROFILE_CALCULATION_RESULT_SCHEMA_VERSION",
     "KARMIC_DEBTS",
     "MASTER_NUMBERS",
     "PYTHAGOREAN_V1_VERSION",
@@ -78,6 +82,8 @@ __all__ = [  # noqa: RUF022
     "LifePathResult",
     "MethodPolicy",
     "NormalizationStep",
+    "NumberResult",
     "PersonInput",
+    "ProfileCalculationResult",
     "ReductionOutcome",
 ]
