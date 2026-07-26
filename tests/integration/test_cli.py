@@ -12,7 +12,7 @@ import json
 import pytest
 from typer.testing import CliRunner
 
-from apps.cli.main import app
+from numerology_cli.main import app
 
 runner = CliRunner()
 
