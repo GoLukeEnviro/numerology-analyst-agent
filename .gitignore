@@ -31,6 +31,7 @@ build/
 dist/
 *.egg-info/
 *.egg
+.worktrees/
 
 # IDE / OS
 .idea/
