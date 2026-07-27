@@ -21,7 +21,7 @@ async def test_deepseek_uses_v4_pro_structured_thinking_contract() -> None:
         return httpx.Response(
             200,
             json={
-                "model": "deepseek-v4-pro",
+                "model": "deepseek-reasoner",
                 "system_fingerprint": "fp-1",
                 "choices": [{"message": {"content": '{"summary":"ok"}'}}],
                 "usage": {"prompt_tokens": 10, "completion_tokens": 4},
@@ -35,7 +35,7 @@ async def test_deepseek_uses_v4_pro_structured_thinking_contract() -> None:
         )
         result = await provider.complete({"facts": {}}, {"type": "object"})
 
-    assert captured["model"] == "deepseek-v4-pro"
+    assert captured["model"] == "deepseek-reasoner"
     assert captured["temperature"] == 0.2
     assert captured["top_p"] == 1
     assert captured["max_tokens"] == 8192
