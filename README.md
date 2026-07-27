@@ -277,25 +277,47 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-| Komponente                                                           | Status                      |
-| -------------------------------------------------------------------- | --------------------------- |
-| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen            |
-| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend       |
-| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                |
-| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                |
-| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                |
-| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                |
-| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend       |
-| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1 |
-| **Release `0.1.3` Contract Integrity**                               | ✅ **LIVE**                              |
-| Release `0.1.2` Packaging-Hardening                                  | ✅ abgelöst durch `0.1.3`               |
-| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.3`               |
-| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                   |
-| Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`       |
-| Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`    |
+> **Stand:** 2026-07-27, verifiziert durch tatsächlichen Testlauf (nicht nur
+> Dokumentenlage). Zwei Zustände sind zu unterscheiden: was auf `main`
+> gemerged/getaggt ist, und was auf dem Branch `codex/numra-pwa` (offener
+> Draft-**PR #10**) bereits implementiert, aber noch **nicht gemerged** ist.
 
-Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` veröffentlicht.
-Release `0.1.3` erscheint nach Merge von PR #6.
+| Komponente                                                                 | Status                                                                  |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Governance-Grundlagen (Master-Vertrag, Charter, Roadmap, ADRs, Agenten)    | ✅ vorhanden, bindend                                                   |
+| **`main`: Release `0.1.3` Contract Integrity** (Life Path A/B)            | ✅ **LIVE**, getaggt `v0.1.3`                                           |
+| Release `0.1.0`–`0.1.2` (Walking Skeleton, Packaging)                     | ✅ abgelöst durch `0.1.3`                                               |
+| **`codex/numra-pwa` (PR #10, offen/Draft): Complete Core Profile (0.1.4)** | ✅ implementiert — Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl, Namenssegmente |
+| **`codex/numra-pwa`: Deterministic Cycles (0.1.5)**                       | ✅ implementiert — persönliche Jahre/Monate/Tage, 4 Pinnacles/Challenges |
+| **`codex/numra-pwa`: Wissensmodell + regelbasierte Interpretation**       | ✅ implementiert (`numerology_knowledge`, `numerology_interpretation`) |
+| **`codex/numra-pwa`: Safety-Gates** (Claims-/Sprachvalidierung, Threat Model, Privacy-Doku) | ✅ implementiert (`numerology_safety`)                    |
+| **`codex/numra-pwa`: FastAPI** (Health/Meta, Profil-Berechnung, optionale LLM-Analyse mit Follow-up) | ✅ implementiert (`numerology_api`)             |
+| **`codex/numra-pwa`: optionaler LLM-Adapter** (DeepSeek, pseudonymisiert, fail-closed, standardmäßig deaktiviert) | ✅ implementiert (`numerology_agent`)   |
+| **`codex/numra-pwa`: React/Vite/TypeScript-PWA** (Profile, Berichte, PDF-Export, IndexedDB, Verschlüsselung) | ✅ implementiert (`apps/web`)              |
+| **`codex/numra-pwa`: gehärteter Docker-/Nginx-Stack, Release/Rollback/Backup-Skripte** | ✅ implementiert (`docker/`, `deploy/`)                       |
+| Forschungs-/Meta-Analyse-Rahmen (Phase 7 / Release `0.4.0`)                | ❌ nicht begonnen                                                        |
+| MkDocs-Dokumentation, Committee-Review-Prozess                             | ❌ nicht begonnen                                                        |
+| **Öffentlicher Launch**                                                    | 🔒 **explizit gesperrt** bis VPS/Domain/TLS/Recht bestätigt sind (siehe `docs/operations/launch-checklist.md`) |
+
+**Wichtig:** `pyproject.toml` steht formal auf Version `0.1.5`, obwohl der
+`codex/numra-pwa`-Branch inhaltlich bereits deutlich weiter ist (Wissen,
+Interpretation, Safety, API, Agent, PWA — Umfang entspricht eher den
+Releases `0.2.0`/`0.3.0` im ursprünglichen Plan). Die Versionsnummer wurde
+dafür noch nicht angehoben; das ist eine offene Entscheidung, keine
+technische Lücke.
+
+Von mir lokal verifiziert (2026-07-27, Branch `codex/numra-pwa` bzw. der
+identische Analyse-Branch): 188 Python-Tests grün, Engine-Coverage 97,53 %,
+Gesamt-Coverage 93,22 %, Ruff/Mypy strict grün, Schema-/OpenAPI-/Beispiel-
+Drift-Checks grün, 28 Vitest-Tests grün, Web-Lint/Typecheck/Build grün,
+`docker compose config` grün. Remote-CI auf dem aktuellen HEAD (`f2baef9`)
+ist ebenfalls grün.
+
+Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0`
+veröffentlicht, Release `0.1.3` nach Merge von PR #6 als Tag `v0.1.3`. Die
+Releases `0.1.4` und `0.1.5` existieren bislang nur als Versionsstand/
+Release-Notes innerhalb des noch offenen PR #10 — dafür wurden keine
+eigenen Tags geschnitten.
 
 ---
 
