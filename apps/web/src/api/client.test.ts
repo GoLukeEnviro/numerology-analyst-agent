@@ -76,7 +76,7 @@ describe("generateReport", () => {
       profile: { deterministic_hash: "a".repeat(64) },
     } as unknown as AnalysisReportRequest;
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      new Response(JSON.stringify({ schema_version: "analysis-report-v1" }), {
+      new Response(JSON.stringify({ schema_version: "analysis-report-v2" }), {
         status: 200,
         headers: { "Content-Type": "application/json" },
       }),

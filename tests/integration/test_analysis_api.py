@@ -21,7 +21,7 @@ class ContractProvider:
         assert isinstance(facts, list)
         life_path = next(fact for fact in facts if fact["calculation_ref"] == "life_path_a")
         content: dict[str, Any]
-        if payload.get("prompt_version") == "numra-follow-up-de-v1":
+        if payload.get("prompt_version") == "numra-follow-up-de-v2":
             content = {
                 "answer": "Diese Rückfrage kann als Reflexionsimpuls betrachtet werden.",
                 "claims": [

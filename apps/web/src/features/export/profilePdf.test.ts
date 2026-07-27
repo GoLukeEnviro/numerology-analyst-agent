@@ -26,7 +26,7 @@ const profile = {
 } as unknown as ProfileCalculationResult;
 
 const report = {
-  schema_version: "analysis-report-v1",
+  schema_version: "analysis-report-v2",
   summary: "Ein geprüfter Reflexionsbericht.",
   sections: [],
   limitations: ["Keine wissenschaftliche Persönlichkeitsdiagnostik."],
@@ -34,13 +34,13 @@ const report = {
   provenance: {
     provider: "deepseek",
     model: "deepseek-v4-pro",
-    temperature: 0.2,
-    top_p: 1,
-    thinking: "enabled/high",
+    temperature: null,
+    top_p: null,
+    thinking: "enabled",
     effective_sampling: "provider_managed",
     reasoning_effort: "high",
     context_signature: "a".repeat(64),
-    prompt_version: "numra-report-de-v1",
+    prompt_version: "numra-report-de-v2",
     knowledge_bundle: "numra-knowledge-de-v1",
     calculation_hash: "a".repeat(64),
     provider_fingerprint: null,

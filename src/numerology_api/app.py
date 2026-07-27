@@ -29,6 +29,7 @@ from numerology_agent.rate_limit import (
     RedisRateLimiter,
     pseudonymous_key,
 )
+from numerology_agent.resilience import CircuitBreaker
 from numerology_agent.service import AgentService, AgentValidationError
 from numerology_api.http_models import (
     AnalysisFollowUpRequest,
@@ -55,6 +56,7 @@ _PROBLEM_BASE = "https://numra.app/problems"
 _ACCESS_LOGGER = logging.getLogger("numerology_api.access")
 _ERROR_LOGGER = logging.getLogger("numerology_api.error")
 _UNSAFE_METHODS = frozenset({"POST", "PUT", "PATCH", "DELETE"})
+_DEPRECATION_LOGGER = logging.getLogger("numerology_api.deprecation")
 
 
 class ApiSettings(BaseModel):
@@ -70,13 +72,42 @@ class ApiSettings(BaseModel):
     deepseek_api_key: SecretStr | None = None
     deepseek_base_url: str = "https://api.deepseek.com"
     deepseek_model: str = "deepseek-v4-pro"
+    deepseek_thinking_enabled: bool = True
+    deepseek_reasoning_effort: str = "high"
+    deepseek_max_output_tokens: int = 8192
+    deepseek_max_retries: int = 3
     redis_url: SecretStr = SecretStr("redis://redis:6379/0")
     rate_limit_hmac_secret: SecretStr | None = None
     max_request_body_bytes: int = Field(default=65_536, ge=256, le=1_048_576)
 
 
+def _env_with_deepseek_fallback(new_key: str, legacy_key: str) -> str | None:
+    """Read ``DEEPSEEK_*`` (preferred) with ``NUMRA_DEEPSEEK_*`` fallback.
+
+    If only the legacy ``NUMRA_DEEPSEEK_*`` variable is set, a deprecation
+    warning is logged. The warning contains NO secret value.
+    """
+    new_val = os.getenv(new_key)
+    if new_val is not None:
+        return new_val
+    legacy_val = os.getenv(legacy_key)
+    if legacy_val is not None:
+        _DEPRECATION_LOGGER.warning(
+            "Environment variable %s is deprecated; use %s instead. The value is not logged.",
+            legacy_key,
+            new_key,
+        )
+    return legacy_val
+
+
 def settings_from_environment() -> ApiSettings:
-    """Read non-secret API settings from environment variables."""
+    """Read non-secret API settings from environment variables.
+
+    DeepSeek variables use the ``DEEPSEEK_*`` prefix (preferred), with a
+    fallback to the legacy ``NUMRA_DEEPSEEK_*`` prefix (deprecated, warns).
+    Operational variables (``NUMRA_LLM_ENABLED``, ``NUMRA_REDIS_URL``, etc.)
+    remain under the ``NUMRA_`` prefix.
+    """
     origins = tuple(
         origin.strip()
         for origin in os.getenv(
@@ -85,15 +116,39 @@ def settings_from_environment() -> ApiSettings:
         ).split(",")
         if origin.strip()
     )
-    api_key = os.getenv("NUMRA_DEEPSEEK_API_KEY")
+    api_key = _env_with_deepseek_fallback("DEEPSEEK_API_KEY", "NUMRA_DEEPSEEK_API_KEY")
     rate_secret = os.getenv("NUMRA_RATE_LIMIT_HMAC_SECRET")
     return ApiSettings(
         environment=os.getenv("NUMRA_ENVIRONMENT", "development"),
         allowed_origins=origins,
         llm_enabled=os.getenv("NUMRA_LLM_ENABLED", "false").lower() == "true",
         deepseek_api_key=SecretStr(api_key) if api_key else None,
-        deepseek_base_url=os.getenv("NUMRA_DEEPSEEK_BASE_URL", "https://api.deepseek.com"),
-        deepseek_model=os.getenv("NUMRA_DEEPSEEK_MODEL", "deepseek-v4-pro"),
+        deepseek_base_url=_env_with_deepseek_fallback(
+            "DEEPSEEK_BASE_URL", "NUMRA_DEEPSEEK_BASE_URL"
+        )
+        or "https://api.deepseek.com",
+        deepseek_model=_env_with_deepseek_fallback("DEEPSEEK_MODEL", "NUMRA_DEEPSEEK_MODEL")
+        or "deepseek-v4-pro",
+        deepseek_thinking_enabled=(
+            _env_with_deepseek_fallback(
+                "DEEPSEEK_THINKING_ENABLED", "NUMRA_DEEPSEEK_THINKING_ENABLED"
+            )
+            or "true"
+        ).lower()
+        == "true",
+        deepseek_reasoning_effort=_env_with_deepseek_fallback(
+            "DEEPSEEK_REASONING_EFFORT", "NUMRA_DEEPSEEK_REASONING_EFFORT"
+        )
+        or "high",
+        deepseek_max_output_tokens=int(
+            _env_with_deepseek_fallback(
+                "DEEPSEEK_MAX_OUTPUT_TOKENS", "NUMRA_DEEPSEEK_MAX_OUTPUT_TOKENS"
+            )
+            or "8192"
+        ),
+        deepseek_max_retries=int(
+            _env_with_deepseek_fallback("DEEPSEEK_MAX_RETRIES", "NUMRA_DEEPSEEK_MAX_RETRIES") or "3"
+        ),
         redis_url=SecretStr(os.getenv("NUMRA_REDIS_URL", "redis://redis:6379/0")),
         rate_limit_hmac_secret=SecretStr(rate_secret) if rate_secret else None,
         max_request_body_bytes=int(os.getenv("NUMRA_MAX_REQUEST_BODY_BYTES", "65536")),
@@ -301,6 +356,10 @@ def _production_dependencies(
                 api_key=settings.deepseek_api_key,
                 base_url=settings.deepseek_base_url,
                 model=settings.deepseek_model,
+                thinking_enabled=settings.deepseek_thinking_enabled,
+                reasoning_effort=settings.deepseek_reasoning_effort,
+                max_output_tokens=settings.deepseek_max_output_tokens,
+                max_retries=settings.deepseek_max_retries,
             )
         )
     if rate_limiter is None:
@@ -322,6 +381,7 @@ def create_app(
     """Build an independently testable FastAPI application instance."""
     resolved = settings or settings_from_environment()
     provider, rate_limiter = _production_dependencies(resolved, provider, rate_limiter)
+    circuit_breaker: CircuitBreaker | None = CircuitBreaker() if resolved.llm_enabled else None
     api = FastAPI(
         title="Numra API",
         version=_package_version(),
@@ -567,6 +627,7 @@ def create_app(
             return await AgentService(
                 provider,
                 context_secret=resolved.rate_limit_hmac_secret.get_secret_value().encode(),
+                circuit_breaker=circuit_breaker,
             ).generate_report(canonical_profile)
         except (AgentValidationError, ProviderError):
             return _problem_response(
@@ -630,6 +691,7 @@ def create_app(
             return await AgentService(
                 provider,
                 context_secret=resolved.rate_limit_hmac_secret.get_secret_value().encode(),
+                circuit_breaker=circuit_breaker,
             ).generate_follow_up(
                 canonical_profile,
                 body.report,

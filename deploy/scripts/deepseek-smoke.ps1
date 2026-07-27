@@ -57,12 +57,19 @@ if ($report.provenance.calculation_hash -ne $profile.deterministic_hash) {
 if ([string]::IsNullOrWhiteSpace($report.summary)) {
     throw "DeepSeek hat keinen validierten Bericht geliefert."
 }
+# reasoning_content darf in keiner Antwort erscheinen
+$serialised = $report | ConvertTo-Json -Depth 100 -Compress
+if ($serialised -match "reasoning_content") {
+    throw "reasoning_content wurde in der Antwort gefunden — Hygiene-Verletzung."
+}
 
 [pscustomobject]@{
     status = "ok"
     provider = $report.provenance.provider
     model = $report.provenance.model
     thinking = $report.provenance.thinking
+    reasoning_effort = $report.provenance.reasoning_effort
+    effective_sampling = $report.provenance.effective_sampling
     temperature = $report.provenance.temperature
     prompt_tokens = $report.provenance.prompt_tokens
     completion_tokens = $report.provenance.completion_tokens

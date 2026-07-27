@@ -123,8 +123,8 @@ describe("LocalProfileRepository", () => {
     const source = repository();
     await source.repository.enableProtection("source vault passphrase");
     const saved = await source.repository.saveProfile(profile("Protected Export", "z"), true);
-    const report = { schema_version: "analysis-report-v1", summary: "Protected report" } as AnalysisReport;
-    const followUp = { schema_version: "analysis-follow-up-v1", answer: "Protected answer" } as AnalysisFollowUp;
+    const report = { schema_version: "analysis-report-v2", summary: "Protected report" } as AnalysisReport;
+    const followUp = { schema_version: "analysis-follow-up-v2", answer: "Protected answer" } as AnalysisFollowUp;
     await source.repository.saveReport(saved.id, report, true);
     await source.repository.saveFollowUp(saved.id, followUp, true);
     await source.repository.saveNote(saved.id, "Protected note", true);
@@ -188,11 +188,11 @@ describe("LocalProfileRepository", () => {
     await source.repository.enableProtection("source vault passphrase");
     const saved = await source.repository.saveProfile(profile("Protected V1", "p"), true);
     const report = {
-      schema_version: "analysis-report-v1",
+      schema_version: "analysis-report-v2",
       summary: "Legacy protected report",
     } as AnalysisReport;
     const followUp = {
-      schema_version: "analysis-follow-up-v1",
+      schema_version: "analysis-follow-up-v2",
       answer: "Legacy protected answer",
     } as AnalysisFollowUp;
     await source.repository.saveReport(saved.id, report, true);
@@ -235,8 +235,8 @@ describe("LocalProfileRepository", () => {
   it("enforces one local report and two local follow-ups per profile", async () => {
     const state = repository();
     const saved = await state.repository.saveProfile(profile("Quota Name", "q"), true);
-    const report = { schema_version: "analysis-report-v1" } as AnalysisReport;
-    const followUp = { schema_version: "analysis-follow-up-v1" } as AnalysisFollowUp;
+    const report = { schema_version: "analysis-report-v2" } as AnalysisReport;
+    const followUp = { schema_version: "analysis-follow-up-v2" } as AnalysisFollowUp;
 
     await state.repository.saveReport(saved.id, report, true);
     await expect(state.repository.saveReport(saved.id, report, true)).rejects.toThrow(/einen Bericht/);
