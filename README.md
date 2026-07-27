@@ -1,34 +1,42 @@
-# Numerology Analyst Agent
+# Numra – Numerologie nachvollziehbar
 
-> **Auditierbare Domänenplattform für numerologische Berechnung** — deterministischer Rechenkern, versionierte Wissenspakete, empirischer Forschungsrahmen, optionale Agenten-Schicht. **Kein Chatbot, kein simpler Rechner, keine Esoterik-Sammlung.**
+> **Installierbare, lokale-first Numerologie-PWA mit auditierbarem Rechenkern** —
+> deterministische Berechnung, versioniertes Wissen, klare Aussageklassen und
+> optionaler, fail-closed validierter LLM-Bericht.
 
 ---
 
-## Status: Release `0.1.3` — Contract Integrity
+## Status: Produktionskandidat – öffentlicher Launch extern gesperrt
 
-`0.1.3` ist der aktuelle stabile Release.
+Auf dem stabilen `0.1.3`-Life-Path-Vertrag bauen zwei neue, getrennt
+versionierte Verträge auf:
 
-`0.1.3` stärkt den deterministischen Berechnungsvertrag: Der Hash umfasst
-jetzt den vollständigen fachlich relevanten Input (Schema-Version, Eingaben,
-Policy, Ergebnisse, Trace), `consent_given` ist ausgeschlossen, Sets werden
-kanonisiert, `--as-of-date` ist verpflichtend, und versionierte JSON-Schemas
-liegen im installierten Wheel. Nur Life Path A/B ist enthalten; alle weiteren
-Zahlen folgen in späteren Releases.
+- `0.1.4`: Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-,
+  Persönlichkeits- und Reifezahl, Namenssegmente, aktiver Name und Y-Varianten.
+- `0.1.5`: persönliche Jahre, Monate und Tage sowie vier Pinnacles und Challenges.
 
-**Breaking Changes gegenüber `0.1.0`–`0.1.2`:**
+Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
+vollständige Profil verwendet `profile-calculation-result-v2`; sein Hash umfasst
+alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
+`consent_given` bleibt ausdrücklich ausgeschlossen.
 
-- `--as-of-date` ist nicht mehr optional.
-- Die Hashsemantik wurde geändert — alte Hashwerte sind nicht mit `0.1.3` vergleichbar.
-- `schema_version` ist neu im Calculation-Result-Contract.
+Der Branch `codex/numra-pwa` implementiert den vollständigen vertikalen
+Produktschnitt:
 
-Die **Plan-Phase ist abgeschlossen** (Plan-Konsolidierung V1.1, Stand 2026-07-25).
-Das Walking-Skeleton-Release `0.1.0 Deterministic Core` ist **LIVE** und
-implementiert einen vertikalen Slice durch alle Schichten — vom Input
-(`PersonInput`) über Normalisierung (`de-direct-v1`) und Rechenkern
-(Life Path A/B) bis hin zur deterministischen JSON-Ausgabe der CLI, Golden
-Tests und CI. **Nur Life Path A/B** ist enthalten; alle weiteren Zahlen
-(Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-,
-Reifezahl, Zyklen, Interpretationen) folgen in späteren Releases.
+- React/Vite/TypeScript-PWA mit Dark/Light Theme und Offline-Lesezugriff
+- lokale Profile, Berichte, Rückfragen und Notizen in IndexedDB
+- optionaler PBKDF2-/AES-GCM-Passphraseschutz sowie Export/Import
+- clientseitiger PDF-Export und Expertenansicht
+- FastAPI für Vollprofil, Zyklen, Health/Meta und optionale LLM-Analyse
+- versioniertes Wissen, regelbasierte Interpretation und Safety-Gates
+- DeepSeek-Adapter ohne Klarname oder vollständiges Geburtsdatum
+- Redis ausschließlich für flüchtige, HMAC-pseudonymisierte Quoten
+- gehärteter Docker-/Nginx-Stack mit Commit-SHA-Release und Rollback
+
+Der öffentliche Launch bleibt gesperrt, bis ein VPS eindeutig zugeordnet,
+Domain und DNS bereitgestellt, Betreiberangaben ergänzt, HTTPS aktiviert und
+die rechtlichen Launch-Gates bestätigt wurden. Die deterministische Anwendung
+bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist.
 
 - **Repository:** `GoLukeEnviro/numerology-analyst-agent`
 - **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`
@@ -91,7 +99,8 @@ Das Projekt **darf nicht**:
 - fehlende Evidenz als Beleg für spirituelle Wahrheit umdeuten,
 - medizinische oder psychologische Diagnosen ableiten.
 
-Vollständige Positionierung: `docs/field/scientific-positioning.md` (folgt in Phase 1).
+Die Nutzeransicht unter `/wissen`, das Threat Model und die versionierten
+Wissenspakete dokumentieren diese Positionierung.
 
 ### Sechs Aussageklassen
 
@@ -114,7 +123,7 @@ Das gesamte System trennt technisch zwischen sechs Aussageklassen, die in Code, 
 
 ---
 
-## Quick Start (`0.1.3`)
+## Quick Start
 
 Voraussetzung: Python 3.12+ und [`uv`](https://docs.astral.sh/uv/).
 
@@ -131,6 +140,37 @@ numerology profile \
 
 `--as-of-date` ist **verpflichtend** (seit `0.1.3`). Der Parameter macht den
 Lauf deterministisch unabhängig vom Tagesdatum der Maschine.
+
+### PWA und API lokal
+
+Voraussetzungen: Node.js gemäß `.node-version`, pnpm 10.22 und Python 3.12.
+
+```bash
+pnpm install --frozen-lockfile
+uv sync --locked --all-groups
+
+# Terminal 1
+uv run uvicorn numerology_api.app:app --reload --port 8000
+
+# Terminal 2
+pnpm --filter @numra/web dev
+```
+
+Die PWA läuft anschließend unter `http://localhost:5173`.
+
+### Produktionsnaher Container-Smoke
+
+```bash
+docker compose config --quiet
+docker compose build
+docker compose up -d --wait
+curl --fail http://127.0.0.1:8080/api/v1/health/ready
+docker compose down
+```
+
+Deployment, privates SSH-Staging und Launch-Gates stehen in
+[`deploy/README.md`](deploy/README.md) und
+[`docs/operations/launch-checklist.md`](docs/operations/launch-checklist.md).
 
 ### Beispiel-Output (gekürzt)
 
@@ -175,10 +215,20 @@ uv sync --locked --all-groups
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src tests scripts
+uv run pip-audit
 uv run pytest --cov=src/numerology_engine --cov-fail-under=95
 uv run pytest --cov=src --cov-fail-under=85
 uv run python scripts/export_schemas.py --check
+uv run python scripts/export_openapi.py --check
 uv run python scripts/generate_examples.py --check
+pnpm audit --audit-level high --ignore GHSA-qwww-vcr4-c8h2
+pnpm web:lint
+pnpm web:typecheck
+pnpm web:test
+pnpm web:build
+pnpm web:check-build
+pnpm web:e2e
+docker compose config --quiet
 ```
 
 ### Architektur (`0.1.0`-Scope)
@@ -194,8 +244,12 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 | ------------------- | ------------------------------------------------------------ |
 | `numerology_domain` | Verträge: `PersonInput`, `MethodPolicy`, `CalculationResult` |
 | `numerology_engine` | Deterministischer Rechenkern (pure functions, kein Netzwerk) |
-| `numerology_api`    | Dünner JSON-Adapter (KEIN FastAPI im Skeleton)               |
+| `numerology_api`    | Zustandslose FastAPI-Grenze und versionierte HTTP-Verträge    |
 | `numerology_cli`    | Typer-CLI mit `profile`-Command                              |
+| `numerology_knowledge` | Versioniertes deutsches Wissenspaket                      |
+| `numerology_interpretation` | Regelbasierte, referenzierte Interpretation          |
+| `numerology_safety` | Claims-, Sprach- und Prompt-Injection-Gates                   |
+| `numerology_agent`  | Optionaler pseudonymisierter LLM-Provider-Adapter             |
 
 ### Determinismus
 
@@ -223,25 +277,47 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-| Komponente                                                           | Status                      |
-| -------------------------------------------------------------------- | --------------------------- |
-| Plan-Konsolidierung V1.1                                             | ✅ abgeschlossen            |
-| Master-Vertrag (`docs/governance/master-implementation-contract.md`) | ✅ vorhanden, bindend       |
-| `PROJECT_CHARTER.md`                                                 | ✅ vorhanden                |
-| `ROADMAP.md` (15 Phasen, 0–14)                                       | ✅ vorhanden                |
-| `docs/audit/gap-analysis.md`                                         | ✅ vorhanden                |
-| `docs/audit/implementation-plan.md`                                  | ✅ vorhanden                |
-| Methoden-ADRs `docs/adr/0001`–`0004`                                 | ✅ vorhanden, bindend       |
-| `.github/agents/*` (6 Agent-Verträge)                                | ✅ Plan-Konsolidierung V1.1 |
-| **Release `0.1.3` Contract Integrity**                               | ✅ **LIVE**                              |
-| Release `0.1.2` Packaging-Hardening                                  | ✅ abgelöst durch `0.1.3`               |
-| Release `0.1.0` Walking Skeleton                                     | ✅ abgelöst durch `0.1.3`               |
-| Phasen 1–14 (Vollausbau)                                             | ⏳ folgen                   |
-| Vollständiger deterministischer Profilkern (`0.1.4`)                 | ⏳ folgt nach `0.1.3`       |
-| Wissensmodell + Interpretation (`0.2.0`)                             | ⏳ blockiert bis `0.1.4`    |
+> **Stand:** 2026-07-27, verifiziert durch tatsächlichen Testlauf (nicht nur
+> Dokumentenlage). Zwei Zustände sind zu unterscheiden: was auf `main`
+> gemerged/getaggt ist, und was auf dem Branch `codex/numra-pwa` (offener
+> Draft-**PR #10**) bereits implementiert, aber noch **nicht gemerged** ist.
 
-Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0` veröffentlicht.
-Release `0.1.3` erscheint nach Merge von PR #6.
+| Komponente                                                                 | Status                                                                  |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Governance-Grundlagen (Master-Vertrag, Charter, Roadmap, ADRs, Agenten)    | ✅ vorhanden, bindend                                                   |
+| **`main`: Release `0.1.3` Contract Integrity** (Life Path A/B)            | ✅ **LIVE**, getaggt `v0.1.3`                                           |
+| Release `0.1.0`–`0.1.2` (Walking Skeleton, Packaging)                     | ✅ abgelöst durch `0.1.3`                                               |
+| **`codex/numra-pwa` (PR #10, offen/Draft): Complete Core Profile (0.1.4)** | ✅ implementiert — Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl, Namenssegmente |
+| **`codex/numra-pwa`: Deterministic Cycles (0.1.5)**                       | ✅ implementiert — persönliche Jahre/Monate/Tage, 4 Pinnacles/Challenges |
+| **`codex/numra-pwa`: Wissensmodell + regelbasierte Interpretation**       | ✅ implementiert (`numerology_knowledge`, `numerology_interpretation`) |
+| **`codex/numra-pwa`: Safety-Gates** (Claims-/Sprachvalidierung, Threat Model, Privacy-Doku) | ✅ implementiert (`numerology_safety`)                    |
+| **`codex/numra-pwa`: FastAPI** (Health/Meta, Profil-Berechnung, optionale LLM-Analyse mit Follow-up) | ✅ implementiert (`numerology_api`)             |
+| **`codex/numra-pwa`: optionaler LLM-Adapter** (DeepSeek, pseudonymisiert, fail-closed, standardmäßig deaktiviert) | ✅ implementiert (`numerology_agent`)   |
+| **`codex/numra-pwa`: React/Vite/TypeScript-PWA** (Profile, Berichte, PDF-Export, IndexedDB, Verschlüsselung) | ✅ implementiert (`apps/web`)              |
+| **`codex/numra-pwa`: gehärteter Docker-/Nginx-Stack, Release/Rollback/Backup-Skripte** | ✅ implementiert (`docker/`, `deploy/`)                       |
+| Forschungs-/Meta-Analyse-Rahmen (Phase 7 / Release `0.4.0`)                | ❌ nicht begonnen                                                        |
+| MkDocs-Dokumentation, Committee-Review-Prozess                             | ❌ nicht begonnen                                                        |
+| **Öffentlicher Launch**                                                    | 🔒 **explizit gesperrt** bis VPS/Domain/TLS/Recht bestätigt sind (siehe `docs/operations/launch-checklist.md`) |
+
+**Wichtig:** `pyproject.toml` steht formal auf Version `0.1.5`, obwohl der
+`codex/numra-pwa`-Branch inhaltlich bereits deutlich weiter ist (Wissen,
+Interpretation, Safety, API, Agent, PWA — Umfang entspricht eher den
+Releases `0.2.0`/`0.3.0` im ursprünglichen Plan). Die Versionsnummer wurde
+dafür noch nicht angehoben; das ist eine offene Entscheidung, keine
+technische Lücke.
+
+Von mir lokal verifiziert (2026-07-27, Branch `codex/numra-pwa` bzw. der
+identische Analyse-Branch): 188 Python-Tests grün, Engine-Coverage 97,53 %,
+Gesamt-Coverage 93,22 %, Ruff/Mypy strict grün, Schema-/OpenAPI-/Beispiel-
+Drift-Checks grün, 28 Vitest-Tests grün, Web-Lint/Typecheck/Build grün,
+`docker compose config` grün. Remote-CI auf dem aktuellen HEAD (`f2baef9`)
+ist ebenfalls grün.
+
+Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0`
+veröffentlicht, Release `0.1.3` nach Merge von PR #6 als Tag `v0.1.3`. Die
+Releases `0.1.4` und `0.1.5` existieren bislang nur als Versionsstand/
+Release-Notes innerhalb des noch offenen PR #10 — dafür wurden keine
+eigenen Tags geschnitten.
 
 ---
 

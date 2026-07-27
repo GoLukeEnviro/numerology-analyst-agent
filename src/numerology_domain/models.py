@@ -74,7 +74,12 @@ class PersonInput(_FrozenModel):
       not carry this constraint.
     """
 
-    core_name: str = Field(..., min_length=1, description="Full birth name (authoritative).")
+    core_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=200,
+        description="Full birth name (authoritative).",
+    )
     birth_date: date = Field(..., description="Calendar date of birth (YYYY-MM-DD).")
     as_of_date: date = Field(
         ...,
@@ -85,6 +90,7 @@ class PersonInput(_FrozenModel):
     )
     active_name: str | None = Field(
         default=None,
+        max_length=200,
         description="Currently used name; optional supplementary profile basis.",
     )
     locale: Locale = Field(default=Locale.DE, description="Normalization locale selector.")
@@ -332,6 +338,7 @@ class AuditTrace(_FrozenModel):
 # Bumped when the JSON shape of CalculationResult changes in a way that
 # affects the deterministic hash.
 CALCULATION_RESULT_SCHEMA_VERSION = "calculation-result-v1"
+PROFILE_CALCULATION_RESULT_SCHEMA_VERSION = "profile-calculation-result-v2"
 
 
 class CalculationHashEnvelope(_FrozenModel):
@@ -387,3 +394,88 @@ class CalculationResult(_FrozenModel):
 
     #: Stable marker so serialization layers never lose the statement class.
     CLAIM: ClassVar[ClaimType] = ClaimType.CALCULATION_FACT
+
+
+class NumberResult(_FrozenModel):
+    """One deterministic numerological value with a reproducible reduction path."""
+
+    name: str
+    raw_total: int = Field(..., ge=0)
+    reduced_value: int = Field(..., ge=0)
+    compound_notation: str
+    is_master: bool = False
+    components: dict[str, int] = Field(default_factory=dict)
+    steps: tuple[CalculationStep, ...] = Field(default_factory=tuple)
+
+
+class NameSegmentResult(_FrozenModel):
+    """Auditable subtotal for one whitespace- or hyphen-delimited name segment."""
+
+    text: str
+    raw_total: int = Field(..., ge=1)
+    reduced_value: int
+    compound_notation: str
+
+
+class NameNumberVariant(_FrozenModel):
+    """A complete vowel/consonant result for one explicit Y interpretation."""
+
+    label: str
+    expression: NumberResult
+    soul_urge: NumberResult
+    personality: NumberResult
+
+
+class NameNumberSet(_FrozenModel):
+    """Expression, Soul Urge and Personality values for one separately held name."""
+
+    basis: str
+    original_name: str
+    normalized_name: str
+    segments: tuple[NameSegmentResult, ...]
+    expression: NumberResult
+    soul_urge: NumberResult
+    personality: NumberResult
+    y_classifications: tuple[str, ...] = Field(default_factory=tuple)
+    variants: tuple[NameNumberVariant, ...] = Field(default_factory=tuple)
+
+
+class CyclePhase(_FrozenModel):
+    """One numbered Pinnacle or Challenge phase with inclusive age boundaries."""
+
+    ordinal: int = Field(..., ge=1, le=4)
+    start_age: int = Field(..., ge=0)
+    end_age: int | None = Field(default=None, ge=0)
+    number: NumberResult
+
+
+class CycleCalculationResult(_FrozenModel):
+    """Personal date cycles and the four lifetime Pinnacle/Challenge phases."""
+
+    as_of_date: date
+    personal_year: NumberResult
+    personal_month: NumberResult
+    personal_day: NumberResult
+    pinnacles: tuple[CyclePhase, ...] = Field(..., min_length=4, max_length=4)
+    challenges: tuple[CyclePhase, ...] = Field(..., min_length=4, max_length=4)
+
+
+class ProfileCalculationResult(_FrozenModel):
+    """Complete deterministic profile contract introduced for release 0.1.4."""
+
+    claim_type: ClaimType = ClaimType.CALCULATION_FACT
+    name: str = "complete_profile"
+    schema_version: str = PROFILE_CALCULATION_RESULT_SCHEMA_VERSION
+    input_ref: PersonInput
+    policy: MethodPolicy
+    life_path_a: LifePathResult
+    life_path_b: LifePathResult
+    consistency: ConsistencyStatus
+    birthday: NumberResult
+    attitude: NumberResult
+    core_name: NameNumberSet
+    active_name: NameNumberSet | None = None
+    maturity: NumberResult
+    cycles: CycleCalculationResult
+    trace: AuditTrace
+    deterministic_hash: str = ""

@@ -18,6 +18,17 @@ env/
 .pytest_cache/
 .tox/
 .cache/
+node_modules/
+*.tsbuildinfo
+apps/web/coverage/
+apps/web/playwright-report/
+apps/web/test-results/
+tmp/
+deploy/*.env.local
+
+# Environment files (secrets)
+.env
+.env.*
 
 # Coverage / test artifacts
 .coverage
@@ -31,6 +42,7 @@ build/
 dist/
 *.egg-info/
 *.egg
+.worktrees/
 
 # IDE / OS
 .idea/

@@ -1,0 +1,37 @@
+cases:
+  - id: max-mustermann-complete-profile-v1
+    core_name: Max Mustermann
+    active_name: Max Power
+    birth_date: "1985-07-25"
+    as_of_date: "2026-07-26"
+    expected:
+      birthday: 7
+      attitude: 5
+      expression: 5
+      soul_urge: 1
+      personality: 4
+      maturity: 6
+      active_expression: 7
+      personal_year: 6
+      personal_month: 4
+      personal_day: 3
+      pinnacles: [5, 3, 8, 3]
+      challenges: [0, 2, 2, 2]
+
+  - id: anna-master-birthday-v1
+    core_name: Anna
+    birth_date: "2000-12-29"
+    as_of_date: "2026-07-26"
+    expected:
+      birthday: 11
+      attitude: 5
+      expression: 3
+      soul_urge: 2
+      personality: 1
+      maturity: 1
+      active_expression: null
+      personal_year: 6
+      personal_month: 4
+      personal_day: 3
+      pinnacles: [5, 4, 9, 5]
+      challenges: [8, 9, 1, 1]

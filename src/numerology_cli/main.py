@@ -20,10 +20,10 @@ from importlib.metadata import PackageNotFoundError, version
 from pydantic import ValidationError
 import typer
 
-from numerology_api.contracts import dump_result_as_json
+from numerology_api.contracts import dump_profile_as_json
 from numerology_domain.exceptions import NumerologyError
 from numerology_domain.models import MethodPolicy, PersonInput
-from numerology_engine.service import calculate_life_path
+from numerology_engine.profile import calculate_profile
 
 
 def _package_version() -> str:
@@ -83,7 +83,7 @@ def profile(
         help="Required evaluation date as YYYY-MM-DD. birth must be <= as_of.",
     ),
 ) -> None:
-    """Compute the Life Path (A + B) profile and emit canonical JSON."""
+    """Compute the complete deterministic profile and emit canonical JSON."""
     # as_of_date is mandatory (v0.1.3 contract integrity): the CLI must be
     # fully reproducible; date.today() would break determinism.
     try:
@@ -95,7 +95,7 @@ def profile(
             as_of_date=as_of_date,
         )
         policy = MethodPolicy()  # canonical pythagorean-v1 defaults
-        result = calculate_life_path(person, policy)
+        result = calculate_profile(person, policy)
     except NumerologyError as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from exc
@@ -108,7 +108,7 @@ def profile(
         typer.echo(f"error: {msg}", err=True)
         raise typer.Exit(code=1) from exc
 
-    typer.echo(dump_result_as_json(result))
+    typer.echo(dump_profile_as_json(result))
 
 
 @app.command(name="version")

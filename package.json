@@ -1,0 +1,20 @@
+{
+  "name": "numra-workspace",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "web:build": "pnpm --filter @numra/web build",
+    "web:check-build": "pnpm --filter @numra/web check:build",
+    "web:e2e": "pnpm --filter @numra/web e2e",
+    "web:generate-api": "pnpm --filter @numra/web generate:api",
+    "web:lint": "pnpm --filter @numra/web lint",
+    "web:test": "pnpm --filter @numra/web test",
+    "web:typecheck": "pnpm --filter @numra/web typecheck"
+  },
+  "pnpm": {
+    "overrides": {
+      "brace-expansion@<=5.0.7": "5.0.8",
+      "js-yaml@>=4.0.0 <4.3.0": "4.3.0"
+    }
+  }
+}
