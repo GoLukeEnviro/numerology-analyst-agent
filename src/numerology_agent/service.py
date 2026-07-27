@@ -18,7 +18,8 @@ from numerology_agent.models import (
     FollowUpProviderRequest,
     ProviderRequest,
 )
-from numerology_agent.provider import LlmProvider
+from numerology_agent.provider import LlmProvider, ProviderError
+from numerology_agent.resilience import CircuitBreaker, CircuitOpenError
 from numerology_domain.enums import ClaimType
 from numerology_domain.models import ProfileCalculationResult
 from numerology_interpretation.service import compose_interpretation
@@ -237,20 +238,36 @@ def _validate_follow_up_context(
 
 
 class AgentService:
-    def __init__(self, provider: LlmProvider, *, context_secret: bytes) -> None:
+    def __init__(
+        self,
+        provider: LlmProvider,
+        *,
+        context_secret: bytes,
+        circuit_breaker: CircuitBreaker | None = None,
+    ) -> None:
         if len(context_secret) < 16:
             raise ValueError("context_secret must contain at least 16 bytes")
         self._provider = provider
         self._context_secret = context_secret
+        self._breaker = circuit_breaker
 
     async def generate_report(self, profile: ProfileCalculationResult) -> AnalysisReport:
         payload = build_provider_payload(profile)
         last_error: Exception | None = None
         for _attempt in range(2):
-            result = await self._provider.complete(
-                payload.model_dump(mode="json"),
-                AnalysisDraft.model_json_schema(),
-            )
+            if self._breaker is not None:
+                self._breaker.before_call()
+            try:
+                result = await self._provider.complete(
+                    payload.model_dump(mode="json"),
+                    AnalysisDraft.model_json_schema(),
+                )
+            except (ProviderError, CircuitOpenError):
+                if self._breaker is not None:
+                    self._breaker.record_failure()
+                raise
+            if self._breaker is not None:
+                self._breaker.record_success()
             try:
                 draft = AnalysisDraft.model_validate_json(result.content)
                 _validate_draft(draft, profile)
@@ -260,9 +277,9 @@ class AgentService:
                     provenance=AnalysisProvenance(
                         provider="deepseek",
                         model=result.model,
-                        temperature=0.2,
-                        top_p=1,
-                        thinking="enabled/high",
+                        temperature=None,
+                        top_p=None,
+                        thinking="enabled",
                         prompt_version=payload.prompt_version,
                         knowledge_bundle=interpretation.knowledge_bundle,
                         calculation_hash=profile.deterministic_hash,
@@ -323,10 +340,19 @@ class AgentService:
         )
         last_error: Exception | None = None
         for _attempt in range(2):
-            result = await self._provider.complete(
-                payload.model_dump(mode="json"),
-                FollowUpDraft.model_json_schema(),
-            )
+            if self._breaker is not None:
+                self._breaker.before_call()
+            try:
+                result = await self._provider.complete(
+                    payload.model_dump(mode="json"),
+                    FollowUpDraft.model_json_schema(),
+                )
+            except (ProviderError, CircuitOpenError):
+                if self._breaker is not None:
+                    self._breaker.record_failure()
+                raise
+            if self._breaker is not None:
+                self._breaker.record_success()
             try:
                 draft = FollowUpDraft.model_validate_json(result.content)
                 _validate_follow_up(draft, profile)
@@ -335,9 +361,9 @@ class AgentService:
                     provenance=AnalysisProvenance(
                         provider="deepseek",
                         model=result.model,
-                        temperature=0.2,
-                        top_p=1,
-                        thinking="enabled/high",
+                        temperature=None,
+                        top_p=None,
+                        thinking="enabled",
                         prompt_version=payload.prompt_version,
                         knowledge_bundle=compose_interpretation(profile).knowledge_bundle,
                         calculation_hash=profile.deterministic_hash,
