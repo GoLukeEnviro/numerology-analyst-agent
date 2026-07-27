@@ -1,0 +1,1452 @@
+{
+  "bundle_id": "numra-knowledge-de-v2",
+  "locale": "de",
+  "version": "v2",
+  "scientific_position": "Numerologie ist empirisch nicht validiert. Alle Aussagen in diesem Paket sind Reflexionsangebote ohne wissenschaftliche, medizinische oder psychologische Beweiskraft.",
+  "sources": [
+    {
+      "id": "numra-method-v1",
+      "title": "Numra Methodenspezifikation v1",
+      "source_type": "internal",
+      "locator": "docs/methods/"
+    },
+    {
+      "id": "numra-boundary-v1",
+      "title": "Numra Wissenschaftliche Grenze",
+      "source_type": "internal",
+      "locator": "docs/field/"
+    },
+    {
+      "id": "numra-tradition-v1",
+      "title": "Traditionelle Numerologie-Überlieferung",
+      "source_type": "tradition",
+      "locator": "unverifiziert"
+    }
+  ],
+  "entries": [
+    {
+      "stable_id": "de.pythagorean.v2.single.0",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 0,
+      "compound": null,
+      "title": "Offener Anteil",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Der Wert kann als Hinweis gelesen werden, wo die verwendete Methode an ihre Grenzen stößt und Raum für eigene Bedeutung offen bleibt.",
+      "shadow_expression": "Ein rechnerisch leerer Anteil kann irritieren, wenn er als Aussage über die Person gedeutet wird.",
+      "development_theme": "Methodengrenzen wahrnehmen",
+      "traditional_claims": [
+        "Ein Wert von 0 markiert in diesem Modell einen Namensteil ohne zugeordnete Buchstaben."
+      ],
+      "reflection_prompts": [
+        "Der offene Anteil kann als Anlass dienen, die Grenzen der verwendeten Methode wahrzunehmen."
+      ],
+      "practical_suggestions": [
+        "Prüfe den Rechenweg und behandle den Wert 0 nicht als Persönlichkeitsurteil."
+      ],
+      "counter_hypotheses": [
+        "Der Wert entsteht rein technisch aus der Buchstabenklassifikation und besitzt möglicherweise keine weitergehende Bedeutung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.1",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 1,
+      "compound": null,
+      "title": "Eigenständigkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Initiative und selbstbestimmtes Handeln anregen, wo eigene Schritte tragfähig sind.",
+      "shadow_expression": "Betontes Selbstständigkeitsstreben kann in Isolation oder Überlastung kippen, wenn Mitwirkung abgewehrt wird.",
+      "development_theme": "Eigenverantwortung",
+      "traditional_claims": [
+        "Die 1 wird traditionell mit Initiative, Eigenständigkeit und Beginn verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann zu der Frage einladen, wo selbstbestimmtes Handeln hilfreich ist."
+      ],
+      "practical_suggestions": [
+        "Formuliere einen kleinen nächsten Schritt, den du eigenverantwortlich prüfen kannst."
+      ],
+      "counter_hypotheses": [
+        "Erlebte Eigenständigkeit kann ebenso durch Situation, Rolle und Lernerfahrung erklärt werden."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.2",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 2,
+      "compound": null,
+      "title": "Beziehung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Kooperationsbereitschaft und feines Gespür für Ausgleich anregen.",
+      "shadow_expression": "Starkes Anpassungsstreben kann eigene Bedürfnisse zurückstellen, bis eine Balance verloren geht.",
+      "development_theme": "Koordination und Ausgleich",
+      "traditional_claims": [
+        "Die 2 wird traditionell mit Kooperation, Resonanz und Ausgleich verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann helfen, das Verhältnis von Anpassung und eigener Position zu betrachten."
+      ],
+      "practical_suggestions": [
+        "Notiere eine Beziehung, in der eine klare Nachfrage mehr Orientierung schaffen könnte."
+      ],
+      "counter_hypotheses": [
+        "Kooperationsverhalten hängt stark von Kontext, Sicherheit und sozialen Erwartungen ab."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.3",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 3,
+      "compound": null,
+      "title": "Ausdruck",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann kreativen Ausdruck und lebendigen Austausch anregen.",
+      "shadow_expression": "Vielfältiges Ausprobieren kann in Zerstreuung kippen, wenn Fokus und Abschluss fehlen.",
+      "development_theme": "Gestaltung und Austausch",
+      "traditional_claims": [
+        "Die 3 wird traditionell mit Ausdruck, Gestaltung und Austausch verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann als Frage gelesen werden, welche Ausdrucksform gerade stimmig wirkt."
+      ],
+      "practical_suggestions": [
+        "Erprobe eine kurze kreative oder sprachliche Form ohne Leistungsanspruch."
+      ],
+      "counter_hypotheses": [
+        "Ausdrucksfähigkeit verändert sich mit Übung, Medium und sozialer Umgebung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.4",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 4,
+      "compound": null,
+      "title": "Struktur",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann verlässlichen Aufbau und tragfähige Ordnung anregen.",
+      "shadow_expression": "Starres Festhalten an Regeln kann Flexibilität und Leichtigkeit einschränken.",
+      "development_theme": "Beständigkeit und Aufbau",
+      "traditional_claims": [
+        "Die 4 wird traditionell mit Struktur, Verlässlichkeit und Aufbau verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann dazu einladen, hilfreiche von einengenden Strukturen zu unterscheiden."
+      ],
+      "practical_suggestions": [
+        "Vereinfache einen wiederkehrenden Ablauf um einen überprüfbaren Schritt."
+      ],
+      "counter_hypotheses": [
+        "Bedarf nach Struktur kann aus Aufgabe, Belastung oder verfügbaren Ressourcen entstehen."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.5",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 5,
+      "compound": null,
+      "title": "Bewegung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Offenheit für Erfahrung und anpassungsfähige Beweglichkeit anregen.",
+      "shadow_expression": "Angetriebene Vielfalt kann in Unbeständigkeit kippen, wenn Verpflichtungen gemieden werden.",
+      "development_theme": "Wandel und Erfahrung",
+      "traditional_claims": [
+        "Die 5 wird traditionell mit Veränderung, Erfahrung und Beweglichkeit verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann die Frage öffnen, wo Abwechslung nützt und wo Kontinuität trägt."
+      ],
+      "practical_suggestions": [
+        "Teste eine begrenzte Veränderung und beobachte ihre tatsächliche Wirkung."
+      ],
+      "counter_hypotheses": [
+        "Wunsch nach Veränderung kann eine direkte Reaktion auf Langeweile oder äußeren Druck sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.6",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 6,
+      "compound": null,
+      "title": "Verantwortung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann fürsorgliche Verbundenheit und tragende Verantwortung anregen.",
+      "shadow_expression": "Übernommene Fürsorge kann in Überlastung oder Einmischung kippen, wenn Grenzen fehlen.",
+      "development_theme": "Fürsorge und Verbundenheit",
+      "traditional_claims": [
+        "Die 6 wird traditionell mit Fürsorge, Verantwortung und Verbundenheit verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann helfen, Fürsorge und eigene Grenzen gemeinsam zu betrachten."
+      ],
+      "practical_suggestions": [
+        "Kläre bei einer Verpflichtung, was wirklich dein Anteil ist."
+      ],
+      "counter_hypotheses": [
+        "Verantwortungsgefühl kann aus Rollen, Normen und konkreten Abhängigkeiten entstehen."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.7",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 7,
+      "compound": null,
+      "title": "Vertiefung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann sorgfältige Analyse und fragende Vertiefung anregen.",
+      "shadow_expression": "Zurückgezogenes Prüfen kann in Isolation oder Grübeln kippen, wenn Austausch gemieden wird.",
+      "development_theme": "Erkenntnis und Rückzug",
+      "traditional_claims": [
+        "Die 7 wird traditionell mit Analyse, Rückzug und Vertiefung verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann als Einladung dienen, Wissen und unmittelbare Erfahrung abzugleichen."
+      ],
+      "practical_suggestions": [
+        "Reserviere einen begrenzten Zeitraum für ungestörte Prüfung statt endloser Analyse."
+      ],
+      "counter_hypotheses": [
+        "Rückzug oder Analyse können situationsbedingt sein und erlauben keinen stabilen Persönlichkeitsschluss."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.8",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 8,
+      "compound": null,
+      "title": "Wirksamkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann sachliche Wirksamkeit und Umgang mit Mitteln anregen.",
+      "shadow_expression": "Auf Wirkung gerichtetes Handeln kann in Kontrolle oder materialistische Einseitigkeit kippen.",
+      "development_theme": "Wirkung und Verantwortung",
+      "traditional_claims": [
+        "Die 8 wird traditionell mit Wirksamkeit, Ressourcen und Verantwortung für Ergebnisse verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann dazu anregen, Wirkung, Mittel und Konsequenzen zusammen zu betrachten."
+      ],
+      "practical_suggestions": [
+        "Definiere für ein Vorhaben ein beobachtbares Ergebnis und eine klare Grenze."
+      ],
+      "counter_hypotheses": [
+        "Erlebte Wirksamkeit wird wesentlich durch Zugang zu Ressourcen und Entscheidungsspielraum geprägt."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.single.9",
+      "method_system": "pythagorean-v1",
+      "classification": "single",
+      "number": 9,
+      "compound": null,
+      "title": "Abschluss",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann weiten Blick und bewussten Abschluss anregen.",
+      "shadow_expression": "Ausgreifendes Mitgefühl kann in Selbstüberforderung oder Loslassschwierigkeit kippen.",
+      "development_theme": "Weite und Übergang",
+      "traditional_claims": [
+        "Die 9 wird traditionell mit Abschluss, Weitblick und Übergang verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann die Frage unterstützen, was beendet und was bewusst bewahrt werden soll."
+      ],
+      "practical_suggestions": [
+        "Schließe eine kleine offene Schleife ab, bevor du eine neue beginnst."
+      ],
+      "counter_hypotheses": [
+        "Das Bedürfnis nach Abschluss kann aus konkreten unerledigten Aufgaben statt aus einer Zahl entstehen."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "birthday", "attitude", "expression", "soul_urge", "personality", "maturity", "personal_year", "personal_month", "personal_day", "pinnacle", "challenge", "name_cycle"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.master.11",
+      "method_system": "pythagorean-v1",
+      "classification": "master",
+      "number": 11,
+      "compound": null,
+      "title": "Intensive Wahrnehmung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Wahrnehmung und inspirierende Einsicht anregen, die geordnet werden möchte.",
+      "shadow_expression": "Starke Eindrücke können ohne Erdung in Überforderung oder innerer Unruhe kippen.",
+      "development_theme": "Wahrnehmung ordnen",
+      "traditional_claims": [
+        "Die Meisterzahl 11 wird traditionell als verstärkte Symbolik von Wahrnehmung und Inspiration behandelt."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann zur Prüfung einladen, wie Eindrücke geordnet und geerdet werden."
+      ],
+      "practical_suggestions": [
+        "Trenne bei einer starken Idee Beobachtung, Interpretation und nächsten Test."
+      ],
+      "counter_hypotheses": [
+        "Intensive Wahrnehmung kann durch Aufmerksamkeit, Stress, Interesse oder Erwartung beeinflusst werden."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "expression", "soul_urge", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.master.22",
+      "method_system": "pythagorean-v1",
+      "classification": "master",
+      "number": 22,
+      "compound": null,
+      "title": "Großer Aufbau",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann weitreichenden Aufbau und praktische Umsetzung anregen.",
+      "shadow_expression": "Großes Vorhaben kann ohne Erdung in Überforderung oder verworfene Pläne kippen.",
+      "development_theme": "Umfangreiches umsetzen",
+      "traditional_claims": [
+        "Die Meisterzahl 22 wird traditionell mit umfangreichem Aufbau und praktischer Umsetzung verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann helfen, große Vorhaben in tragfähige Einheiten zu zerlegen."
+      ],
+      "practical_suggestions": [
+        "Bestimme den kleinsten überprüfbaren Baustein eines größeren Vorhabens."
+      ],
+      "counter_hypotheses": [
+        "Umsetzungsfähigkeit hängt von Kompetenzen, Ressourcen, Zusammenarbeit und Zeit ab."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "expression", "soul_urge", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.master.33",
+      "method_system": "pythagorean-v1",
+      "classification": "master",
+      "number": 33,
+      "compound": null,
+      "title": "Verantwortete Fürsorge",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann weitgespannte Fürsorge und vermittelnde Verantwortung anregen.",
+      "shadow_expression": "Ausgreifendes Helfen kann ohne Grenzen in Selbstüberforderung oder Einmischung kippen.",
+      "development_theme": "Fürsorge begrenzen",
+      "traditional_claims": [
+        "Die Meisterzahl 33 wird traditionell als verstärkte Symbolik von Fürsorge und Vermittlung behandelt."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann dazu einladen, Unterstützung ohne Selbstüberforderung zu betrachten."
+      ],
+      "practical_suggestions": [
+        "Formuliere bei einer Hilfeleistung zugleich Angebot, Grenze und Zuständigkeit."
+      ],
+      "counter_hypotheses": [
+        "Fürsorgliches Verhalten wird durch Bindung, Normen, Rolle und persönliche Geschichte beeinflusst."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["life_path", "expression", "soul_urge", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.10-1",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 1,
+      "compound": {
+        "raw_value": 10,
+        "reduced_value": 1,
+        "compound_notation": "10/1"
+      },
+      "title": "Beginn nach Erfahrung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann einen Neubeginn anregen, der auf bereits gemachter Erfahrung aufbaut.",
+      "shadow_expression": "Frühes Voranschreiten kann überspringen, was erst noch eingeordnet werden möchte.",
+      "development_theme": "Erneuerter Aufbruch",
+      "traditional_claims": [
+        "Die Verbindung 10/1 wird traditionell als Neubeginn nach einem abgeschlossenen Zyklus gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, welche Erfahrung in einen neuen Schritt einfließen kann."
+      ],
+      "practical_suggestions": [
+        "Halte einen Erkenntnisgewinn fest, bevor du den nächsten Schritt beginnst."
+      ],
+      "counter_hypotheses": [
+        "Ob ein Schritt gelingt, hängt eher von Vorbereitung, Ressourcen und Timing ab als von einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.12-3",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 3,
+      "compound": {
+        "raw_value": 12,
+        "reduced_value": 3,
+        "compound_notation": "12/3"
+      },
+      "title": "Ausdruck im Miteinander",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Ausdruck anregen, der Vielfalt und Zusammenarbeit verbindet.",
+      "shadow_expression": "Stark auf Wirkung bedachte Sprache kann verletzen, wenn Empfindsamkeit übergangen wird.",
+      "development_theme": "Vermittelnder Ausdruck",
+      "traditional_claims": [
+        "Die Verbindung 12/3 wird traditionell mit kreativer Vermittlung und gelingender Zusammenarbeit gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wie eigener Ausdruck und die Wahrnehmung anderer zusammenpassen."
+      ],
+      "practical_suggestions": [
+        "Erprobe eine Äußerung, die eigene Sicht und Nachfragen an die anderen verbindet."
+      ],
+      "counter_hypotheses": [
+        "Gelingende Vermittlung entsteht aus Übung, Haltung und passendem Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.15-6",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 6,
+      "compound": {
+        "raw_value": 15,
+        "reduced_value": 6,
+        "compound_notation": "15/6"
+      },
+      "title": "Fürsorge in Beziehungen",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Verantwortung in nahen Beziehungen und emotionale Verbundenheit anregen.",
+      "shadow_expression": "Starkes Einbringen in Beziehungen kann in Überverantwortung oder Festhalten kippen.",
+      "development_theme": "Beziehungsgestaltung",
+      "traditional_claims": [
+        "Die Verbindung 15/6 wird traditionell mit liebevoller Verantwortung und emotionalem Gleichgewicht gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Fürsorge trägt und wo sie in Überlastung kippt."
+      ],
+      "practical_suggestions": [
+        "Benenne bei einer nahen Beziehung einen Anteil, den du abgeben könntest."
+      ],
+      "counter_hypotheses": [
+        "Beziehungsdynamiken erklären sich aus Geschichte, Bindung und Kontext deutlicher als aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.17-8",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 8,
+      "compound": {
+        "raw_value": 17,
+        "reduced_value": 8,
+        "compound_notation": "17/8"
+      },
+      "title": "Sachliche Wirksamkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Wirksamkeit anregen, die auf innerer Klarheit beruht.",
+      "shadow_expression": "Auf Wirkung gerichtetes Auftreten kann in Kontrolle oder Skepsis gegenüber Mitbestimmung kippen.",
+      "development_theme": "Wirkung mit Klarheit",
+      "traditional_claims": [
+        "Die Verbindung 17/8 wird traditionell mit durchsetzbarer, geerdeter Kraft gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, worauf eine gewünschte Wirkung tatsächlich beruht."
+      ],
+      "practical_suggestions": [
+        "Lege für ein Vorhaben fest, welche Wirkung du beobachten möchtest und welche Grenze du setzt."
+      ],
+      "counter_hypotheses": [
+        "Wirksamkeit entsteht aus Kompetenz, Mitteln und Entscheidungsspielraum, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.20-2",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 2,
+      "compound": {
+        "raw_value": 20,
+        "reduced_value": 2,
+        "compound_notation": "20/2"
+      },
+      "title": "Feingefühl im Kontakt",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann feines Gespür und achtsame Begleitung im Kontakt anregen.",
+      "shadow_expression": "Hohe Empfindsamkeit kann in Zurückhaltung oder Selbstzurückstellung kippen, wenn Klarheit fehlt.",
+      "development_theme": "Sensibles Mitwirken",
+      "traditional_claims": [
+        "Die Verbindung 20/2 wird traditionell mit feinfühliger Partnerschaft und unterstützt sein gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Empfindsamkeit eine Stärke ist und wo sie geschützt werden möchte."
+      ],
+      "practical_suggestions": [
+        "Formuliere für eine empfindliche Situation eine klare Grenze oder Bitte."
+      ],
+      "counter_hypotheses": [
+        "Empfindsamkeit und Kontaktverhalten variieren stark mit Sicherheit, Kontext und Biografie."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.21-3",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 3,
+      "compound": {
+        "raw_value": 21,
+        "reduced_value": 3,
+        "compound_notation": "21/3"
+      },
+      "title": "Entfaltung durch Vielfalt",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann kreative Entfaltung anregen, die aus unterschiedlicher Erfahrung speist.",
+      "shadow_expression": "Auf Vielfalt gerichtetes Streben kann in Zerstreuung oder Oberflächlichkeit kippen.",
+      "development_theme": "Vielfältige Entfaltung",
+      "traditional_claims": [
+        "Die Verbindung 21/3 wird traditionell mit gelingendem Ausdruck und reicher Entfaltung gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, welche Vielfalt tragfähig ist und welche zerstreut."
+      ],
+      "practical_suggestions": [
+        "Wähle aus mehreren Ideen eine aus und führe sie bis zu einem überprüfbaren Ergebnis."
+      ],
+      "counter_hypotheses": [
+        "Entfaltung hängt an Übung, Förderung und passendem Rahmen, nicht an einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.23-5",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 5,
+      "compound": {
+        "raw_value": 23,
+        "reduced_value": 5,
+        "compound_notation": "23/5"
+      },
+      "title": "Beweglichkeit im Kontakt",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann anpassungsfähige Beweglichkeit und kommunikative Offenheit anregen.",
+      "shadow_expression": "Rege Beweglichkeit kann in Unbeständigkeit oder Oberflächlichkeit kippen, wenn Bindung fehlt.",
+      "development_theme": "Freiheit mit Anschluss",
+      "traditional_claims": [
+        "Die Verbindung 23/5 wird traditionell mit lebensnaher Freiheit und gelingendem Austausch gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Beweglichkeit nützt und wo Verbindlichkeit trägt."
+      ],
+      "practical_suggestions": [
+        "Wähle einen Bereich und trage eine kleine Verbindlichkeit bewusst bei."
+      ],
+      "counter_hypotheses": [
+        "Anpassungsfähigkeit entsteht aus Erfahrung, Übung und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.24-6",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 6,
+      "compound": {
+        "raw_value": 24,
+        "reduced_value": 6,
+        "compound_notation": "24/6"
+      },
+      "title": "Harmonische Fürsorge",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann warmherzige Fürsorge und ausgleichende Verantwortung anregen.",
+      "shadow_expression": "Auf Harmonie gerichtetes Wirken kann eigene Bedürfnisse zurückstellen bis Erschöpfung droht.",
+      "development_theme": "Ausgleichendes Einbringen",
+      "traditional_claims": [
+        "Die Verbindung 24/6 wird traditionell mit liebevoller Verantwortung in Partnerschaft und Familie gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo du aushältst und wo du eine Last teilen könntest."
+      ],
+      "practical_suggestions": [
+        "Prüfe eine Verpflichtung darauf, ob sie wirklich in deinem Verantwortungsbereich liegt."
+      ],
+      "counter_hypotheses": [
+        "Fürsorge und Harmoniestreben erklären sich aus Bindung, Normen und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.25-7",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 7,
+      "compound": {
+        "raw_value": 25,
+        "reduced_value": 7,
+        "compound_notation": "25/7"
+      },
+      "title": "Erfahrungsgestützte Vertiefung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Vertiefung anregen, die Erfahrung und Prüfung verbindet.",
+      "shadow_expression": "Auf Innenschau gerichtetes Prüfen kann in Rückzug oder Grübeln kippen, wenn Austausch fehlt.",
+      "development_theme": "Prüfendes Verstehen",
+      "traditional_claims": [
+        "Die Verbindung 25/7 wird traditionell mit weiser Vertiefung durch eigenes Erleben gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, was direkte Erfahrung und was gedankliche Deutung ist."
+      ],
+      "practical_suggestions": [
+        "Lege für eine Wiederholungsfrage einen Zeitpunkt fest, an dem du eine Antwort einholst statt zu raten."
+      ],
+      "counter_hypotheses": [
+        "Vertiefung entsteht aus Übung, Dialog und Reflexion, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.26-8",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 8,
+      "compound": {
+        "raw_value": 26,
+        "reduced_value": 8,
+        "compound_notation": "26/8"
+      },
+      "title": "Wirksamkeit im Miteinander",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann sachliche Wirksamkeit anregen, die Mitwirkung einbezieht.",
+      "shadow_expression": "Auf Gestaltung gerichtetes Streben kann in Kontrolle oder Machtanspruch kippen.",
+      "development_theme": "Verantwortliche Gestaltung",
+      "traditional_claims": [
+        "Die Verbindung 26/8 wird traditionell mit gestaltender Wirksamkeit in Gemeinschaft gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wessen Mitwirkung du brauchst, um Wirkung zu entfalten."
+      ],
+      "practical_suggestions": [
+        "Definiere für ein Vorhaben eine Entscheidung, die du bewusst teilst."
+      ],
+      "counter_hypotheses": [
+        "Gestaltungsspielraum entsteht aus Rolle, Mitteln und Kooperation, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.27-9",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 9,
+      "compound": {
+        "raw_value": 27,
+        "reduced_value": 9,
+        "compound_notation": "27/9"
+      },
+      "title": "Weiter Blick mit Verantwortung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann weite Perspektive und verantwortete Fürsorge anregen.",
+      "shadow_expression": "Ausgreifendes Mitgefühl kann eigene Grenzen übersehen und in Überforderung kippen.",
+      "development_theme": "Verantwortete Weite",
+      "traditional_claims": [
+        "Die Verbindung 27/9 wird traditionell mit weisem Mitgefühl und übergreifendem Blick gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo dein Mitgefühl tragfähig ist und wo es dich übersteigt."
+      ],
+      "practical_suggestions": [
+        "Grenze ein weiteres Engagement ein, solange eine bestehende Aufgabe noch offen ist."
+      ],
+      "counter_hypotheses": [
+        "Weiter Blick und Mitgefühl erklären sich aus Erfahrung, Rolle und Werten, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.28-1",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 1,
+      "compound": {
+        "raw_value": 28,
+        "reduced_value": 1,
+        "compound_notation": "28/1"
+      },
+      "title": "Eigenständige Gestaltung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann selbstbestimmte Initiative anregen, die Mitwirkung wertschätzt.",
+      "shadow_expression": "Betontes Vorangehen kann in Dominanz oder Alleingang kippen, wenn Beitrag anderer übersehen wird.",
+      "development_theme": "Führung mit Respekt",
+      "traditional_claims": [
+        "Die Verbindung 28/1 wird traditionell mit eigenständiger Führung und gelingendem Gestalten gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wann du vorangehen und wann du Raum geben möchtest."
+      ],
+      "practical_suggestions": [
+        "Frage bei einem Vorhaben bewusst eine andere Perspektive ein, bevor du entscheidest."
+      ],
+      "counter_hypotheses": [
+        "Initiative und Führung entstehen aus Erfahrung, Rolle und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.29-11",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 11,
+      "compound": {
+        "raw_value": 29,
+        "reduced_value": 11,
+        "compound_notation": "29/11"
+      },
+      "title": "Intensive Wahrnehmung im Miteinander",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann feine Wahrnehmung anregen, die im Kontakt geordnet werden möchte.",
+      "shadow_expression": "Starke Eindrücke aus Begegnungen können in Überforderung oder Rückzug kippen, wenn Erdung fehlt.",
+      "development_theme": "Wahrnehmung ordnen",
+      "traditional_claims": [
+        "Die Verbindung 29/11 wird traditionell als intensive, mitunter herausfordernde Wahrnehmung im Kontakt gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wie du starke Eindrücke von außen sortierst und erdest."
+      ],
+      "practical_suggestions": [
+        "Trenne bei einem starken Eindruck Beobachtung, Deutung und nächsten überprüfbaren Schritt."
+      ],
+      "counter_hypotheses": [
+        "Wahrnehmungsintensität erklärt sich aus Aufmerksamkeit, Sensibilität und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.30-3",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 3,
+      "compound": {
+        "raw_value": 30,
+        "reduced_value": 3,
+        "compound_notation": "30/3"
+      },
+      "title": "Kraftvoller Ausdruck",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann lebendigen Ausdruck und rege Entfaltung anregen.",
+      "shadow_expression": "Auf Wirkung bedachtes Auftreten kann in Oberfläche oder Geltungsstreben kippen.",
+      "development_theme": "Klarer Ausdruck",
+      "traditional_claims": [
+        "Die Verbindung 30/3 wird traditionell mit ausgeprägtem kreativen und kommunikativen Ausdruck gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, ob dein Ausdruck eher verbindet oder eher beeindrucken will."
+      ],
+      "practical_suggestions": [
+        "Wähle eine Äußerung und prüfe, ob sie ohne Wirkung nach außen für sich stehen kann."
+      ],
+      "counter_hypotheses": [
+        "Ausdrucksstärke entsteht aus Übung, Medium und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.31-4",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 4,
+      "compound": {
+        "raw_value": 31,
+        "reduced_value": 4,
+        "compound_notation": "31/4"
+      },
+      "title": "Aufbau durch Beharrlichkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann geduldigen Aufbau und verlässliche Struktur anregen.",
+      "shadow_expression": "Starkes Festhalten an Ordnung kann in Sturheit oder Verkrampfung kippen.",
+      "development_theme": "Tragfähiger Aufbau",
+      "traditional_claims": [
+        "Die Verbindung 31/4 wird traditionell mit anhaltendem, mitunter forderndem Aufbau gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Beharrlichkeit trägt und wo Lockerung hilft."
+      ],
+      "practical_suggestions": [
+        "Lockere eine starre Regel bewusst und beobachte, was sich verändert."
+      ],
+      "counter_hypotheses": [
+        "Beharrlichkeit entsteht aus Aufgabe, Erfahrung und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.32-5",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 5,
+      "compound": {
+        "raw_value": 32,
+        "reduced_value": 5,
+        "compound_notation": "32/5"
+      },
+      "title": "Kommunikative Beweglichkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann vielseitigen Austausch und anpassungsfähige Erfahrung anregen.",
+      "shadow_expression": "Rege Kommunikation mit Freiheitsdrang kann in Zerstreuung oder Unverbindlichkeit kippen.",
+      "development_theme": "Vielseitigkeit mit Bezug",
+      "traditional_claims": [
+        "Die Verbindung 32/5 wird traditionell mit lebendiger, kommunikativer Beweglichkeit gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, welche Vielseitigkeit dich trägt und welche dich zerstreut."
+      ],
+      "practical_suggestions": [
+        "Wähle aus mehreren Ideen eine aus und führe sie bis zu einer überprüfbaren Probe."
+      ],
+      "counter_hypotheses": [
+        "Vielseitigkeit entsteht aus Neigung, Übung und Möglichkeit, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.34-7",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 7,
+      "compound": {
+        "raw_value": 34,
+        "reduced_value": 7,
+        "compound_notation": "34/7"
+      },
+      "title": "Geistiger Aufbau",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann strukturierte Vertiefung und ruhiges Prüfen anregen.",
+      "shadow_expression": "Auf Innenschau gerichteter Aufbau kann in Rückzug oder Isolation kippen, wenn Austausch fehlt.",
+      "development_theme": "Geordnete Vertiefung",
+      "traditional_claims": [
+        "Die Verbindung 34/7 wird traditionell mit ruhigem, strukturiertem Nachdenken gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, ob deine Vertiefung ins Handeln mündet oder im Grübeln bleibt."
+      ],
+      "practical_suggestions": [
+        "Verwandle eine wiederkehrende Frage in einen kleinen überprüfbaren Schritt nach außen."
+      ],
+      "counter_hypotheses": [
+        "Vertiefung entsteht aus Neigung, Übung und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.35-8",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 8,
+      "compound": {
+        "raw_value": 35,
+        "reduced_value": 8,
+        "compound_notation": "35/8"
+      },
+      "title": "Erfahrenes Wirken",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Wirksamkeit anregen, die auf vielfältiger Erfahrung beruht.",
+      "shadow_expression": "Auf Wirkung gerichtetes Handeln kann in Kontrolle oder materialistische Einseitigkeit kippen.",
+      "development_theme": "Wirksamkeit mit Erfahrung",
+      "traditional_claims": [
+        "Die Verbindung 35/8 wird traditionell mit erfahrener, gestaltender Kraft gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, worauf deine Wirksamkeit tatsächlich beruht."
+      ],
+      "practical_suggestions": [
+        "Benenne für ein Vorhaben ein beobachtbares Ergebnis und eine klare Grenze."
+      ],
+      "counter_hypotheses": [
+        "Wirksamkeit entsteht aus Mitteln, Kompetenz und Entscheidungsspielraum, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.36-9",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 9,
+      "compound": {
+        "raw_value": 36,
+        "reduced_value": 9,
+        "compound_notation": "36/9"
+      },
+      "title": "Verantwortete Weite",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann kreative Verantwortung und weitgespanntes Mitgefühl anregen.",
+      "shadow_expression": "Ausgreifendes Helfen kann in Selbstüberforderung oder Einmischung kippen, wenn Grenzen fehlen.",
+      "development_theme": "Mitgefühl begrenzen",
+      "traditional_claims": [
+        "Die Verbindung 36/9 wird traditionell mit fürsorglichem Wirken und übergreifendem Sinn gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo dein Mitgefühl tragfähig ist und wo es dich übersteigt."
+      ],
+      "practical_suggestions": [
+        "Grenze ein weiteres Engagement ein, solange eine bestehende Aufgabe noch offen ist."
+      ],
+      "counter_hypotheses": [
+        "Fürsorge und Sinnstreben erklären sich aus Werten, Rolle und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.37-1",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 1,
+      "compound": {
+        "raw_value": 37,
+        "reduced_value": 1,
+        "compound_notation": "37/1"
+      },
+      "title": "Selbstbestimmte Einsicht",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann eigenständige Prüfung und selbstgetragene Entschlüsse anregen.",
+      "shadow_expression": "Betontes Alleinentscheiden kann in Isolation oder Abwehr von Mitwirkung kippen.",
+      "development_theme": "Eigenständige Klarheit",
+      "traditional_claims": [
+        "Die Verbindung 37/1 wird traditionell mit unabhängigem, geistig fundiertem Vorangehen gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wann du allein entscheidest und wann du Rat einholst."
+      ],
+      "practical_suggestions": [
+        "Hole vor einem Alleinentscheid bewusst eine zweite Perspektive ein."
+      ],
+      "counter_hypotheses": [
+        "Selbstbestimmung entsteht aus Erfahrung, Rolle und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.38-11",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 11,
+      "compound": {
+        "raw_value": 38,
+        "reduced_value": 11,
+        "compound_notation": "38/11"
+      },
+      "title": "Kreative Intuition im Kontakt",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann feine Wahrnehmung anregen, die im Austausch Gestalt annimmt.",
+      "shadow_expression": "Starke intuitive Eindrücke können ohne Erdung in Unverbindlichkeit oder innere Unruhe kippen.",
+      "development_theme": "Intuition erden",
+      "traditional_claims": [
+        "Die Verbindung 38/11 wird traditionell als partnerschaftliche, kreative Meisterung gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wie du Eindrücke ins Handeln übersetzt."
+      ],
+      "practical_suggestions": [
+        "Verwandle eine starke Ahnung in eine überprüfbare kleine Probe im Kontakt."
+      ],
+      "counter_hypotheses": [
+        "Intuition entsteht aus Erfahrung, Mustern und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.39-3",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 3,
+      "compound": {
+        "raw_value": 39,
+        "reduced_value": 3,
+        "compound_notation": "39/3"
+      },
+      "title": "Kreativer Ausdruck im Weiten",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann lebendigen Ausdruck anregen, der über den engeren Kreis hinausreicht.",
+      "shadow_expression": "Auf Wirkung gerichtetes Auftreten kann in Streben nach Beachtung oder Oberfläche kippen.",
+      "development_theme": "Ausdruck mit Verantwortung",
+      "traditional_claims": [
+        "Die Verbindung 39/3 wird traditionell mit verantwortungsvollem, kreativem Ausdruck gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wem dein Ausdruck nützt und wo er dich überfordert."
+      ],
+      "practical_suggestions": [
+        "Wähle eine Äußerung und überlege, für wen sie gedacht ist und welche Wirkung sie anstrebt."
+      ],
+      "counter_hypotheses": [
+        "Ausdrucksstärke entsteht aus Übung, Medium und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.40-4",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 4,
+      "compound": {
+        "raw_value": 40,
+        "reduced_value": 4,
+        "compound_notation": "40/4"
+      },
+      "title": "Fundierter Aufbau",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann geduldigen, gut fundierten Aufbau anregen.",
+      "shadow_expression": "Starkes Festhalten an Sicherheit kann in Erstarrung oder Überordnung von Regeln kippen.",
+      "development_theme": "Geduldiger Aufbau",
+      "traditional_claims": [
+        "Die Verbindung 40/4 wird traditionell mit tragfähigem, langfristigem Aufbau gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Geduld trägt und wo ein überholter Rahmen gelockert werden möchte."
+      ],
+      "practical_suggestions": [
+        "Prüfe eine alte Regel darauf, ob sie noch ihrem Zweck dient oder nur noch Gewohnheit ist."
+      ],
+      "counter_hypotheses": [
+        "Beständigkeit entsteht aus Aufgabe, Mitteln und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.compound.44-8",
+      "method_system": "pythagorean-v1",
+      "classification": "compound",
+      "number": 8,
+      "compound": {
+        "raw_value": 44,
+        "reduced_value": 8,
+        "compound_notation": "44/8"
+      },
+      "title": "Organisatorische Kraft",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann strukturierte, weitreichende Gestaltung anregen.",
+      "shadow_expression": "Auf Ordnung gerichtetes Wirken kann in Kontrolle oder Übermaß an Regeln kippen.",
+      "development_theme": "Strukturierte Wirksamkeit",
+      "traditional_claims": [
+        "Die Verbindung 44/8 wird traditionell mit meisterhafter organisatorischer Kraft gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Ordnung trägt und wo sie anderen Raum nimmt."
+      ],
+      "practical_suggestions": [
+        "Gib in einem von dir geordneten Bereich bewusst Verantwortung ab und beobachte das Ergebnis."
+      ],
+      "counter_hypotheses": [
+        "Organisationsfähigkeit entsteht aus Erfahrung, Mitteln und Kooperation, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": null,
+      "result_contexts": ["expression", "soul_urge", "personality", "maturity"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.karmic.13-4",
+      "method_system": "pythagorean-v1",
+      "classification": "karmic_debt",
+      "number": 4,
+      "compound": {
+        "raw_value": 13,
+        "reduced_value": 4,
+        "compound_notation": "13/4"
+      },
+      "title": "Aufbau durch stetige Arbeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann anregen, tragfähige Grundlagen durch beharrliche, wiederkehrende Arbeit zu schaffen.",
+      "shadow_expression": "Oft abgebrochene oder verschobene Aufgaben können als Erschöpfung oder Frustration spürbar werden.",
+      "development_theme": "Beharrlichkeit einüben",
+      "traditional_claims": [
+        "Die Verbindung 13/4 wird in der Überlieferung als Hinweis auf Umbruch und stetigen Aufbau gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo geduldiges Dranbleiben mehr trägt als ein schneller Wechsel."
+      ],
+      "practical_suggestions": [
+        "Wähle eine Aufgabe, die du oft verschoben hast, und trage sie in kleinen Schritten bis zu einem Abschluss."
+      ],
+      "counter_hypotheses": [
+        "Ob Vorhaben gelingen, hängt von Planung, Mitteln und Umständen ab, nicht von einer Zahlenverbindung."
+      ],
+      "uncertainty": "Die Deutung als Schulden- oder Prüfungsaspekt ist eine Überlieferung ohne empirische Grundlage.",
+      "result_contexts": ["life_path", "expression"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.karmic.14-5",
+      "method_system": "pythagorean-v1",
+      "classification": "karmic_debt",
+      "number": 5,
+      "compound": {
+        "raw_value": 14,
+        "reduced_value": 5,
+        "compound_notation": "14/5"
+      },
+      "title": "Maßvolle Freiheit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann anregen, Vielfalt und Erfahrung mit Maß und Verbindlichkeit zu verbinden.",
+      "shadow_expression": "Übermäßiger Drang nach Wechsel oder Reiz kann als Zerstreuung oder Überforderung spürbar werden.",
+      "development_theme": "Maß und Verbindlichkeit",
+      "traditional_claims": [
+        "Die Verbindung 14/5 wird in der Überlieferung als Hinweis auf den Umgang mit Freiheit und Maß gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo Vielfalt trägt und wo sie in Unbeständigkeit kippt."
+      ],
+      "practical_suggestions": [
+        "Setze einem wiederkehrenden Wechsel eine bewusste Grenze und beobachte die Wirkung."
+      ],
+      "counter_hypotheses": [
+        "Umgang mit Freiheit erklärt sich aus Neigung, Kontext und Erfahrung, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": "Die Deutung als Schulden- oder Prüfungsaspekt ist eine Überlieferung ohne empirische Grundlage.",
+      "result_contexts": ["life_path", "expression"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.karmic.16-7",
+      "method_system": "pythagorean-v1",
+      "classification": "karmic_debt",
+      "number": 7,
+      "compound": {
+        "raw_value": 16,
+        "reduced_value": 7,
+        "compound_notation": "16/7"
+      },
+      "title": "Umgang mit Umbruch",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann anregen, eingefahrene Sichtweisen behutsam zu überprüfen und Neues zu erproben.",
+      "shadow_expression": "Starres Festhalten an Vertrautem kann bei äußeren Veränderungen als Erschütterung spürbar werden.",
+      "development_theme": "Flexibilität einüben",
+      "traditional_claims": [
+        "Die Verbindung 16/7 wird in der Überlieferung als Hinweis auf Ablösung und Vertiefung gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, was du loslassen und was du bewusst bewahren möchtest."
+      ],
+      "practical_suggestions": [
+        "Prüfe eine Gewohnheit darauf, ob sie noch trägt oder einem überprüfbaren Wandel weichen darf."
+      ],
+      "counter_hypotheses": [
+        "Veränderungsbereitschaft entsteht aus Erfahrung, Sicherheit und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": "Die Deutung als Schulden- oder Prüfungsaspekt ist eine Überlieferung ohne empirische Grundlage.",
+      "result_contexts": ["life_path", "expression"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v2.karmic.19-1",
+      "method_system": "pythagorean-v1",
+      "classification": "karmic_debt",
+      "number": 1,
+      "compound": {
+        "raw_value": 19,
+        "reduced_value": 1,
+        "compound_notation": "19/1"
+      },
+      "title": "Eigenständigkeit einüben",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann anregen, eigene Schritte mutig und zugleich im Kontakt mit anderen zu gehen.",
+      "shadow_expression": "Zu starkes Sich-Abgrenzen kann als Isolation, zu starkes Anlehnen als Abhängigkeit spürbar werden.",
+      "development_theme": "Selbstvertrauen aufbauen",
+      "traditional_claims": [
+        "Die Verbindung 19/1 wird in der Überlieferung als Hinweis auf den Aufbau von Selbstbestimmung gelesen."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann einladen zu prüfen, wo du eigene Entscheidungen triffst und wo du dich anlehnst."
+      ],
+      "practical_suggestions": [
+        "Triff eine kleine Entscheidung bewusst selbst und prüfe ihre Wirkung nach."
+      ],
+      "counter_hypotheses": [
+        "Eigenständigkeit entsteht aus Erfahrung, Rolle und Kontext, nicht aus einer Zahlenverbindung."
+      ],
+      "uncertainty": "Die Deutung als Schulden- oder Prüfungsaspekt ist eine Überlieferung ohne empirische Grundlage.",
+      "result_contexts": ["life_path", "expression"],
+      "source_refs": ["numra-method-v1", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-07-28",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    }
+  ]
+}
