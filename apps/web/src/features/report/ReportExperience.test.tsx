@@ -17,7 +17,7 @@ afterEach(() => {
 describe("ReportExperience", () => {
   it("shows the provider boundary and requires separate consent", async () => {
     const report: AnalysisReport = {
-      schema_version: "analysis-report-v1",
+      schema_version: "analysis-report-v2",
       summary: "Reflexionsbericht",
       sections: [],
       limitations: [],
@@ -25,13 +25,13 @@ describe("ReportExperience", () => {
       provenance: {
         provider: "deepseek",
         model: "contract-model",
-        temperature: 0.2,
-        top_p: 1,
-        thinking: "enabled/high",
+        temperature: null,
+        top_p: null,
+        thinking: "enabled",
         effective_sampling: "provider_managed",
         reasoning_effort: "high",
         context_signature: "a".repeat(64),
-        prompt_version: "numra-report-de-v1",
+        prompt_version: "numra-report-de-v2",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "a".repeat(64),
         provider_fingerprint: "test",
@@ -83,7 +83,7 @@ describe("ReportExperience", () => {
 
   it("explains why a follow-up cannot be sent while offline", async () => {
     const report: AnalysisReport = {
-      schema_version: "analysis-report-v1",
+      schema_version: "analysis-report-v2",
       summary: "Gespeicherter Bericht",
       sections: [],
       limitations: [],
@@ -91,13 +91,13 @@ describe("ReportExperience", () => {
       provenance: {
         provider: "deepseek",
         model: "contract-model",
-        temperature: 0.2,
-        top_p: 1,
-        thinking: "enabled/high",
+        temperature: null,
+        top_p: null,
+        thinking: "enabled",
         effective_sampling: "provider_managed",
         reasoning_effort: "high",
         context_signature: "a".repeat(64),
-        prompt_version: "numra-report-de-v1",
+        prompt_version: "numra-report-de-v2",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "c".repeat(64),
         provider_fingerprint: "test",
@@ -134,7 +134,7 @@ describe("ReportExperience", () => {
     vi.useFakeTimers({ toFake: ["Date"] });
     vi.setSystemTime(new Date("2026-07-25T12:00:00+02:00"));
     const report = {
-      schema_version: "analysis-report-v1",
+      schema_version: "analysis-report-v2",
       summary: "Tagesbericht",
       sections: [],
       limitations: [],
@@ -142,13 +142,13 @@ describe("ReportExperience", () => {
       provenance: {
         provider: "deepseek",
         model: "deepseek-v4-pro",
-        temperature: 0.2,
-        top_p: 1,
-        thinking: "enabled/high",
+        temperature: null,
+        top_p: null,
+        thinking: "enabled",
         effective_sampling: "provider_managed",
         reasoning_effort: "high",
         context_signature: "a".repeat(64),
-        prompt_version: "numra-report-de-v1",
+        prompt_version: "numra-report-de-v2",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "d".repeat(64),
         provider_fingerprint: "test",
@@ -187,7 +187,7 @@ describe("ReportExperience", () => {
 
   it("requires fresh consent before a follow-up to a loaded local report", async () => {
     const report = {
-      schema_version: "analysis-report-v1",
+      schema_version: "analysis-report-v2",
       summary: "Gespeicherter Bericht",
       sections: [],
       limitations: [],
@@ -195,13 +195,13 @@ describe("ReportExperience", () => {
       provenance: {
         provider: "deepseek",
         model: "deepseek-v4-pro",
-        temperature: 0.2,
-        top_p: 1,
-        thinking: "enabled/high",
+        temperature: null,
+        top_p: null,
+        thinking: "enabled",
         effective_sampling: "provider_managed",
         reasoning_effort: "high",
         context_signature: "a".repeat(64),
-        prompt_version: "numra-report-de-v1",
+        prompt_version: "numra-report-de-v2",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "e".repeat(64),
         provider_fingerprint: "test",

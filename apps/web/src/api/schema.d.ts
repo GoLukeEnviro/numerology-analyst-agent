@@ -115,14 +115,23 @@ export interface components {
             /** Calculation Ref */
             calculation_ref: string;
             claim_type: components["schemas"]["ClaimType"];
+            /** Composer Rule Id */
+            composer_rule_id?: string | null;
+            /** Counter Hypothesis */
+            counter_hypothesis?: string | null;
             /** Knowledge Ref */
             knowledge_ref: string;
             /** Number */
             number: number;
             /** Text */
             text: string;
+            /** Uncertainty */
+            uncertainty?: string | null;
         };
-        /** AnalysisFollowUp */
+        /**
+         * AnalysisFollowUp
+         * @description Canonical v2 follow-up — the only structure newly produced by the agent.
+         */
         AnalysisFollowUp: {
             /** Answer */
             answer: string;
@@ -133,10 +142,10 @@ export interface components {
             provenance: components["schemas"]["AnalysisProvenance"];
             /**
              * Schema Version
-             * @default analysis-follow-up-v1
+             * @default analysis-follow-up-v2
              * @constant
              */
-            schema_version: "analysis-follow-up-v1";
+            schema_version: "analysis-follow-up-v2";
         };
         /** AnalysisFollowUpRequest */
         AnalysisFollowUpRequest: {
@@ -153,7 +162,14 @@ export interface components {
             question: string;
             report: components["schemas"]["AnalysisReport"];
         };
-        /** AnalysisProvenance */
+        /**
+         * AnalysisProvenance
+         * @description Provenance shared by v1 (read) and v2 (write) reports.
+         *
+         *     ``temperature``/``top_p`` are nullable because the DeepSeek thinking mode
+         *     renders them ineffective (provider-managed sampling). Legacy v1 data with
+         *     concrete floats validates unchanged against this superset.
+         */
         AnalysisProvenance: {
             /** Calculation Hash */
             calculation_hash: string;
@@ -186,23 +202,26 @@ export interface components {
              */
             reasoning_effort: "high";
             /** Temperature */
-            temperature: number;
+            temperature?: number | null;
             /** Thinking */
             thinking: string;
             /** Top P */
-            top_p: number;
+            top_p?: number | null;
         };
-        /** AnalysisReport */
+        /**
+         * AnalysisReport
+         * @description Canonical v2 report — the only structure newly produced by the agent.
+         */
         AnalysisReport: {
             /** Limitations */
             limitations: string[];
             provenance: components["schemas"]["AnalysisProvenance"];
             /**
              * Schema Version
-             * @default analysis-report-v1
+             * @default analysis-report-v2
              * @constant
              */
-            schema_version: "analysis-report-v1";
+            schema_version: "analysis-report-v2";
             /** Sections */
             sections: components["schemas"]["AnalysisSection"][];
             /** Suggestions */

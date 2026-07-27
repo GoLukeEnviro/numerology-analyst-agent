@@ -13,6 +13,30 @@
           "claim_type": {
             "$ref": "#/components/schemas/ClaimType"
           },
+          "composer_rule_id": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Composer Rule Id"
+          },
+          "counter_hypothesis": {
+            "anyOf": [
+              {
+                "maxLength": 600,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Counter Hypothesis"
+          },
           "knowledge_ref": {
             "maxLength": 160,
             "minLength": 1,
@@ -30,6 +54,18 @@
             "minLength": 1,
             "title": "Text",
             "type": "string"
+          },
+          "uncertainty": {
+            "anyOf": [
+              {
+                "maxLength": 600,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Uncertainty"
           }
         },
         "required": [
@@ -44,6 +80,7 @@
       },
       "AnalysisFollowUp": {
         "additionalProperties": false,
+        "description": "Canonical v2 follow-up — the only structure newly produced by the agent.",
         "properties": {
           "answer": {
             "title": "Answer",
@@ -67,8 +104,8 @@
             "$ref": "#/components/schemas/AnalysisProvenance"
           },
           "schema_version": {
-            "const": "analysis-follow-up-v1",
-            "default": "analysis-follow-up-v1",
+            "const": "analysis-follow-up-v2",
+            "default": "analysis-follow-up-v2",
             "title": "Schema Version",
             "type": "string"
           }
@@ -130,6 +167,7 @@
       },
       "AnalysisProvenance": {
         "additionalProperties": false,
+        "description": "Provenance shared by v1 (read) and v2 (write) reports.\n\n``temperature``/``top_p`` are nullable because the DeepSeek thinking mode\nrenders them ineffective (provider-managed sampling). Legacy v1 data with\nconcrete floats validates unchanged against this superset.",
         "properties": {
           "calculation_hash": {
             "title": "Calculation Hash",
@@ -190,23 +228,35 @@
             "type": "string"
           },
           "temperature": {
-            "title": "Temperature",
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperature"
           },
           "thinking": {
             "title": "Thinking",
             "type": "string"
           },
           "top_p": {
-            "title": "Top P",
-            "type": "number"
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top P"
           }
         },
         "required": [
           "provider",
           "model",
-          "temperature",
-          "top_p",
           "thinking",
           "prompt_version",
           "knowledge_bundle",
@@ -221,6 +271,7 @@
       },
       "AnalysisReport": {
         "additionalProperties": false,
+        "description": "Canonical v2 report — the only structure newly produced by the agent.",
         "properties": {
           "limitations": {
             "items": {
@@ -233,8 +284,8 @@
             "$ref": "#/components/schemas/AnalysisProvenance"
           },
           "schema_version": {
-            "const": "analysis-report-v1",
-            "default": "analysis-report-v1",
+            "const": "analysis-report-v2",
+            "default": "analysis-report-v2",
             "title": "Schema Version",
             "type": "string"
           },
