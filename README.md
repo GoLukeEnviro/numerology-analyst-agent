@@ -20,8 +20,8 @@ vollständige Profil verwendet `profile-calculation-result-v2`; sein Hash umfass
 alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
 `consent_given` bleibt ausdrücklich ausgeschlossen.
 
-Der Branch `codex/numra-pwa` implementiert den vollständigen vertikalen
-Produktschnitt:
+Der aktuelle `main`-Quellstand enthält seit dem Merge von PR #10 den
+vollständigen vertikalen Produktschnitt:
 
 - React/Vite/TypeScript-PWA mit Dark/Light Theme und Offline-Lesezugriff
 - lokale Profile, Berichte, Rückfragen und Notizen in IndexedDB
@@ -277,47 +277,35 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-> **Stand:** 2026-07-27, verifiziert durch tatsächlichen Testlauf (nicht nur
-> Dokumentenlage). Zwei Zustände sind zu unterscheiden: was auf `main`
-> gemerged/getaggt ist, und was auf dem Branch `codex/numra-pwa` (offener
-> Draft-**PR #10**) bereits implementiert, aber noch **nicht gemerged** ist.
+> **Stand:** 2026-07-27. Zwei Zustände sind zu unterscheiden: Der aktuelle
+> Quellstand ist über PR #10 auf `main` integriert; das jüngste veröffentlichte
+> und getaggte Release bleibt `v0.1.3`. Der kumulative Numra-Stand ist deshalb
+> bis zur geklärten SemVer-Zuordnung ausdrücklich **unreleased**.
 
-| Komponente                                                                 | Status                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Governance-Grundlagen (Master-Vertrag, Charter, Roadmap, ADRs, Agenten)    | ✅ vorhanden, bindend                                                   |
-| **`main`: Release `0.1.3` Contract Integrity** (Life Path A/B)            | ✅ **LIVE**, getaggt `v0.1.3`                                           |
-| Release `0.1.0`–`0.1.2` (Walking Skeleton, Packaging)                     | ✅ abgelöst durch `0.1.3`                                               |
-| **`codex/numra-pwa` (PR #10, offen/Draft): Complete Core Profile (0.1.4)** | ✅ implementiert — Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl, Namenssegmente |
-| **`codex/numra-pwa`: Deterministic Cycles (0.1.5)**                       | ✅ implementiert — persönliche Jahre/Monate/Tage, 4 Pinnacles/Challenges |
-| **`codex/numra-pwa`: Wissensmodell + regelbasierte Interpretation**       | ✅ implementiert (`numerology_knowledge`, `numerology_interpretation`) |
-| **`codex/numra-pwa`: Safety-Gates** (Claims-/Sprachvalidierung, Threat Model, Privacy-Doku) | ✅ implementiert (`numerology_safety`)                    |
-| **`codex/numra-pwa`: FastAPI** (Health/Meta, Profil-Berechnung, optionale LLM-Analyse mit Follow-up) | ✅ implementiert (`numerology_api`)             |
-| **`codex/numra-pwa`: optionaler LLM-Adapter** (DeepSeek, pseudonymisiert, fail-closed, standardmäßig deaktiviert) | ✅ implementiert (`numerology_agent`)   |
-| **`codex/numra-pwa`: React/Vite/TypeScript-PWA** (Profile, Berichte, PDF-Export, IndexedDB, Verschlüsselung) | ✅ implementiert (`apps/web`)              |
-| **`codex/numra-pwa`: gehärteter Docker-/Nginx-Stack, Release/Rollback/Backup-Skripte** | ✅ implementiert (`docker/`, `deploy/`)                       |
-| Forschungs-/Meta-Analyse-Rahmen (Phase 7 / Release `0.4.0`)                | ❌ nicht begonnen                                                        |
-| MkDocs-Dokumentation, Committee-Review-Prozess                             | ❌ nicht begonnen                                                        |
-| **Öffentlicher Launch**                                                    | 🔒 **explizit gesperrt** bis VPS/Domain/TLS/Recht bestätigt sind (siehe `docs/operations/launch-checklist.md`) |
+| Komponente | Status |
+| --- | --- |
+| Governance-Grundlagen | ✅ vorhanden und bindend |
+| Jüngstes getaggtes Release `v0.1.3` | ✅ veröffentlicht; Life Path A/B und Contract Integrity |
+| Vollständiges Profil und deterministische Zyklen | ✅ auf `main` integriert |
+| Wissensmodell, Interpretation und Safety-Gates | ✅ auf `main` integriert |
+| FastAPI und optionaler DeepSeek-Adapter | ✅ auf `main` integriert; LLM standardmäßig deaktiviert |
+| React/Vite/TypeScript-PWA | ✅ auf `main` integriert |
+| Gehärteter Docker-/Nginx-Stack | ✅ auf `main` integriert |
+| Kumulativer Numra-Release | ⏸️ Tag bewusst zurückgestellt; siehe `docs/releases/unreleased-numra.md` |
+| Forschungs-/Meta-Analyse-Rahmen (0.4.0) | ❌ nicht begonnen |
+| MkDocs-Dokumentation und Committee-Prozess | ❌ nicht begonnen |
+| Öffentlicher Launch | 🔒 bis VPS, Domain, TLS, Betreiberangaben und Rechtsfreigaben bestätigt sind |
 
-**Wichtig:** `pyproject.toml` steht formal auf Version `0.1.5`, obwohl der
-`codex/numra-pwa`-Branch inhaltlich bereits deutlich weiter ist (Wissen,
-Interpretation, Safety, API, Agent, PWA — Umfang entspricht eher den
-Releases `0.2.0`/`0.3.0` im ursprünglichen Plan). Die Versionsnummer wurde
-dafür noch nicht angehoben; das ist eine offene Entscheidung, keine
-technische Lücke.
+**Versionshinweis:** `pyproject.toml` steht formal auf `0.1.5`, der integrierte
+Funktionsumfang reicht jedoch kumulativ bis in die geplanten Bereiche `0.2.0`
+und `0.3.0`. ADR 0006 verlangt streng sequenzielle Releases. Deshalb wird kein
+nachträglicher Tag erfunden; die konkrete Release-Zuordnung bleibt
+dokumentiert zurückgestellt.
 
-Von mir lokal verifiziert (2026-07-27, Branch `codex/numra-pwa` bzw. der
-identische Analyse-Branch): 188 Python-Tests grün, Engine-Coverage 97,53 %,
-Gesamt-Coverage 93,22 %, Ruff/Mypy strict grün, Schema-/OpenAPI-/Beispiel-
-Drift-Checks grün, 28 Vitest-Tests grün, Web-Lint/Typecheck/Build grün,
-`docker compose config` grün. Remote-CI auf dem aktuellen HEAD (`f2baef9`)
-ist ebenfalls grün.
-
-Release `0.1.0` wurde nach dem Merge von PR #2 als Tag `v0.1.0`
-veröffentlicht, Release `0.1.3` nach Merge von PR #6 als Tag `v0.1.3`. Die
-Releases `0.1.4` und `0.1.5` existieren bislang nur als Versionsstand/
-Release-Notes innerhalb des noch offenen PR #10 — dafür wurden keine
-eigenen Tags geschnitten.
+PR #10 wurde mit allen vier CI-Jobs grün gemergt. Frische lokale und
+post-merge CI-Ergebnisse werden im Abschlussaudit dokumentiert. Die Dateien
+`docs/releases/v0.1.4.md` und `v0.1.5.md` beschreiben Entwicklungsmeilensteine,
+aber keine veröffentlichten Tags.
 
 ---
 
@@ -331,7 +319,7 @@ eigenen Tags geschnitten.
 | `docs/governance/master-implementation-contract.md` | Normativer Master-Vertrag (vorhanden, bindend)                        |
 | `docs/adr/`                                         | 4 ADRs zu Methodenentscheidungen (vorhanden, bindend)                 |
 | `docs/audit/`                                       | Repository-Baseline, Gap-Analyse, Übersetzungsplan                    |
-| `docs/field/`                                       | Fachgebiet, Claim-Taxonomie, wissenschaftliche Positionierung (folgt) |
+| `docs/field/`                                       | Fachgebiet, Claim-Taxonomie, wissenschaftliche Positionierung (geplant) |
 
 Agentenverträge: siehe `.github/agents/`.
 
@@ -339,7 +327,7 @@ Agentenverträge: siehe `.github/agents/`.
 
 ## Lizenz
 
-**MIT** (geplant). Die `LICENSE`-Datei wird in Phase 14 (GitHub-Finalisierung) hinzugefügt.
+**MIT.** Der vollständige Lizenztext liegt in [`LICENSE`](LICENSE).
 
 ---
 
