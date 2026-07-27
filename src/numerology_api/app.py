@@ -32,8 +32,10 @@ from numerology_agent.rate_limit import (
 from numerology_agent.service import AgentService, AgentValidationError
 from numerology_api.http_models import (
     AnalysisFollowUpRequest,
+    AnalysisProfile,
     AnalysisReportRequest,
     FieldError,
+    LegacyV2ProfileCalculationResult,
     LiveStatus,
     MetaResponse,
     ProblemDetails,
@@ -462,6 +464,17 @@ def create_app(
     async def calculate(request: ProfileCalculationRequest) -> ProfileCalculationResult:
         return calculate_profile(request.person, request.policy)
 
+    def canonical_analysis_profile(profile: AnalysisProfile) -> ProfileCalculationResult | None:
+        canonical = calculate_profile(profile.input_ref, profile.policy)
+        if isinstance(profile, LegacyV2ProfileCalculationResult):
+            return canonical
+        if (
+            profile.schema_version != PROFILE_CALCULATION_RESULT_SCHEMA_VERSION
+            or profile != canonical
+        ):
+            return None
+        return canonical
+
     async def consume_analysis_limits(
         request: Request,
         *,
@@ -529,8 +542,8 @@ def create_app(
                     correlation_id=_correlation_id(request),
                 )
             )
-        canonical_profile = calculate_profile(body.profile.input_ref, body.profile.policy)
-        if body.profile != canonical_profile:
+        canonical_profile = canonical_analysis_profile(body.profile)
+        if canonical_profile is None:
             return _problem_response(
                 ProblemDetails(
                     type=f"{_PROBLEM_BASE}/profile-integrity",
@@ -592,8 +605,8 @@ def create_app(
                     correlation_id=_correlation_id(request),
                 )
             )
-        canonical_profile = calculate_profile(body.profile.input_ref, body.profile.policy)
-        if body.profile != canonical_profile:
+        canonical_profile = canonical_analysis_profile(body.profile)
+        if canonical_profile is None:
             return _problem_response(
                 ProblemDetails(
                     type=f"{_PROBLEM_BASE}/profile-integrity",

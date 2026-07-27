@@ -1,16 +1,22 @@
 interface ExpertDetailsProps {
   hash: string;
+  methodVersion: string;
+  schemaVersion: string;
 }
 
-export default function ExpertDetails({ hash }: ExpertDetailsProps) {
+export default function ExpertDetails({
+  hash,
+  methodVersion,
+  schemaVersion,
+}: ExpertDetailsProps) {
   return (
     <div className="provenance">
       <span>Berechnungshash</span>
       <code>{hash}</code>
       <span>Schema</span>
-      <code>profile-calculation-result-v3</code>
+      <code>{schemaVersion}</code>
       <span>Methode</span>
-      <code>pythagorean-v1</code>
+      <code>{methodVersion}</code>
     </div>
   );
 }

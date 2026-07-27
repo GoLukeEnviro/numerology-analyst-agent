@@ -68,4 +68,21 @@ describe("Numra PDF export", () => {
     expect(new TextDecoder().decode(bytes.slice(0, 5))).toBe("%PDF-");
     expect(bytes.byteLength).toBeGreaterThan(1_000);
   });
+
+  it("keeps a legacy V2 active-name profile exportable without inventing maturity data", () => {
+    const legacyProfile = {
+      ...profile,
+      schema_version: "profile-calculation-result-v2",
+      active_name: {
+        expression: { reduced_value: 7, compound_notation: "43/7" },
+        soul_urge: { reduced_value: 4, compound_notation: "22/4" },
+        personality: { reduced_value: 3, compound_notation: "21/3" },
+      },
+    } as unknown as ProfileCalculationResult;
+
+    const text = buildPdfLines(legacyProfile, null).join("\n");
+
+    expect(text).toContain("Aktiver Ausdruck: 7");
+    expect(text).not.toContain("Aktive Reife");
+  });
 });

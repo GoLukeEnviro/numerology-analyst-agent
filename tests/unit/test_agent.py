@@ -161,6 +161,7 @@ async def test_follow_up_blocks_prompt_injection_before_provider_call() -> None:
         "Ich heiße Max. Was passt dazu?",
         "Wie passt das zu meinem Geburtstag 1985-07-25?",
         "Was bedeutet mein Geburtstag 25-07-1985?",
+        "Was bedeutet mein Geburtstag 25-7-1985?",
         "Was bedeutet mein Geburtstag 25. Juli 1985?",
         "Bitte beziehe Max Power in die Antwort ein.",
     ],

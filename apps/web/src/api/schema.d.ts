@@ -147,7 +147,8 @@ export interface components {
             consent: true;
             /** Device Id */
             device_id: string;
-            profile: components["schemas"]["ProfileCalculationResult"];
+            /** Profile */
+            profile: components["schemas"]["ProfileCalculationResult"] | components["schemas"]["LegacyV2ProfileCalculationResult"];
             /** Question */
             question: string;
             report: components["schemas"]["AnalysisReport"];
@@ -218,7 +219,8 @@ export interface components {
             consent: true;
             /** Device Id */
             device_id: string;
-            profile: components["schemas"]["ProfileCalculationResult"];
+            /** Profile */
+            profile: components["schemas"]["ProfileCalculationResult"] | components["schemas"]["LegacyV2ProfileCalculationResult"];
         };
         /** AnalysisSection */
         AnalysisSection: {
@@ -378,6 +380,65 @@ export interface components {
              * @description Methodical component that produced the value (e.g. 'total_sum').
              */
             origin: string;
+        };
+        /**
+         * LegacyV2NameNumberSet
+         * @description Historical V2 name contract, accepted only for server-side recalculation.
+         */
+        LegacyV2NameNumberSet: {
+            /** Basis */
+            basis: string;
+            expression: components["schemas"]["NumberResult"];
+            /** Normalized Name */
+            normalized_name: string;
+            /** Original Name */
+            original_name: string;
+            personality: components["schemas"]["NumberResult"];
+            /** Segments */
+            segments: components["schemas"]["NameSegmentResult"][];
+            soul_urge: components["schemas"]["NumberResult"];
+            /**
+             * Variants
+             * @default []
+             */
+            variants: components["schemas"]["NameNumberVariant"][];
+            /**
+             * Y Classifications
+             * @default []
+             */
+            y_classifications: string[];
+        };
+        /**
+         * LegacyV2ProfileCalculationResult
+         * @description Read-only V2 envelope; calculated fields are never trusted by the API.
+         */
+        LegacyV2ProfileCalculationResult: {
+            active_name?: components["schemas"]["LegacyV2NameNumberSet"] | null;
+            attitude: components["schemas"]["NumberResult"];
+            birthday: components["schemas"]["NumberResult"];
+            /** @default calculation_fact */
+            claim_type: components["schemas"]["ClaimType"];
+            consistency: components["schemas"]["ConsistencyStatus"];
+            core_name?: components["schemas"]["LegacyV2NameNumberSet"] | null;
+            cycles: components["schemas"]["CycleCalculationResult"];
+            /** Deterministic Hash */
+            deterministic_hash: string;
+            input_ref: components["schemas"]["PersonInput"];
+            life_path_a: components["schemas"]["LifePathResult"];
+            life_path_b: components["schemas"]["LifePathResult"];
+            maturity: components["schemas"]["NumberResult"];
+            /**
+             * Name
+             * @default complete_profile
+             */
+            name: string;
+            policy: components["schemas"]["MethodPolicy"];
+            /**
+             * Schema Version
+             * @constant
+             */
+            schema_version: "profile-calculation-result-v2";
+            trace: components["schemas"]["AuditTrace"];
         };
         /**
          * LifePathResult

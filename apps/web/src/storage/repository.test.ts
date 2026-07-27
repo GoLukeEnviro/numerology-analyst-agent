@@ -6,7 +6,7 @@ import type { ProfileCalculationResult } from "../api/types";
 import type { AnalysisFollowUp, AnalysisReport } from "../api/types";
 import { NumraDatabase, migrateLegacyProfile } from "./database";
 import { MemoryVault, VaultLockedError, encryptArchive } from "./crypto";
-import { LocalProfileRepository, migrateProfileContract } from "./repository";
+import { LocalProfileRepository } from "./repository";
 
 function profile(name: string, hashCharacter: string): ProfileCalculationResult {
   return {
@@ -28,8 +28,11 @@ afterEach(async () => {
 });
 
 describe("LocalProfileRepository", () => {
-  it("backfills nested maturity values when reading a stored V2 profile", () => {
-    const migrated = migrateProfileContract({
+  it("preserves a stored V2 profile and its historical hash without creating a hybrid", async () => {
+    const state = repository();
+    const legacy = {
+      deterministic_hash: "v".repeat(64),
+      input_ref: { core_name: "Legacy V2", as_of_date: "2026-07-26" },
       schema_version: "profile-calculation-result-v2",
       life_path_a: { reduced_value: 1 },
       policy: { master_numbers: [11, 22, 33] },
@@ -42,11 +45,15 @@ describe("LocalProfileRepository", () => {
         basis: "active_name",
         expression: { reduced_value: 7 },
       },
-    } as unknown as ProfileCalculationResult);
+    } as unknown as ProfileCalculationResult;
 
-    expect(migrated.core_name?.maturity.reduced_value).toBe(6);
-    expect(migrated.active_name?.maturity.reduced_value).toBe(8);
-    expect(migrated.schema_version).toBe("profile-calculation-result-v2");
+    const saved = await state.repository.saveProfile(legacy, true);
+    const reloaded = await state.repository.getProfile(saved.id);
+
+    expect(reloaded?.profile).toEqual(legacy);
+    expect(reloaded?.calculationHash).toBe("v".repeat(64));
+    expect(reloaded?.profile.core_name).not.toHaveProperty("maturity");
+    expect(reloaded?.profile.active_name).not.toHaveProperty("maturity");
   });
 
   it("requires explicit opt-in and supports search, sorting and deletion", async () => {
@@ -173,7 +180,43 @@ describe("LocalProfileRepository", () => {
         { ...protectedEncrypted, format: "numra-export-v1" },
         "archive passphrase",
       ),
-    ).rejects.toThrow(/ursprünglichen.*entsperrten Numra/i);
+    ).rejects.toThrow(/ursprünglichen.*entsperrten Vault/i);
+  });
+
+  it("recovers protected V1 payloads inside their original unlocked vault", async () => {
+    const source = repository();
+    await source.repository.enableProtection("source vault passphrase");
+    const saved = await source.repository.saveProfile(profile("Protected V1", "p"), true);
+    const report = {
+      schema_version: "analysis-report-v1",
+      summary: "Legacy protected report",
+    } as AnalysisReport;
+    const followUp = {
+      schema_version: "analysis-follow-up-v1",
+      answer: "Legacy protected answer",
+    } as AnalysisFollowUp;
+    await source.repository.saveReport(saved.id, report, true);
+    await source.repository.saveFollowUp(saved.id, followUp, true);
+    await source.repository.saveNote(saved.id, "Legacy protected note", true);
+
+    const legacyContents = {
+      schemaVersion: 1 as const,
+      exportedAt: "2026-07-27T00:00:00.000Z",
+      profiles: [saved.profile],
+      runs: await source.database.runs.toArray(),
+      reports: await source.database.reports.toArray(),
+      threads: await source.database.threads.toArray(),
+      notes: await source.database.notes.toArray(),
+    };
+    const encrypted = await encryptArchive(legacyContents, "archive passphrase");
+    const legacyArchive = { ...encrypted, format: "numra-export-v1" as const };
+
+    await source.repository.deleteProfile(saved.id);
+    await source.repository.importAll(legacyArchive, "archive passphrase");
+
+    expect(await source.repository.getReport(saved.id)).toEqual(report);
+    expect(await source.repository.listFollowUps(saved.id)).toEqual([followUp]);
+    expect(await source.repository.getNote(saved.id)).toBe("Legacy protected note");
   });
 
   it("migrates legacy profile records to schema version two", () => {

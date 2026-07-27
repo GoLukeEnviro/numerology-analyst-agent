@@ -29,7 +29,7 @@ class AgentValidationError(ValueError):
     """Raised when generated content fails schema, provenance or safety validation."""
 
 
-_FULL_DATE_PATTERN = re.compile(r"\b(?:\d{4}-\d{2}-\d{2}|\d{1,2}[./]\d{1,2}[./]\d{2,4})\b")
+_FULL_DATE_PATTERN = re.compile(r"\b(?:\d{4}-\d{1,2}-\d{1,2}|\d{1,2}[-./]\d{1,2}[-./]\d{2,4})\b")
 _GERMAN_MONTHS = (
     "januar",
     "februar",
@@ -52,7 +52,7 @@ def _contains_profile_pii(text: str, profile: ProfileCalculationResult) -> bool:
         token.casefold()
         for name in (profile.input_ref.core_name, profile.input_ref.active_name)
         if name is not None
-        for token in re.findall(r"[^\W\d_]{3,}", name, re.UNICODE)
+        for token in re.findall(r"[^\W\d_]+", name, re.UNICODE)
     }
     if any(re.search(rf"(?<!\w){re.escape(token)}(?!\w)", normalized) for token in name_tokens):
         return True
@@ -60,6 +60,7 @@ def _contains_profile_pii(text: str, profile: ProfileCalculationResult) -> bool:
     date_variants = {
         birth.isoformat(),
         f"{birth.day:02d}-{birth.month:02d}-{birth.year:04d}",
+        f"{birth.day}-{birth.month}-{birth.year:04d}",
         f"{birth.day:02d}.{birth.month:02d}.{birth.year:04d}",
         f"{birth.day:02d}/{birth.month:02d}/{birth.year:04d}",
         f"{birth.day}. {_GERMAN_MONTHS[birth.month - 1]} {birth.year}",

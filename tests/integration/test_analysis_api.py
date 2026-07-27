@@ -190,6 +190,53 @@ async def test_report_is_generated_without_raw_ip_in_rate_limit_keys(
 
 
 @pytest.mark.anyio
+async def test_report_recalculates_a_legacy_v2_profile_as_canonical_v3(
+    enabled_state: tuple[AsyncClient, MemoryLimiter],
+) -> None:
+    client, _ = enabled_state
+    current_profile = await _profile(client)
+    legacy_profile = json.loads(json.dumps(current_profile))
+    legacy_profile["schema_version"] = "profile-calculation-result-v2"
+    legacy_profile["core_name"].pop("maturity")
+    legacy_profile["active_name"].pop("maturity")
+    legacy_profile["birthday"]["reduced_value"] = 99
+    legacy_profile["maturity"]["reduced_value"] = 99
+    legacy_profile["deterministic_hash"] = "f" * 64
+
+    response = await client.post(
+        "/api/v1/analyses/report",
+        json={
+            "consent": True,
+            "device_id": "device-legacy-v2-1234",
+            "profile": legacy_profile,
+        },
+    )
+
+    assert response.status_code == 200
+    assert (
+        response.json()["provenance"]["calculation_hash"] == current_profile["deterministic_hash"]
+    )
+
+
+@pytest.mark.anyio
+async def test_report_rejects_an_unknown_profile_schema_before_consuming_quota(
+    enabled_state: tuple[AsyncClient, MemoryLimiter],
+) -> None:
+    client, limiter = enabled_state
+    profile = await _profile(client)
+    profile["schema_version"] = "profile-calculation-result-v99"
+
+    response = await client.post(
+        "/api/v1/analyses/report",
+        json={"consent": True, "device_id": "device-unknown-v99-1234", "profile": profile},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["code"] == "PROFILE_INTEGRITY_FAILED"
+    assert limiter.keys == []
+
+
+@pytest.mark.anyio
 @pytest.mark.parametrize("field", ["deterministic_hash", "maturity"])
 async def test_report_rejects_a_tampered_profile_before_consuming_quota(
     enabled_state: tuple[AsyncClient, MemoryLimiter],

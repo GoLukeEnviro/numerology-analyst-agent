@@ -21,13 +21,18 @@ Releasefreigabe ebenfalls in diesen unreleased Stand gehören:
 - serverseitige Neuberechnung und Integritätsprüfung aller an LLM-Endpunkte
   gesendeten Profile,
 - `profile-calculation-result-v3` mit getrennten Core-/Active-Name-Reifezahlen,
-  Active-Trace und lesender V2-Migration,
+  Active-Trace, unveränderter lokaler V2-Lesbarkeit und kontrollierter
+  serverseitiger V2-Neuberechnung als kanonisches V3-Profil,
 - wiederherstellbare Voll-Exporte auch zwischen unterschiedlich geschützten
-  lokalen Bibliotheken; neue Archive tragen explizit `numra-export-v2`,
+  lokalen Bibliotheken; neue Archive tragen explizit `numra-export-v2`.
+  Geschützte V1-Innenpayloads lassen sich ausschließlich im ursprünglichen,
+  entsperrten Vault entschlüsseln und anschließend als V2 exportieren,
 - HMAC-gebundene Reportkontexte, erneute Reportvalidierung und PII-Sperren
   für Rückfragen,
 - geräteweite Tageskontingente sowie eine gehärtete Proxy-Vertrauenskette,
 - echte Redis-Readiness und explizite Thinking-/Sampling-Provenienz,
+- automatisierte WCAG-2.2-AA-Prüfung des primären Browserflusses mit axe
+  sowie tastaturzugängliche mobile Ergebnistabellen,
 - der aktuelle Providervertrag `deepseek-v4-pro`.
 
 Der öffentliche Launch ist nicht Bestandteil dieser Quellintegration.

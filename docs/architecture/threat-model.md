@@ -47,11 +47,12 @@ LLM-Anbieter sind getrennte Vertrauensbereiche.
 `GHSA-qwww-vcr4-c8h2` betrifft laut Advisory ausschließlich React Routers RSC
 Framework Mode und die Ausführung von Server Actions. Numra verwendet nur den
 deklarativen `BrowserRouter` im statischen Vite-Client, besitzt keine
-React-Server-Komponenten und keine Server Actions. Die Registry nennt eine
-behobene Version, die dort am 2026-07-26 noch nicht veröffentlicht ist. Nur
-diese Advisory-ID wird deshalb im expliziten CI-Auditbefehl befristet
-ignoriert; alle übrigen hohen Funde bleiben build-blockierend. Die Ausnahme ist
-bei jedem Router-Update zu entfernen beziehungsweise neu zu prüfen.
+React-Server-Komponenten und keine Server Actions. Die verfügbare behobene
+Version `8.3.0` erfordert einen Major-Upgrade von Numras derzeitiger 7.x-Linie.
+Nur diese Advisory-ID wird deshalb, nach erneuter Prüfung am 2026-07-27, im
+expliziten CI-Auditbefehl befristet ignoriert; alle übrigen hohen Funde bleiben
+build-blockierend. Die Ausnahme wird entfernt, sobald der Major-Upgrade durch
+Numras Kompatibilitäts-, Build- und Browser-Gates validiert ist.
 
 ## Datenschutzprinzipien
 

@@ -370,6 +370,10 @@ function ProfilePage() {
       </div>
     );
   }
+  const activeMaturity =
+    result.active_name != null && "maturity" in result.active_name
+      ? result.active_name.maturity
+      : undefined;
   const numbers: AtlasNumber[] = [
     { label: "Lebensweg", value: result.life_path_a.reduced_value, notation: result.life_path_a.compound_notation },
     { label: "Geburtstag", value: result.birthday.reduced_value, notation: result.birthday.compound_notation },
@@ -383,7 +387,9 @@ function ProfilePage() {
           { label: "Aktiver Ausdruck", value: result.active_name.expression.reduced_value, notation: result.active_name.expression.compound_notation },
           { label: "Aktives Seelenstreben", value: result.active_name.soul_urge.reduced_value, notation: result.active_name.soul_urge.compound_notation },
           { label: "Aktive Persönlichkeit", value: result.active_name.personality.reduced_value, notation: result.active_name.personality.compound_notation },
-          { label: "Aktive Reife", value: result.active_name.maturity.reduced_value, notation: result.active_name.maturity.compound_notation },
+          ...(activeMaturity == null
+            ? []
+            : [{ label: "Aktive Reife", value: activeMaturity.reduced_value, notation: activeMaturity.compound_notation }]),
         ]
       : []),
   ];
@@ -397,7 +403,11 @@ function ProfilePage() {
             <h1>{result.input_ref.core_name}</h1>
             <p>Berechnet für den Stand {result.input_ref.as_of_date}. Keine Deutung verändert diese Werte.</p>
           </div>
-          <div className="profile-seal"><span>Schema</span><strong>V3</strong><small>verifiziert</small></div>
+          <div className="profile-seal">
+            <span>Schema</span>
+            <strong>{result.schema_version.replace("profile-calculation-result-", "").toUpperCase()}</strong>
+            <small>verifiziert</small>
+          </div>
         </header>
         <div className="local-actions">
           <button
@@ -417,7 +427,12 @@ function ProfilePage() {
           {message && <p role="status">{message}</p>}
           <a className="button button-primary" href={`/profil/${id}/bericht`}>Reflexionsbericht</a>
         </div>
-        <NumberAtlas hash={result.deterministic_hash} numbers={numbers} />
+        <NumberAtlas
+          hash={result.deterministic_hash}
+          methodVersion={`${result.policy.system}-${result.policy.version}`}
+          numbers={numbers}
+          schemaVersion={result.schema_version}
+        />
         <section className="result-section">
           <div className="section-heading">
             <div><p className="eyebrow">ZEITLICHE MUSTER</p><h2>Persönliche Zyklen</h2></div>

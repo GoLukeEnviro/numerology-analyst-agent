@@ -9,6 +9,10 @@ pdfMake.addVirtualFileSystem(virtualFonts);
 function numbers(profile: ProfileCalculationResult): Array<[string, number, string]> {
   const selectedName = profile.core_name ?? profile.active_name;
   if (selectedName == null) throw new Error("Profil ohne Namensprofil kann nicht exportiert werden.");
+  const activeMaturity =
+    profile.active_name != null && "maturity" in profile.active_name
+      ? profile.active_name.maturity
+      : undefined;
   return [
     ["Lebensweg", profile.life_path_a.reduced_value, profile.life_path_a.compound_notation],
     ["Geburtstag", profile.birthday.reduced_value, profile.birthday.compound_notation],
@@ -22,7 +26,9 @@ function numbers(profile: ProfileCalculationResult): Array<[string, number, stri
           ["Aktiver Ausdruck", profile.active_name.expression.reduced_value, profile.active_name.expression.compound_notation] as [string, number, string],
           ["Aktives Seelenstreben", profile.active_name.soul_urge.reduced_value, profile.active_name.soul_urge.compound_notation] as [string, number, string],
           ["Aktive Persönlichkeit", profile.active_name.personality.reduced_value, profile.active_name.personality.compound_notation] as [string, number, string],
-          ["Aktive Reife", profile.active_name.maturity.reduced_value, profile.active_name.maturity.compound_notation] as [string, number, string],
+          ...(activeMaturity == null
+            ? []
+            : [["Aktive Reife", activeMaturity.reduced_value, activeMaturity.compound_notation] as [string, number, string]]),
         ]
       : []),
   ];

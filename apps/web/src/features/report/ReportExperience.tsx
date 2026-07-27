@@ -188,10 +188,10 @@ export function ReportExperience({
             <h2>Rückfragen <small>{quota.followUps}/2</small></h2>
             {followUps.map((item, index) => <article key={`${item.provenance.prompt_tokens}:${index}`}><p>{item.answer}</p></article>)}
             <p>
-              Der Rückfragetext wird an DeepSeek übertragen. Namen, Geburtsdaten
-              aus diesem Profil und vollständige Datumsformen werden
-              serverseitig abgewiesen. Gib keine weiteren personenbezogenen
-              Angaben ein.
+              Der Rückfragetext wird an DeepSeek übertragen. Erkennbare
+              Namensbestandteile aus diesem Profil und übliche vollständige
+              Datumsformen werden serverseitig abgewiesen. Gib keine weiteren
+              personenbezogenen Angaben ein.
             </p>
             <label className="check-row">
               <input

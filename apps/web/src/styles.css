@@ -175,6 +175,9 @@ h1 {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0.85rem 1.35rem;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
   font-weight: 650;
   transition:
     transform 180ms ease,
@@ -761,6 +764,11 @@ button:disabled {
 .table-scroll {
   overflow-x: auto;
   margin-top: 2rem;
+}
+
+.table-scroll:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 0.25rem;
 }
 
 table {
