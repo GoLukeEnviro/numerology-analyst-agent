@@ -359,14 +359,33 @@ function ProfilePage() {
       </div>
     );
   }
+  const selectedName = result.core_name ?? result.active_name;
+  if (selectedName == null) {
+    return (
+      <div className="app-shell">
+        <SiteHeader />
+        <main className="empty-state">
+          <h1>Das Profil enthält kein gültiges Namensprofil.</h1>
+        </main>
+      </div>
+    );
+  }
   const numbers: AtlasNumber[] = [
     { label: "Lebensweg", value: result.life_path_a.reduced_value, notation: result.life_path_a.compound_notation },
     { label: "Geburtstag", value: result.birthday.reduced_value, notation: result.birthday.compound_notation },
     { label: "Einstellung", value: result.attitude.reduced_value, notation: result.attitude.compound_notation },
-    { label: "Ausdruck", value: result.core_name.expression.reduced_value, notation: result.core_name.expression.compound_notation },
-    { label: "Seelenstreben", value: result.core_name.soul_urge.reduced_value, notation: result.core_name.soul_urge.compound_notation },
-    { label: "Persönlichkeit", value: result.core_name.personality.reduced_value, notation: result.core_name.personality.compound_notation },
+    { label: "Ausdruck", value: selectedName.expression.reduced_value, notation: selectedName.expression.compound_notation },
+    { label: "Seelenstreben", value: selectedName.soul_urge.reduced_value, notation: selectedName.soul_urge.compound_notation },
+    { label: "Persönlichkeit", value: selectedName.personality.reduced_value, notation: selectedName.personality.compound_notation },
     { label: "Reife", value: result.maturity.reduced_value, notation: result.maturity.compound_notation },
+    ...(result.core_name != null && result.active_name != null
+      ? [
+          { label: "Aktiver Ausdruck", value: result.active_name.expression.reduced_value, notation: result.active_name.expression.compound_notation },
+          { label: "Aktives Seelenstreben", value: result.active_name.soul_urge.reduced_value, notation: result.active_name.soul_urge.compound_notation },
+          { label: "Aktive Persönlichkeit", value: result.active_name.personality.reduced_value, notation: result.active_name.personality.compound_notation },
+          { label: "Aktive Reife", value: result.active_name.maturity.reduced_value, notation: result.active_name.maturity.compound_notation },
+        ]
+      : []),
   ];
   return (
     <div className="app-shell">

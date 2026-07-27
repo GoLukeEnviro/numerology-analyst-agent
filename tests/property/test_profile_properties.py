@@ -29,6 +29,7 @@ def test_expression_partition_and_reduction_range(name: str) -> None:
     )
     numbers = result.core_name
 
+    assert numbers is not None
     assert numbers.expression.raw_total == (
         numbers.soul_urge.raw_total + numbers.personality.raw_total
     )

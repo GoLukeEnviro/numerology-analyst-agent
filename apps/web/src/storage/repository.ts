@@ -42,10 +42,10 @@ interface ExportContents {
   schemaVersion: 1;
   exportedAt: string;
   profiles: ProfileCalculationResult[];
-  runs: LocalRunRecord[];
-  reports: LocalReportRecord[];
-  threads: LocalThreadRecord[];
-  notes: LocalNoteRecord[];
+  runs: Array<Omit<LocalRunRecord, "payload"> & { payload: ProfileCalculationResult }>;
+  reports: Array<Omit<LocalReportRecord, "payload"> & { payload: AnalysisReport }>;
+  threads: Array<Omit<LocalThreadRecord, "payload"> & { payload: AnalysisFollowUp }>;
+  notes: Array<Omit<LocalNoteRecord, "payload"> & { payload: string }>;
 }
 
 function parseProfile(value: string): ProfileCalculationResult {
@@ -270,15 +270,39 @@ export class LocalProfileRepository {
 
   async exportAll(passphrase: string): Promise<EncryptedArchive> {
     const profiles = await this.listProfiles({ query: "", sort: "updated" });
+    const runs = await this.database.runs.toArray();
+    const reports = await this.database.reports.toArray();
+    const threads = await this.database.threads.toArray();
+    const notes = await this.database.notes.toArray();
     return encryptArchive(
       {
         schemaVersion: 1,
         exportedAt: new Date().toISOString(),
         profiles: profiles.map((profile) => profile.profile),
-        runs: await this.database.runs.toArray(),
-        reports: await this.database.reports.toArray(),
-        threads: await this.database.threads.toArray(),
-        notes: await this.database.notes.toArray(),
+        runs: await Promise.all(
+          runs.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<ProfileCalculationResult>(payload),
+          })),
+        ),
+        reports: await Promise.all(
+          reports.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<AnalysisReport>(payload),
+          })),
+        ),
+        threads: await Promise.all(
+          threads.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<AnalysisFollowUp>(payload),
+          })),
+        ),
+        notes: await Promise.all(
+          notes.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<string>(payload),
+          })),
+        ),
       } satisfies ExportContents,
       passphrase,
     );
@@ -290,6 +314,30 @@ export class LocalProfileRepository {
       throw new Error("Ungültiger Numra-Export.");
     }
     for (const profile of contents.profiles) await this.saveProfile(profile, true);
+    const runs = await Promise.all(
+      contents.runs.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const reports = await Promise.all(
+      contents.reports.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const threads = await Promise.all(
+      contents.threads.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const notes = await Promise.all(
+      contents.notes.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
     await this.database.transaction(
       "rw",
       [
@@ -299,10 +347,11 @@ export class LocalProfileRepository {
         this.database.notes,
       ],
       async () => {
-        await this.database.runs.bulkPut(contents.runs);
-        await this.database.reports.bulkPut(contents.reports);
-        await this.database.threads.bulkPut(contents.threads);
-        await this.database.notes.bulkPut(contents.notes);
+        await this.database.runs.clear();
+        await this.database.runs.bulkPut(runs);
+        await this.database.reports.bulkPut(reports);
+        await this.database.threads.bulkPut(threads);
+        await this.database.notes.bulkPut(notes);
       },
     );
   }

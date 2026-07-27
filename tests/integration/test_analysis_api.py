@@ -67,14 +67,18 @@ class ContractProvider:
 
 
 class MemoryLimiter:
-    def __init__(self) -> None:
+    def __init__(self, ready: bool = True) -> None:
         self.counts: dict[str, int] = {}
         self.keys: list[str] = []
+        self.ready = ready
 
     async def consume(self, key: str, limit: int, window_seconds: int) -> int | None:
         self.keys.append(key)
         self.counts[key] = self.counts.get(key, 0) + 1
         return 3600 if self.counts[key] > limit else None
+
+    async def is_ready(self) -> bool:
+        return self.ready
 
 
 async def _profile(client: AsyncClient) -> dict[str, Any]:
@@ -143,8 +147,30 @@ async def test_ready_reports_configured_llm_dependencies(
 
     response = await client.get("/api/v1/health/ready")
 
-    assert response.json()["provider"] == "ready"
+    assert response.json()["provider"] == "configured"
     assert response.json()["redis"] == "ready"
+
+
+@pytest.mark.anyio
+async def test_ready_fails_when_the_rate_limit_store_is_unavailable() -> None:
+    app = create_app(
+        ApiSettings(
+            environment="test",
+            llm_enabled=True,
+            rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
+        ),
+        provider=ContractProvider(),
+        rate_limiter=MemoryLimiter(ready=False),
+    )
+    async with AsyncClient(
+        transport=ASGITransport(app=app),
+        base_url="https://test",
+    ) as client:
+        response = await client.get("/api/v1/health/ready")
+
+    assert response.status_code == 503
+    assert response.json()["status"] == "unavailable"
+    assert response.json()["redis"] == "unavailable"
 
 
 @pytest.mark.anyio
@@ -164,6 +190,29 @@ async def test_report_is_generated_without_raw_ip_in_rate_limit_keys(
 
 
 @pytest.mark.anyio
+@pytest.mark.parametrize("field", ["deterministic_hash", "maturity"])
+async def test_report_rejects_a_tampered_profile_before_consuming_quota(
+    enabled_state: tuple[AsyncClient, MemoryLimiter],
+    field: str,
+) -> None:
+    client, limiter = enabled_state
+    profile = await _profile(client)
+    if field == "deterministic_hash":
+        profile[field] = "f" * 64
+    else:
+        profile[field]["reduced_value"] = 99
+
+    response = await client.post(
+        "/api/v1/analyses/report",
+        json={"consent": True, "device_id": "device-contract-1234", "profile": profile},
+    )
+
+    assert response.status_code == 422
+    assert response.json()["code"] == "PROFILE_INTEGRITY_FAILED"
+    assert limiter.keys == []
+
+
+@pytest.mark.anyio
 async def test_second_report_returns_problem_details_with_retry_after(
     enabled_state: tuple[AsyncClient, MemoryLimiter],
 ) -> None:
@@ -178,6 +227,38 @@ async def test_second_report_returns_problem_details_with_retry_after(
     assert response.headers["Retry-After"] == "3600"
     assert response.headers["content-type"].startswith("application/problem+json")
     assert response.json()["code"] == "LLM_DEVICE_QUOTA_EXCEEDED"
+
+
+@pytest.mark.anyio
+async def test_report_quota_is_per_device_day_not_per_profile(
+    enabled_state: tuple[AsyncClient, MemoryLimiter],
+) -> None:
+    client, _ = enabled_state
+    first_profile = await _profile(client)
+    alternate_request = _request()
+    alternate_person = cast(dict[str, Any], alternate_request["person"])
+    alternate_person["core_name"] = "Anna Beispiel"
+    alternate_person["active_name"] = None
+    alternate_response = await client.post(
+        "/api/v1/profiles/calculate",
+        json=alternate_request,
+    )
+    alternate_profile = alternate_response.json()
+    device_id = "device-daily-quota-1234"
+
+    assert (
+        await client.post(
+            "/api/v1/analyses/report",
+            json={"consent": True, "device_id": device_id, "profile": first_profile},
+        )
+    ).status_code == 200
+    denied = await client.post(
+        "/api/v1/analyses/report",
+        json={"consent": True, "device_id": device_id, "profile": alternate_profile},
+    )
+
+    assert denied.status_code == 429
+    assert denied.json()["code"] == "LLM_DEVICE_QUOTA_EXCEEDED"
 
 
 @pytest.mark.anyio

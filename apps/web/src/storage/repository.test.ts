@@ -91,6 +91,28 @@ describe("LocalProfileRepository", () => {
     expect(await target.database.notes.count()).toBe(0);
   });
 
+  it("round-trips every payload from one protected vault into another", async () => {
+    const source = repository();
+    await source.repository.enableProtection("source vault passphrase");
+    const saved = await source.repository.saveProfile(profile("Protected Export", "z"), true);
+    const report = { schema_version: "analysis-report-v1", summary: "Protected report" } as AnalysisReport;
+    const followUp = { schema_version: "analysis-follow-up-v1", answer: "Protected answer" } as AnalysisFollowUp;
+    await source.repository.saveReport(saved.id, report, true);
+    await source.repository.saveFollowUp(saved.id, followUp, true);
+    await source.repository.saveNote(saved.id, "Protected note", true);
+    const archive = await source.repository.exportAll("archive passphrase");
+
+    const target = repository();
+    await target.repository.enableProtection("different target passphrase");
+    await target.repository.importAll(archive, "archive passphrase");
+
+    expect(await target.repository.getReport(saved.id)).toEqual(report);
+    expect(await target.repository.listFollowUps(saved.id)).toEqual([followUp]);
+    expect(await target.repository.getNote(saved.id)).toBe("Protected note");
+    expect(JSON.stringify(await target.database.reports.toArray())).not.toContain("Protected report");
+    expect(JSON.stringify(await target.database.notes.toArray())).not.toContain("Protected note");
+  });
+
   it("migrates legacy profile records to schema version two", () => {
     const migrated = migrateLegacyProfile({
       id: "legacy",

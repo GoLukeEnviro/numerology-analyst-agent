@@ -135,7 +135,9 @@ def profile_result_to_payload(result: ProfileCalculationResult) -> dict[str, Any
         {
             "birthday": _number_payload(result.birthday),
             "attitude": _number_payload(result.attitude),
-            "core_name": result.core_name.model_dump(mode="json"),
+            "core_name": (
+                None if result.core_name is None else result.core_name.model_dump(mode="json")
+            ),
             "active_name": (
                 None if result.active_name is None else result.active_name.model_dump(mode="json")
             ),

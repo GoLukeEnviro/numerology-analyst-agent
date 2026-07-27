@@ -47,6 +47,8 @@ class AnalysisProvenance(_AgentModel):
     temperature: float
     top_p: float
     thinking: str
+    effective_sampling: Literal["provider_managed"] = "provider_managed"
+    reasoning_effort: Literal["high"] = "high"
     prompt_version: str
     knowledge_bundle: str
     calculation_hash: str

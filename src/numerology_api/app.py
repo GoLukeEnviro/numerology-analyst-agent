@@ -67,7 +67,7 @@ class ApiSettings(BaseModel):
     llm_enabled: bool = False
     deepseek_api_key: SecretStr | None = None
     deepseek_base_url: str = "https://api.deepseek.com"
-    deepseek_model: str = "deepseek-reasoner"
+    deepseek_model: str = "deepseek-v4-pro"
     redis_url: SecretStr = SecretStr("redis://redis:6379/0")
     rate_limit_hmac_secret: SecretStr | None = None
     max_request_body_bytes: int = Field(default=65_536, ge=256, le=1_048_576)
@@ -425,13 +425,18 @@ def create_app(
         return LiveStatus()
 
     @api.get("/api/v1/health/ready", response_model=ReadyStatus, tags=["health"])
-    async def ready() -> ReadyStatus:
-        return ReadyStatus(
-            redis="ready"
-            if resolved.llm_enabled and rate_limiter is not None
-            else "not_configured",
-            provider="ready" if resolved.llm_enabled and provider is not None else "disabled",
+    async def ready() -> ReadyStatus | JSONResponse:
+        if not resolved.llm_enabled:
+            return ReadyStatus()
+        limiter_ready = rate_limiter is not None and await rate_limiter.is_ready()
+        status = ReadyStatus(
+            status="ready" if limiter_ready else "unavailable",
+            redis="ready" if limiter_ready else "unavailable",
+            provider="configured" if provider is not None else "disabled",
         )
+        if limiter_ready:
+            return status
+        return JSONResponse(status_code=503, content=status.model_dump(mode="json"))
 
     @api.get("/api/v1/meta", response_model=MetaResponse, tags=["meta"])
     async def meta() -> MetaResponse:
@@ -461,7 +466,6 @@ def create_app(
         request: Request,
         *,
         device_id: str,
-        calculation_hash: str,
         device_limit: int,
         device_scope: str,
     ) -> JSONResponse | None:
@@ -477,7 +481,7 @@ def create_app(
         device_retry = await rate_limiter.consume(
             pseudonymous_key(
                 device_scope,
-                f"{device_id}:{calculation_hash}",
+                device_id,
                 secret,
             ),
             device_limit,
@@ -525,17 +529,28 @@ def create_app(
                     correlation_id=_correlation_id(request),
                 )
             )
+        canonical_profile = calculate_profile(body.profile.input_ref, body.profile.policy)
+        if body.profile != canonical_profile:
+            return _problem_response(
+                ProblemDetails(
+                    type=f"{_PROBLEM_BASE}/profile-integrity",
+                    title="Profile integrity validation failed",
+                    status=422,
+                    code="PROFILE_INTEGRITY_FAILED",
+                    detail="Das übermittelte Profil stimmt nicht mit der kanonischen Berechnung überein.",
+                    correlation_id=_correlation_id(request),
+                )
+            )
         limited = await consume_analysis_limits(
             request,
             device_id=body.device_id,
-            calculation_hash=body.profile.deterministic_hash,
             device_limit=1,
             device_scope="device-report",
         )
         if limited is not None:
             return limited
         try:
-            return await AgentService(provider).generate_report(body.profile)
+            return await AgentService(provider).generate_report(canonical_profile)
         except (AgentValidationError, ProviderError):
             return _problem_response(
                 ProblemDetails(
@@ -573,10 +588,21 @@ def create_app(
                     correlation_id=_correlation_id(request),
                 )
             )
+        canonical_profile = calculate_profile(body.profile.input_ref, body.profile.policy)
+        if body.profile != canonical_profile:
+            return _problem_response(
+                ProblemDetails(
+                    type=f"{_PROBLEM_BASE}/profile-integrity",
+                    title="Profile integrity validation failed",
+                    status=422,
+                    code="PROFILE_INTEGRITY_FAILED",
+                    detail="Das übermittelte Profil stimmt nicht mit der kanonischen Berechnung überein.",
+                    correlation_id=_correlation_id(request),
+                )
+            )
         limited = await consume_analysis_limits(
             request,
             device_id=body.device_id,
-            calculation_hash=body.profile.deterministic_hash,
             device_limit=2,
             device_scope="device-follow-up",
         )
@@ -584,7 +610,7 @@ def create_app(
             return limited
         try:
             return await AgentService(provider).generate_follow_up(
-                body.profile,
+                canonical_profile,
                 body.report,
                 body.question,
             )

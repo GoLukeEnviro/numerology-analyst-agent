@@ -158,6 +158,12 @@ export interface components {
             calculation_hash: string;
             /** Completion Tokens */
             completion_tokens: number;
+            /**
+             * Effective Sampling
+             * @default provider_managed
+             * @constant
+             */
+            effective_sampling: "provider_managed";
             /** Knowledge Bundle */
             knowledge_bundle: string;
             /** Model */
@@ -170,6 +176,12 @@ export interface components {
             provider: string;
             /** Provider Fingerprint */
             provider_fingerprint: string | null;
+            /**
+             * Reasoning Effort
+             * @default high
+             * @constant
+             */
+            reasoning_effort: "high";
             /** Temperature */
             temperature: number;
             /** Thinking */
@@ -541,12 +553,13 @@ export interface components {
         NameBasis: "core_name_only" | "active_name_only" | "both_separate";
         /**
          * NameNumberSet
-         * @description Expression, Soul Urge and Personality values for one separately held name.
+         * @description All name-derived values for one explicitly separated name profile.
          */
         NameNumberSet: {
             /** Basis */
             basis: string;
             expression: components["schemas"]["NumberResult"];
+            maturity: components["schemas"]["NumberResult"];
             /** Normalized Name */
             normalized_name: string;
             /** Original Name */
@@ -737,7 +750,7 @@ export interface components {
             /** @default calculation_fact */
             claim_type: components["schemas"]["ClaimType"];
             consistency: components["schemas"]["ConsistencyStatus"];
-            core_name: components["schemas"]["NameNumberSet"];
+            core_name?: components["schemas"]["NameNumberSet"] | null;
             cycles: components["schemas"]["CycleCalculationResult"];
             /**
              * Deterministic Hash
@@ -774,19 +787,19 @@ export interface components {
              * @default disabled
              * @enum {string}
              */
-            provider: "disabled" | "ready";
+            provider: "disabled" | "configured";
             /**
              * Redis
              * @default not_configured
              * @enum {string}
              */
-            redis: "not_configured" | "ready";
+            redis: "not_configured" | "ready" | "unavailable";
             /**
              * Status
              * @default ready
-             * @constant
+             * @enum {string}
              */
-            status: "ready";
+            status: "ready" | "unavailable";
         };
         /**
          * ReductionOutcome

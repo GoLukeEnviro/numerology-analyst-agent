@@ -16,16 +16,42 @@ from numerology_safety.validation import assert_claims_safe
 def compose_interpretation(profile: ProfileCalculationResult) -> InterpretationResult:
     """Resolve selected profile values without generating or changing calculations."""
     bundle = load_knowledge_bundle(profile.input_ref.locale.value, "v1")
-    values = (
+    name_profiles = tuple(
+        names for names in (profile.core_name, profile.active_name) if names is not None
+    )
+    if not name_profiles:
+        raise ValueError("profile contains no selected name profile")
+    values = [
         ("life_path", profile.life_path_a.reduced_value, "life_path_a"),
         ("birthday", profile.birthday.reduced_value, "birthday"),
         ("attitude", profile.attitude.reduced_value, "attitude"),
-        ("expression", profile.core_name.expression.reduced_value, "core_name.expression"),
-        ("soul_urge", profile.core_name.soul_urge.reduced_value, "core_name.soul_urge"),
-        ("personality", profile.core_name.personality.reduced_value, "core_name.personality"),
-        ("maturity", profile.maturity.reduced_value, "maturity"),
         ("personal_year", profile.cycles.personal_year.reduced_value, "cycles.personal_year"),
-    )
+    ]
+    for names in name_profiles:
+        values.extend(
+            (
+                (
+                    f"{names.basis}_expression",
+                    names.expression.reduced_value,
+                    f"{names.basis}.expression",
+                ),
+                (
+                    f"{names.basis}_soul_urge",
+                    names.soul_urge.reduced_value,
+                    f"{names.basis}.soul_urge",
+                ),
+                (
+                    f"{names.basis}_personality",
+                    names.personality.reduced_value,
+                    f"{names.basis}.personality",
+                ),
+                (
+                    f"{names.basis}_maturity",
+                    names.maturity.reduced_value,
+                    f"{names.basis}.maturity",
+                ),
+            )
+        )
     sections: list[InterpretationSection] = []
     for subject, number, calculation_ref in values:
         entry = bundle.entry_for(number)

@@ -89,6 +89,7 @@ def _name_numbers(
     *,
     basis: str,
     policy: MethodPolicy,
+    life_path_value: int,
 ) -> tuple[NameNumberSet, tuple[NormalizationStep, ...], bool]:
     normalized, normalization_steps = normalize_name(
         original_name,
@@ -160,6 +161,15 @@ def _name_numbers(
             ),
         )
 
+    maturity = create_number(
+        f"{basis}_maturity",
+        life_path_value + expression.reduced_value,
+        policy=policy,
+        components={
+            "life_path": life_path_value,
+            "expression": expression.reduced_value,
+        },
+    )
     return (
         NameNumberSet(
             basis=basis,
@@ -169,6 +179,7 @@ def _name_numbers(
             expression=expression,
             soul_urge=soul,
             personality=personality,
+            maturity=maturity,
             y_classifications=decisions,
             variants=variants,
         ),
@@ -189,33 +200,33 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
         policy=policy,
         components={"month": person.birth_date.month, "day": person.birth_date.day},
     )
-    core, core_normalization, core_ambiguous = _name_numbers(
-        person.core_name,
-        basis="core_name",
-        policy=policy,
-    )
-
+    core: NameNumberSet | None = None
+    core_normalization: tuple[NormalizationStep, ...] = ()
+    core_ambiguous = False
     active: NameNumberSet | None = None
     active_normalization: tuple[NormalizationStep, ...] = ()
     active_ambiguous = False
     if policy.name_basis is NameBasis.ACTIVE_NAME_ONLY and person.active_name is None:
         raise PolicyError("name_basis 'active_name_only' requires active_name")
+    if policy.name_basis is not NameBasis.ACTIVE_NAME_ONLY:
+        core, core_normalization, core_ambiguous = _name_numbers(
+            person.core_name,
+            basis="core_name",
+            policy=policy,
+            life_path_value=life_a.reduced_value,
+        )
     if person.active_name is not None and policy.name_basis is not NameBasis.CORE_NAME_ONLY:
         active, active_normalization, active_ambiguous = _name_numbers(
             person.active_name,
             basis="active_name",
             policy=policy,
+            life_path_value=life_a.reduced_value,
         )
 
-    maturity = create_number(
-        "maturity",
-        life_a.reduced_value + core.expression.reduced_value,
-        policy=policy,
-        components={
-            "life_path": life_a.reduced_value,
-            "expression": core.expression.reduced_value,
-        },
-    )
+    primary_name = active if policy.name_basis is NameBasis.ACTIVE_NAME_ONLY else core
+    if primary_name is None:
+        raise PolicyError("selected name_basis did not produce a name profile")
+    maturity = primary_name.maturity
     warnings = (consistency.warning,) if consistency.warning else ()
     cycles = calculate_cycles(person, policy)
     calculation_steps = (
@@ -223,10 +234,15 @@ def calculate_profile(person: PersonInput, policy: MethodPolicy) -> ProfileCalcu
         *life_b.steps,
         *birthday.steps,
         *attitude.steps,
-        *core.expression.steps,
-        *core.soul_urge.steps,
-        *core.personality.steps,
-        *maturity.steps,
+        *(step for names in (core, active) if names is not None for step in names.expression.steps),
+        *(step for names in (core, active) if names is not None for step in names.soul_urge.steps),
+        *(
+            step
+            for names in (core, active)
+            if names is not None
+            for step in names.personality.steps
+        ),
+        *(step for names in (core, active) if names is not None for step in names.maturity.steps),
         *cycles.personal_year.steps,
         *cycles.personal_month.steps,
         *cycles.personal_day.steps,

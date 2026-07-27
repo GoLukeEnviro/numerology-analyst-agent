@@ -60,6 +60,7 @@ def test_complete_profile_golden(case: _Case) -> None:
         MethodPolicy(),
     )
 
+    assert result.core_name is not None
     assert result.birthday.reduced_value == case.expected.birthday
     assert result.attitude.reduced_value == case.expected.attitude
     assert result.core_name.expression.reduced_value == case.expected.expression

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from pydantic import ValidationError
 
 from numerology_agent.models import (
@@ -24,20 +26,34 @@ class AgentValidationError(ValueError):
     """Raised when generated content fails schema, provenance or safety validation."""
 
 
+_FULL_DATE_PATTERN = re.compile(r"\b(?:\d{4}-\d{2}-\d{2}|\d{1,2}[./]\d{1,2}[./]\d{2,4})\b")
+
+
 def _facts(profile: ProfileCalculationResult) -> dict[str, int]:
-    return {
+    name_profiles = tuple(
+        names for names in (profile.core_name, profile.active_name) if names is not None
+    )
+    if not name_profiles:
+        raise AgentValidationError("profile contains no selected name profile")
+    facts = {
         "life_path_a": profile.life_path_a.reduced_value,
         "life_path_b": profile.life_path_b.reduced_value,
         "birthday": profile.birthday.reduced_value,
         "attitude": profile.attitude.reduced_value,
-        "core_name.expression": profile.core_name.expression.reduced_value,
-        "core_name.soul_urge": profile.core_name.soul_urge.reduced_value,
-        "core_name.personality": profile.core_name.personality.reduced_value,
-        "maturity": profile.maturity.reduced_value,
         "cycles.personal_year": profile.cycles.personal_year.reduced_value,
         "cycles.personal_month": profile.cycles.personal_month.reduced_value,
         "cycles.personal_day": profile.cycles.personal_day.reduced_value,
     }
+    for names in name_profiles:
+        facts.update(
+            {
+                f"{names.basis}.expression": names.expression.reduced_value,
+                f"{names.basis}.soul_urge": names.soul_urge.reduced_value,
+                f"{names.basis}.personality": names.personality.reduced_value,
+                f"{names.basis}.maturity": names.maturity.reduced_value,
+            }
+        )
+    return facts
 
 
 def build_provider_payload(profile: ProfileCalculationResult) -> ProviderRequest:
@@ -121,6 +137,36 @@ def _validate_follow_up(
         raise AgentValidationError("generated content failed safety validation") from exc
 
 
+def _validate_follow_up_context(
+    profile: ProfileCalculationResult,
+    report: AnalysisReport,
+    question: str,
+) -> None:
+    if report.provenance.calculation_hash != profile.deterministic_hash:
+        raise AgentValidationError("Bericht ist nicht an das kanonische Profil gebunden")
+    try:
+        report_draft = AnalysisDraft(
+            summary=report.summary,
+            sections=report.sections,
+            limitations=report.limitations,
+            suggestions=report.suggestions,
+        )
+        _validate_draft(report_draft, profile)
+    except (ValidationError, AgentValidationError) as exc:
+        raise AgentValidationError("Berichtskontext ist nicht sicher oder kanonisch") from exc
+
+    normalized_question = " ".join(question.casefold().split())
+    known_names = {
+        " ".join(name.casefold().split())
+        for name in (profile.input_ref.core_name, profile.input_ref.active_name)
+        if name is not None
+    }
+    if _FULL_DATE_PATTERN.search(question) or any(
+        name in normalized_question for name in known_names
+    ):
+        raise AgentValidationError("Die Rückfrage enthält erkennbare personenbezogene Profildaten")
+
+
 class AgentService:
     def __init__(self, provider: LlmProvider) -> None:
         self._provider = provider
@@ -171,6 +217,7 @@ class AgentService:
             assert_prompt_safe(question)
         except SafetyError as exc:
             raise AgentValidationError("follow-up contains prompt injection") from exc
+        _validate_follow_up_context(profile, report, question)
         payload = FollowUpProviderRequest(
             calculation_hash=profile.deterministic_hash,
             facts=tuple(
@@ -181,7 +228,7 @@ class AgentService:
                 }
                 for reference, number in _facts(profile).items()
             ),
-            report=report.model_dump(mode="json"),
+            report=report.model_dump(mode="json", exclude={"provenance"}),
             question=question,
             safety_rules=(
                 "Beantworte nur die Rückfrage im bestehenden Berichtskontext.",

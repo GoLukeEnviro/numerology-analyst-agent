@@ -37,6 +37,8 @@ const report = {
     temperature: 0.2,
     top_p: 1,
     thinking: "enabled/high",
+    effective_sampling: "provider_managed",
+    reasoning_effort: "high",
     prompt_version: "numra-report-de-v1",
     knowledge_bundle: "numra-knowledge-de-v1",
     calculation_hash: "a".repeat(64),

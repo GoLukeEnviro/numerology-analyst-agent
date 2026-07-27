@@ -29,7 +29,7 @@ def test_interpretation_references_calculation_and_knowledge() -> None:
     assert interpretation.calculation_hash == profile.deterministic_hash
     assert {section.subject for section in interpretation.sections} >= {
         "life_path",
-        "expression",
+        "core_name_expression",
         "personal_year",
     }
     assert all(
@@ -45,3 +45,21 @@ def test_interpretation_references_calculation_and_knowledge() -> None:
         ClaimType.INTERPRETIVE_HYPOTHESIS,
         ClaimType.PRACTICAL_SUGGESTION,
     }
+
+
+@pytest.mark.unit
+def test_interpretation_keeps_core_and_active_name_profiles_separate() -> None:
+    profile = calculate_profile(
+        PersonInput(
+            core_name="Max Mustermann",
+            active_name="Max Power",
+            birth_date=date(1985, 7, 25),
+            as_of_date=date(2026, 7, 26),
+        ),
+        MethodPolicy(),
+    )
+
+    subjects = {section.subject for section in compose_interpretation(profile).sections}
+
+    assert "core_name_maturity" in subjects
+    assert "active_name_maturity" in subjects

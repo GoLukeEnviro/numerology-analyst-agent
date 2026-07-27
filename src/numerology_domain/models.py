@@ -427,7 +427,7 @@ class NameNumberVariant(_FrozenModel):
 
 
 class NameNumberSet(_FrozenModel):
-    """Expression, Soul Urge and Personality values for one separately held name."""
+    """All name-derived values for one explicitly separated name profile."""
 
     basis: str
     original_name: str
@@ -436,6 +436,7 @@ class NameNumberSet(_FrozenModel):
     expression: NumberResult
     soul_urge: NumberResult
     personality: NumberResult
+    maturity: NumberResult
     y_classifications: tuple[str, ...] = Field(default_factory=tuple)
     variants: tuple[NameNumberVariant, ...] = Field(default_factory=tuple)
 
@@ -473,7 +474,7 @@ class ProfileCalculationResult(_FrozenModel):
     consistency: ConsistencyStatus
     birthday: NumberResult
     attitude: NumberResult
-    core_name: NameNumberSet
+    core_name: NameNumberSet | None = None
     active_name: NameNumberSet | None = None
     maturity: NumberResult
     cycles: CycleCalculationResult

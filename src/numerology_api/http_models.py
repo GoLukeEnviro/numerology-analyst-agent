@@ -58,10 +58,10 @@ class LiveStatus(_HttpModel):
 
 
 class ReadyStatus(_HttpModel):
-    status: Literal["ready"] = "ready"
+    status: Literal["ready", "unavailable"] = "ready"
     engine: Literal["ready"] = "ready"
-    redis: Literal["not_configured", "ready"] = "not_configured"
-    provider: Literal["disabled", "ready"] = "disabled"
+    redis: Literal["not_configured", "ready", "unavailable"] = "not_configured"
+    provider: Literal["disabled", "configured"] = "disabled"
 
 
 class LlmMeta(_HttpModel):

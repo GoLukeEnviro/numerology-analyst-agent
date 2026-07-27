@@ -131,6 +131,12 @@
             "title": "Completion Tokens",
             "type": "integer"
           },
+          "effective_sampling": {
+            "const": "provider_managed",
+            "default": "provider_managed",
+            "title": "Effective Sampling",
+            "type": "string"
+          },
           "knowledge_bundle": {
             "title": "Knowledge Bundle",
             "type": "string"
@@ -161,6 +167,12 @@
               }
             ],
             "title": "Provider Fingerprint"
+          },
+          "reasoning_effort": {
+            "const": "high",
+            "default": "high",
+            "title": "Reasoning Effort",
+            "type": "string"
           },
           "temperature": {
             "title": "Temperature",
@@ -784,13 +796,16 @@
       },
       "NameNumberSet": {
         "additionalProperties": false,
-        "description": "Expression, Soul Urge and Personality values for one separately held name.",
+        "description": "All name-derived values for one explicitly separated name profile.",
         "properties": {
           "basis": {
             "title": "Basis",
             "type": "string"
           },
           "expression": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "maturity": {
             "$ref": "#/components/schemas/NumberResult"
           },
           "normalized_name": {
@@ -836,7 +851,8 @@
           "segments",
           "expression",
           "soul_urge",
-          "personality"
+          "personality",
+          "maturity"
         ],
         "title": "NameNumberSet",
         "type": "object"
@@ -1134,7 +1150,14 @@
             "$ref": "#/components/schemas/ConsistencyStatus"
           },
           "core_name": {
-            "$ref": "#/components/schemas/NameNumberSet"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "cycles": {
             "$ref": "#/components/schemas/CycleCalculationResult"
@@ -1181,7 +1204,6 @@
           "consistency",
           "birthday",
           "attitude",
-          "core_name",
           "maturity",
           "cycles",
           "trace"
@@ -1202,7 +1224,7 @@
             "default": "disabled",
             "enum": [
               "disabled",
-              "ready"
+              "configured"
             ],
             "title": "Provider",
             "type": "string"
@@ -1211,14 +1233,18 @@
             "default": "not_configured",
             "enum": [
               "not_configured",
-              "ready"
+              "ready",
+              "unavailable"
             ],
             "title": "Redis",
             "type": "string"
           },
           "status": {
-            "const": "ready",
             "default": "ready",
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
             "title": "Status",
             "type": "string"
           }

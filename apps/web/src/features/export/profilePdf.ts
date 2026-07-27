@@ -7,14 +7,24 @@ import type { AnalysisReport, ProfileCalculationResult } from "../../api/types";
 pdfMake.addVirtualFileSystem(virtualFonts);
 
 function numbers(profile: ProfileCalculationResult): Array<[string, number, string]> {
+  const selectedName = profile.core_name ?? profile.active_name;
+  if (selectedName == null) throw new Error("Profil ohne Namensprofil kann nicht exportiert werden.");
   return [
     ["Lebensweg", profile.life_path_a.reduced_value, profile.life_path_a.compound_notation],
     ["Geburtstag", profile.birthday.reduced_value, profile.birthday.compound_notation],
     ["Einstellung", profile.attitude.reduced_value, profile.attitude.compound_notation],
-    ["Ausdruck", profile.core_name.expression.reduced_value, profile.core_name.expression.compound_notation],
-    ["Seelenstreben", profile.core_name.soul_urge.reduced_value, profile.core_name.soul_urge.compound_notation],
-    ["Persönlichkeit", profile.core_name.personality.reduced_value, profile.core_name.personality.compound_notation],
+    ["Ausdruck", selectedName.expression.reduced_value, selectedName.expression.compound_notation],
+    ["Seelenstreben", selectedName.soul_urge.reduced_value, selectedName.soul_urge.compound_notation],
+    ["Persönlichkeit", selectedName.personality.reduced_value, selectedName.personality.compound_notation],
     ["Reife", profile.maturity.reduced_value, profile.maturity.compound_notation],
+    ...(profile.core_name != null && profile.active_name != null
+      ? [
+          ["Aktiver Ausdruck", profile.active_name.expression.reduced_value, profile.active_name.expression.compound_notation] as [string, number, string],
+          ["Aktives Seelenstreben", profile.active_name.soul_urge.reduced_value, profile.active_name.soul_urge.compound_notation] as [string, number, string],
+          ["Aktive Persönlichkeit", profile.active_name.personality.reduced_value, profile.active_name.personality.compound_notation] as [string, number, string],
+          ["Aktive Reife", profile.active_name.maturity.reduced_value, profile.active_name.maturity.compound_notation] as [string, number, string],
+        ]
+      : []),
   ];
 }
 
