@@ -2,9 +2,16 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
+> **Stand:** 2026-07-27 (V1.3 — State Reconciliation nach Verifikation von `codex/numra-pwa`)
 > **Sprache:** Deutsch
-> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger deterministischer Profilkern (0.1.4) ausstehend
+> **Status:** Auf `main` ist Release 0.1.3 LIVE (getaggt). Auf dem Branch
+> `codex/numra-pwa` (offener Draft-PR #10, noch nicht gemerged) sind die
+> Releases 0.1.4, 0.1.5 sowie große Teile von 0.2.0 und 0.3.0 bereits
+> **implementiert und lokal verifiziert** (188 Python-Tests grün, 28
+> Vitest-Tests grün, alle Quality Gates grün) — deutlich weiter als frühere
+> Statusstände dieses Dokuments behauptet hatten. Nicht begonnen: 0.4.0
+> (Forschungsrahmen), MkDocs, Committee-Prozess. Details siehe
+> `README.md` → „Aktueller Status".
 
 Diese Roadmap übersetzt die **15 Phasen (0–14)** des Master-Vertrags in eine
 strukturierte, nachvollziehbare Abfolge. Pro Phase: Ziel, Aufgaben, Gate,
@@ -47,17 +54,30 @@ Commit-Message, Abhängigkeiten, Aufwandsschätzung, Delegations-Empfehlung, Ris
 
 | Release | Titel | Phasen | Ziel | Zeitrahmen |
 |----------|-------|--------|------|------------|
-| **0.1.3** | Contract Integrity | 0–4 | Governance + Tooling + Methodenspec + Rechenkern (Life Path A/B) + CLI-Basis + Tests | ✅ **LIVE** |
-| **0.1.4** | Complete Core Profile | 4 (erweitert) | Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl + Namenssegmentierung + Y-Klassifikation | ⏳ als nächstes |
-| **0.1.5** | Deterministic Cycles | 4 (erweitert) | Persönliche Jahre/Monate/Tage, Pinnacles, Challenges | ⏳ folgt |
-| **0.2.0** | Knowledge and Interpretation | 5–6 | Wissensmodell + regelbasierte Interpretation + Safety Minimum | ⏳ folgt |
-| **0.3.0** | Interfaces, Safety and Agent | 8, 9, 10 | Vollständiges Safety-Subsystem + FastAPI + CLI-Erweiterung + Mock-Agent | ⏳ folgt |
-| **0.4.0** | Research Preview | 7 | Forschungs-/Meta-Analyse-Rahmen — **explizit als Preview, nicht als wissenschaftliche Validierung** | ⏳ folgt |
+| **0.1.3** | Contract Integrity | 0–4 | Governance + Tooling + Methodenspec + Rechenkern (Life Path A/B) + CLI-Basis + Tests | ✅ **LIVE auf `main`**, getaggt `v0.1.3` |
+| **0.1.4** | Complete Core Profile | 4 (erweitert) | Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl + Namenssegmentierung + Y-Klassifikation | ✅ implementiert auf `codex/numra-pwa` (PR #10, **offen/ungemerged**) |
+| **0.1.5** | Deterministic Cycles | 4 (erweitert) | Persönliche Jahre/Monate/Tage, Pinnacles, Challenges | ✅ implementiert auf `codex/numra-pwa` (PR #10, **offen/ungemerged**) |
+| **0.2.0** | Knowledge and Interpretation | 5–6 | Wissensmodell + regelbasierte Interpretation + Safety Minimum | ✅ implementiert auf `codex/numra-pwa` (`numerology_knowledge`, `numerology_interpretation`, `numerology_safety`; **offen/ungemerged**) |
+| **0.3.0** | Interfaces, Safety and Agent | 8, 9, 10 | Vollständiges Safety-Subsystem + FastAPI + CLI-Erweiterung + Agent | ✅ größtenteils implementiert auf `codex/numra-pwa` (FastAPI mit Health/Meta/Profil/Analyse-Endpunkten, optionaler DeepSeek-Adapter statt nur Mock; **offen/ungemerged**; CLI-Erweiterung um Research-Befehle fehlt noch, da Phase 7 nicht existiert) |
+| **0.4.0** | Research Preview | 7 | Forschungs-/Meta-Analyse-Rahmen — **explizit als Preview, nicht als wissenschaftliche Validierung** | ❌ nicht begonnen |
+
+**Zusätzlich außerhalb der ursprünglichen 15-Phasen-Zählung**, aber bereits
+auf `codex/numra-pwa` implementiert: eine vollständige React/Vite/
+TypeScript-PWA (`apps/web`) mit lokaler IndexedDB-Bibliothek, Verschlüsselung,
+PDF-Export und Offline-Betrieb, sowie ein gehärteter Docker-/Nginx-
+Produktionsstack mit Release-, Rollback- und Backup-Automation
+(`docker/`, `deploy/`). Dokumentiert in ADRs `0007`–`0014`. Der öffentliche
+Launch bleibt bewusst gesperrt (siehe `docs/operations/launch-checklist.md`).
 
 **Phasen 11–14** (Evaluation, Doku, Committee, Release) werden in die
-jeweiligen Releases eingebettet, sie sind **kein eigener Release**.
+jeweiligen Releases eingebettet, sie sind **kein eigener Release**. MkDocs-
+Dokumentation (Phase 2/12) und der Committee-Review-Prozess (Phase 13) sind
+bislang **nicht begonnen**.
 
 → Details zu 0.1.3 siehe `docs/releases/v0.1.3.md` und `docs/audit/repository-baseline-v0.1.3.md`.
+→ Details zu 0.1.4/0.1.5 siehe `docs/releases/v0.1.4.md` und `docs/releases/v0.1.5.md`
+(Achtung: Diese Release-Notes beschreiben bereits implementierten Code auf
+`codex/numra-pwa`, aber keinen eigenen Tag/Release auf `main`).
 
 ### Warum die Trennung
 

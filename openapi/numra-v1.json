@@ -1,0 +1,1522 @@
+{
+  "components": {
+    "schemas": {
+      "AnalysisClaim": {
+        "additionalProperties": false,
+        "properties": {
+          "calculation_ref": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Calculation Ref",
+            "type": "string"
+          },
+          "claim_type": {
+            "$ref": "#/components/schemas/ClaimType"
+          },
+          "knowledge_ref": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Knowledge Ref",
+            "type": "string"
+          },
+          "number": {
+            "maximum": 99.0,
+            "minimum": 0.0,
+            "title": "Number",
+            "type": "integer"
+          },
+          "text": {
+            "maxLength": 1200,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "claim_type",
+          "text",
+          "calculation_ref",
+          "knowledge_ref",
+          "number"
+        ],
+        "title": "AnalysisClaim",
+        "type": "object"
+      },
+      "AnalysisFollowUp": {
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisClaim"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-follow-up-v1",
+            "default": "analysis-follow-up-v1",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "claims",
+          "limitations",
+          "provenance"
+        ],
+        "title": "AnalysisFollowUp",
+        "type": "object"
+      },
+      "AnalysisFollowUpRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileCalculationResult"
+          },
+          "question": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "report": {
+            "$ref": "#/components/schemas/AnalysisReport"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile",
+          "report",
+          "question"
+        ],
+        "title": "AnalysisFollowUpRequest",
+        "type": "object"
+      },
+      "AnalysisProvenance": {
+        "additionalProperties": false,
+        "properties": {
+          "calculation_hash": {
+            "title": "Calculation Hash",
+            "type": "string"
+          },
+          "completion_tokens": {
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "knowledge_bundle": {
+            "title": "Knowledge Bundle",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
+          "prompt_tokens": {
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "prompt_version": {
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Fingerprint"
+          },
+          "temperature": {
+            "title": "Temperature",
+            "type": "number"
+          },
+          "thinking": {
+            "title": "Thinking",
+            "type": "string"
+          },
+          "top_p": {
+            "title": "Top P",
+            "type": "number"
+          }
+        },
+        "required": [
+          "provider",
+          "model",
+          "temperature",
+          "top_p",
+          "thinking",
+          "prompt_version",
+          "knowledge_bundle",
+          "calculation_hash",
+          "provider_fingerprint",
+          "prompt_tokens",
+          "completion_tokens"
+        ],
+        "title": "AnalysisProvenance",
+        "type": "object"
+      },
+      "AnalysisReport": {
+        "additionalProperties": false,
+        "properties": {
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-report-v1",
+            "default": "analysis-report-v1",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisSection"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggestions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "sections",
+          "limitations",
+          "suggestions",
+          "provenance"
+        ],
+        "title": "AnalysisReport",
+        "type": "object"
+      },
+      "AnalysisReportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "$ref": "#/components/schemas/ProfileCalculationResult"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile"
+        ],
+        "title": "AnalysisReportRequest",
+        "type": "object"
+      },
+      "AnalysisSection": {
+        "additionalProperties": false,
+        "properties": {
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisClaim"
+            },
+            "maxItems": 12,
+            "minItems": 1,
+            "title": "Claims",
+            "type": "array"
+          },
+          "title": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "claims"
+        ],
+        "title": "AnalysisSection",
+        "type": "object"
+      },
+      "AuditTrace": {
+        "additionalProperties": false,
+        "description": "Deterministic audit trail attached to every calculation result.\n\nThe trace is one component of the CalculationHashEnvelope.\nThe calculation hash also covers the schema version, relevant input\nfields, MethodPolicy and calculated results — not the trace alone.",
+        "properties": {
+          "calculation_steps": {
+            "items": {
+              "$ref": "#/components/schemas/CalculationStep"
+            },
+            "title": "Calculation Steps",
+            "type": "array"
+          },
+          "disambiguation_required": {
+            "default": false,
+            "description": "True iff an ambiguous Y (ADR 0001) or other ambiguity was hit.",
+            "title": "Disambiguation Required",
+            "type": "boolean"
+          },
+          "normalization_steps": {
+            "items": {
+              "$ref": "#/components/schemas/NormalizationStep"
+            },
+            "title": "Normalization Steps",
+            "type": "array"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "title": "AuditTrace",
+        "type": "object"
+      },
+      "CalculationStep": {
+        "additionalProperties": false,
+        "description": "A single auditable step in a calculation (Master Contract §6.3).\n\nThe deterministic hash of a result is computed over the sorted JSON of\nits steps, so every step must carry exactly the fields that influence\nthe outcome - nothing more, nothing less.",
+        "properties": {
+          "inputs": {
+            "description": "Numeric inputs consumed by this step, in order.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Inputs",
+            "type": "array"
+          },
+          "label": {
+            "description": "Human-readable step identifier (stable).",
+            "title": "Label",
+            "type": "string"
+          },
+          "note": {
+            "default": "",
+            "description": "Optional deterministic note (no free text logic).",
+            "title": "Note",
+            "type": "string"
+          },
+          "output": {
+            "description": "Numeric output produced by this step.",
+            "title": "Output",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "label",
+          "output"
+        ],
+        "title": "CalculationStep",
+        "type": "object"
+      },
+      "ClaimType": {
+        "description": "Statement classes (Master Contract §2.2).\n\nEvery artifact in the system is tagged with exactly one claim type so\nthat symbolic tradition, deterministic calculation, interpretive\nhypothesis and empirical evidence can never be silently conflated.",
+        "enum": [
+          "input_fact",
+          "calculation_fact",
+          "traditional_claim",
+          "interpretive_hypothesis",
+          "empirical_evidence",
+          "practical_suggestion"
+        ],
+        "title": "ClaimType",
+        "type": "string"
+      },
+      "ConsistencyStatus": {
+        "additionalProperties": false,
+        "description": "A-vs-B consistency report (Master Contract §3.2).",
+        "properties": {
+          "a_equals_b": {
+            "title": "A Equals B",
+            "type": "boolean"
+          },
+          "life_path_a": {
+            "title": "Life Path A",
+            "type": "integer"
+          },
+          "life_path_b": {
+            "title": "Life Path B",
+            "type": "integer"
+          },
+          "warning": {
+            "default": "",
+            "description": "Empty when A == B.",
+            "title": "Warning",
+            "type": "string"
+          }
+        },
+        "required": [
+          "a_equals_b",
+          "life_path_a",
+          "life_path_b"
+        ],
+        "title": "ConsistencyStatus",
+        "type": "object"
+      },
+      "CycleCalculationResult": {
+        "additionalProperties": false,
+        "description": "Personal date cycles and the four lifetime Pinnacle/Challenge phases.",
+        "properties": {
+          "as_of_date": {
+            "format": "date",
+            "title": "As Of Date",
+            "type": "string"
+          },
+          "challenges": {
+            "items": {
+              "$ref": "#/components/schemas/CyclePhase"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Challenges",
+            "type": "array"
+          },
+          "personal_day": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "personal_month": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "personal_year": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "pinnacles": {
+            "items": {
+              "$ref": "#/components/schemas/CyclePhase"
+            },
+            "maxItems": 4,
+            "minItems": 4,
+            "title": "Pinnacles",
+            "type": "array"
+          }
+        },
+        "required": [
+          "as_of_date",
+          "personal_year",
+          "personal_month",
+          "personal_day",
+          "pinnacles",
+          "challenges"
+        ],
+        "title": "CycleCalculationResult",
+        "type": "object"
+      },
+      "CyclePhase": {
+        "additionalProperties": false,
+        "description": "One numbered Pinnacle or Challenge phase with inclusive age boundaries.",
+        "properties": {
+          "end_age": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End Age"
+          },
+          "number": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "ordinal": {
+            "maximum": 4.0,
+            "minimum": 1.0,
+            "title": "Ordinal",
+            "type": "integer"
+          },
+          "start_age": {
+            "minimum": 0.0,
+            "title": "Start Age",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "ordinal",
+          "start_age",
+          "number"
+        ],
+        "title": "CyclePhase",
+        "type": "object"
+      },
+      "DateMethod": {
+        "description": "Life Path reduction strategy.\n\n``BOTH`` runs A and B and emits a consistency warning when they\ndiverge (Master Contract §3.2, V1 minimal scope).",
+        "enum": [
+          "sum_all_digits",
+          "component_then_sum",
+          "both"
+        ],
+        "title": "DateMethod",
+        "type": "string"
+      },
+      "FieldError": {
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "message",
+          "code"
+        ],
+        "title": "FieldError",
+        "type": "object"
+      },
+      "KarmicDebtInfo": {
+        "additionalProperties": false,
+        "description": "Methodically defined karmic debt number with its origin (Korrektur 1).\n\nThe marker is attached ONLY when the *unreduced core value* of a Life\nPath method (the raw total before the first reduction step) is one of\n{13, 14, 16, 19}. Random intermediate sums are NOT karmic markers.\n``origin`` records which methodical component produced the value, e.g.\n``'total_sum'`` (Life Path A) or ``'component_sum'`` (Life Path B).",
+        "properties": {
+          "number": {
+            "description": "Karmic debt number (13, 14, 16 or 19).",
+            "title": "Number",
+            "type": "integer"
+          },
+          "origin": {
+            "description": "Methodical component that produced the value (e.g. 'total_sum').",
+            "title": "Origin",
+            "type": "string"
+          }
+        },
+        "required": [
+          "number",
+          "origin"
+        ],
+        "title": "KarmicDebtInfo",
+        "type": "object"
+      },
+      "LifePathResult": {
+        "additionalProperties": false,
+        "description": "Life Path result for one reduction method (A or B).\n\nCarries the *methodically defined unreduced core value* (``raw_total``)\nalongside the final reduced value, the slash-notation reduction path\n(``compound_notation``) and an optional karmic-debt marker attached to\nthat raw total (Korrektur 1).",
+        "properties": {
+          "components": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Per-component reductions (only for method B).",
+            "title": "Components",
+            "type": "object"
+          },
+          "compound_notation": {
+            "description": "Reduction path as slash-notation, e.g. '19/10/1' or '37/10/1'.",
+            "title": "Compound Notation",
+            "type": "string"
+          },
+          "karmic_debt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/KarmicDebtInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Karmic debt info iff raw_total is a karmic debt number, else None."
+          },
+          "method": {
+            "description": "'sum_all_digits' (A) or 'component_then_sum' (B).",
+            "title": "Method",
+            "type": "string"
+          },
+          "raw_total": {
+            "description": "Methodically defined unreduced core value before the first reduction.",
+            "title": "Raw Total",
+            "type": "integer"
+          },
+          "reduced_value": {
+            "description": "Final reduced value (1-9 or a master number); mirrors reduction.value.",
+            "title": "Reduced Value",
+            "type": "integer"
+          },
+          "reduction": {
+            "$ref": "#/components/schemas/ReductionOutcome"
+          },
+          "steps": {
+            "description": "Ordered audit steps for this method.",
+            "items": {
+              "$ref": "#/components/schemas/CalculationStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "method",
+          "reduction",
+          "raw_total",
+          "reduced_value",
+          "compound_notation"
+        ],
+        "title": "LifePathResult",
+        "type": "object"
+      },
+      "LiveStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "LiveStatus",
+        "type": "object"
+      },
+      "LlmMeta": {
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "default": false,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider"
+          }
+        },
+        "title": "LlmMeta",
+        "type": "object"
+      },
+      "Locale": {
+        "description": "Locale for normalization policy selection.\n\nV1 ships only ``DE``; other locales are extension points.",
+        "enum": [
+          "de",
+          "en"
+        ],
+        "title": "Locale",
+        "type": "string"
+      },
+      "MetaResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "api_version": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Api Version",
+            "type": "string"
+          },
+          "knowledge_bundle": {
+            "title": "Knowledge Bundle",
+            "type": "string"
+          },
+          "llm": {
+            "$ref": "#/components/schemas/LlmMeta"
+          },
+          "method_system": {
+            "const": "pythagorean",
+            "default": "pythagorean",
+            "title": "Method System",
+            "type": "string"
+          },
+          "method_version": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Method Version",
+            "type": "string"
+          },
+          "package_version": {
+            "title": "Package Version",
+            "type": "string"
+          },
+          "profile_schema_version": {
+            "title": "Profile Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "package_version",
+          "profile_schema_version",
+          "knowledge_bundle"
+        ],
+        "title": "MetaResponse",
+        "type": "object"
+      },
+      "MethodPolicy": {
+        "additionalProperties": false,
+        "description": "Explicit method configuration (Master Contract §6.2).\n\nNo silent defaults: every policy dimension relevant to 0.1.0 is an\nexplicit field with a documented canonical default. Mixing\nincompatible policies (e.g. two umlaut policies) is rejected.",
+        "properties": {
+          "date_method": {
+            "$ref": "#/components/schemas/DateMethod",
+            "default": "both",
+            "description": "Life Path A/B selection (Master Contract §3.2)."
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale",
+            "default": "de",
+            "description": "Normalization locale."
+          },
+          "master_numbers": {
+            "default": [
+              11,
+              22,
+              33
+            ],
+            "description": "Numbers held as-is during reduction.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Master Numbers",
+            "type": "array",
+            "uniqueItems": true
+          },
+          "name_basis": {
+            "$ref": "#/components/schemas/NameBasis",
+            "default": "both_separate",
+            "description": "core_name vs active_name selection (ADR 0004)."
+          },
+          "system": {
+            "$ref": "#/components/schemas/MethodSystem",
+            "default": "pythagorean"
+          },
+          "umlaut_policy": {
+            "$ref": "#/components/schemas/UmlautPolicy",
+            "default": "de-direct-v1",
+            "description": "Umlaut/accent normalization (ADR 0002)."
+          },
+          "version": {
+            "default": "v1",
+            "description": "Method version tag.",
+            "title": "Version",
+            "type": "string"
+          },
+          "y_mode": {
+            "$ref": "#/components/schemas/YMode",
+            "default": "phonetic",
+            "description": "Y classification (ADR 0001)."
+          }
+        },
+        "title": "MethodPolicy",
+        "type": "object"
+      },
+      "MethodSystem": {
+        "description": "Numerological method systems.\n\nV1 implements only ``PYTHAGOREAN``. Other systems are documented\nextension points (Master Contract §3.1) and must never be silently\nmixed (calculation-engineer agent contract §4).",
+        "enum": [
+          "pythagorean",
+          "chaldean",
+          "kabbalistic"
+        ],
+        "title": "MethodSystem",
+        "type": "string"
+      },
+      "NameBasis": {
+        "description": "Two-level name model selector (ADR 0004).\n\nThere is intentionally no ``MIXED`` or ``WEIGHTED`` value: silently\nfusing ``core_name`` and ``active_name`` would violate the statement\nclass separation (Master Contract §2.2).",
+        "enum": [
+          "core_name_only",
+          "active_name_only",
+          "both_separate"
+        ],
+        "title": "NameBasis",
+        "type": "string"
+      },
+      "NameNumberSet": {
+        "additionalProperties": false,
+        "description": "Expression, Soul Urge and Personality values for one separately held name.",
+        "properties": {
+          "basis": {
+            "title": "Basis",
+            "type": "string"
+          },
+          "expression": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "normalized_name": {
+            "title": "Normalized Name",
+            "type": "string"
+          },
+          "original_name": {
+            "title": "Original Name",
+            "type": "string"
+          },
+          "personality": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/NameSegmentResult"
+            },
+            "title": "Segments",
+            "type": "array"
+          },
+          "soul_urge": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "variants": {
+            "items": {
+              "$ref": "#/components/schemas/NameNumberVariant"
+            },
+            "title": "Variants",
+            "type": "array"
+          },
+          "y_classifications": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Y Classifications",
+            "type": "array"
+          }
+        },
+        "required": [
+          "basis",
+          "original_name",
+          "normalized_name",
+          "segments",
+          "expression",
+          "soul_urge",
+          "personality"
+        ],
+        "title": "NameNumberSet",
+        "type": "object"
+      },
+      "NameNumberVariant": {
+        "additionalProperties": false,
+        "description": "A complete vowel/consonant result for one explicit Y interpretation.",
+        "properties": {
+          "expression": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "personality": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "soul_urge": {
+            "$ref": "#/components/schemas/NumberResult"
+          }
+        },
+        "required": [
+          "label",
+          "expression",
+          "soul_urge",
+          "personality"
+        ],
+        "title": "NameNumberVariant",
+        "type": "object"
+      },
+      "NameSegmentResult": {
+        "additionalProperties": false,
+        "description": "Auditable subtotal for one whitespace- or hyphen-delimited name segment.",
+        "properties": {
+          "compound_notation": {
+            "title": "Compound Notation",
+            "type": "string"
+          },
+          "raw_total": {
+            "minimum": 1.0,
+            "title": "Raw Total",
+            "type": "integer"
+          },
+          "reduced_value": {
+            "title": "Reduced Value",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text",
+          "raw_total",
+          "reduced_value",
+          "compound_notation"
+        ],
+        "title": "NameSegmentResult",
+        "type": "object"
+      },
+      "NormalizationStep": {
+        "additionalProperties": false,
+        "description": "A single normalization transformation (ADR 0002 §6).",
+        "properties": {
+          "input": {
+            "description": "Input string before the transformation.",
+            "title": "Input",
+            "type": "string"
+          },
+          "note": {
+            "default": "",
+            "description": "Optional deterministic note.",
+            "title": "Note",
+            "type": "string"
+          },
+          "output": {
+            "description": "Output string after the transformation.",
+            "title": "Output",
+            "type": "string"
+          },
+          "step": {
+            "description": "Stable step identifier (e.g. 'unicode_nfc').",
+            "title": "Step",
+            "type": "string"
+          }
+        },
+        "required": [
+          "step",
+          "input",
+          "output"
+        ],
+        "title": "NormalizationStep",
+        "type": "object"
+      },
+      "NumberResult": {
+        "additionalProperties": false,
+        "description": "One deterministic numerological value with a reproducible reduction path.",
+        "properties": {
+          "components": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Components",
+            "type": "object"
+          },
+          "compound_notation": {
+            "title": "Compound Notation",
+            "type": "string"
+          },
+          "is_master": {
+            "default": false,
+            "title": "Is Master",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "raw_total": {
+            "minimum": 0.0,
+            "title": "Raw Total",
+            "type": "integer"
+          },
+          "reduced_value": {
+            "minimum": 0.0,
+            "title": "Reduced Value",
+            "type": "integer"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/CalculationStep"
+            },
+            "title": "Steps",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "raw_total",
+          "reduced_value",
+          "compound_notation"
+        ],
+        "title": "NumberResult",
+        "type": "object"
+      },
+      "PersonInput": {
+        "additionalProperties": false,
+        "description": "Person input contract (Master Contract §6.1).\n\nThe Walking Skeleton (0.1.0) only consumes ``core_name`` and\n``birth_date`` for the Life Path calculation, but the full contract is\nmodelled here so later name-based numbers (Expression, Soul Urge,\nPersonality, Maturity - Phase 4+) can reuse the same input without a\nbreaking migration.\n\n* ``core_name`` - full birth name (authoritative for the core profile,\n  ADR 0004 §1). Required.\n* ``active_name`` - currently used name, optional. When present and\n  different from ``core_name`` it triggers the supplementary profile\n  (ADR 0004 §2). Never silently merged with ``core_name``.\n* ``birth_date`` - calendar date of birth. The Life Path A/B\n  calculations operate exclusively on this field.\n* ``as_of_date`` - explicit evaluation date for deterministic tests.\n  MUST be >= ``birth_date`` for a person profile (Korrektur 3); the\n  domain core never calls ``date.today()`` - the CLI defaults this at\n  its own boundary (Korrektur 2). General date analysis (later) will\n  not carry this constraint.",
+        "properties": {
+          "active_name": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Currently used name; optional supplementary profile basis.",
+            "title": "Active Name"
+          },
+          "as_of_date": {
+            "description": "Explicit evaluation date for deterministic tests. birth_date must be <= as_of_date for a person profile.",
+            "format": "date",
+            "title": "As Of Date",
+            "type": "string"
+          },
+          "birth_date": {
+            "description": "Calendar date of birth (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Birth Date",
+            "type": "string"
+          },
+          "consent_given": {
+            "default": false,
+            "description": "Whether the data subject consented to processing.",
+            "title": "Consent Given",
+            "type": "boolean"
+          },
+          "core_name": {
+            "description": "Full birth name (authoritative).",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Core Name",
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale",
+            "default": "de",
+            "description": "Normalization locale selector."
+          }
+        },
+        "required": [
+          "core_name",
+          "birth_date",
+          "as_of_date"
+        ],
+        "title": "PersonInput",
+        "type": "object"
+      },
+      "ProblemDetails": {
+        "additionalProperties": false,
+        "description": "RFC-9457-style API error with a stable machine-readable code.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "correlation_id": {
+            "title": "Correlation Id",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "field_errors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            },
+            "title": "Field Errors",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "correlation_id"
+        ],
+        "title": "ProblemDetails",
+        "type": "object"
+      },
+      "ProfileCalculationRequest": {
+        "additionalProperties": false,
+        "description": "Explicit person and method policy submitted to the deterministic core.",
+        "properties": {
+          "person": {
+            "$ref": "#/components/schemas/PersonInput"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/MethodPolicy"
+          }
+        },
+        "required": [
+          "person",
+          "policy"
+        ],
+        "title": "ProfileCalculationRequest",
+        "type": "object"
+      },
+      "ProfileCalculationResult": {
+        "additionalProperties": false,
+        "description": "Complete deterministic profile contract introduced for release 0.1.4.",
+        "properties": {
+          "active_name": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attitude": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "birthday": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "claim_type": {
+            "$ref": "#/components/schemas/ClaimType",
+            "default": "calculation_fact"
+          },
+          "consistency": {
+            "$ref": "#/components/schemas/ConsistencyStatus"
+          },
+          "core_name": {
+            "$ref": "#/components/schemas/NameNumberSet"
+          },
+          "cycles": {
+            "$ref": "#/components/schemas/CycleCalculationResult"
+          },
+          "deterministic_hash": {
+            "default": "",
+            "title": "Deterministic Hash",
+            "type": "string"
+          },
+          "input_ref": {
+            "$ref": "#/components/schemas/PersonInput"
+          },
+          "life_path_a": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "life_path_b": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "maturity": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "name": {
+            "default": "complete_profile",
+            "title": "Name",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/MethodPolicy"
+          },
+          "schema_version": {
+            "default": "profile-calculation-result-v2",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace": {
+            "$ref": "#/components/schemas/AuditTrace"
+          }
+        },
+        "required": [
+          "input_ref",
+          "policy",
+          "life_path_a",
+          "life_path_b",
+          "consistency",
+          "birthday",
+          "attitude",
+          "core_name",
+          "maturity",
+          "cycles",
+          "trace"
+        ],
+        "title": "ProfileCalculationResult",
+        "type": "object"
+      },
+      "ReadyStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "engine": {
+            "const": "ready",
+            "default": "ready",
+            "title": "Engine",
+            "type": "string"
+          },
+          "provider": {
+            "default": "disabled",
+            "enum": [
+              "disabled",
+              "ready"
+            ],
+            "title": "Provider",
+            "type": "string"
+          },
+          "redis": {
+            "default": "not_configured",
+            "enum": [
+              "not_configured",
+              "ready"
+            ],
+            "title": "Redis",
+            "type": "string"
+          },
+          "status": {
+            "const": "ready",
+            "default": "ready",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "ReadyStatus",
+        "type": "object"
+      },
+      "ReductionOutcome": {
+        "additionalProperties": false,
+        "description": "A reduced numeric result with master-number metadata.\n\n``value`` is always in ``1..9`` or one of the configured master numbers.\n``intermediate`` is the pre-reduction sum (useful for the audit trace).\n\nKarmic-debt detection moved OFF this primitive (Korrektur 1): the marker\nis only meaningful on the *methodically defined unreduced core value*\nof a Life Path method, not on arbitrary intermediate sums. The karmic\ninfo therefore lives on :class:`LifePathResult` (``karmic_debt``), not\nhere. This primitive stays focused on numeric reduction + master-flag.",
+        "properties": {
+          "intermediate": {
+            "description": "Sum fed into the reduction.",
+            "title": "Intermediate",
+            "type": "integer"
+          },
+          "is_master": {
+            "default": false,
+            "description": "True iff value is a master number.",
+            "title": "Is Master",
+            "type": "boolean"
+          },
+          "value": {
+            "description": "Reduced value (1..9 or a master number).",
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value",
+          "intermediate"
+        ],
+        "title": "ReductionOutcome",
+        "type": "object"
+      },
+      "UmlautPolicy": {
+        "description": "German umlaut / semantic normalization policy (ADR 0002).\n\n``DE_DIRECT_V1`` is the V1 default for ``locale=de``. The two policies\nmust never be mixed within a single calculation (ADR 0002 §7).",
+        "enum": [
+          "de-direct-v1",
+          "de-expanded-v1"
+        ],
+        "title": "UmlautPolicy",
+        "type": "string"
+      },
+      "YMode": {
+        "description": "Y classification policy (ADR 0001).\n\n``PHONETIC`` is the V1 canonical default for ``pythagorean-v1``.",
+        "enum": [
+          "phonetic",
+          "always_vowel",
+          "always_consonant",
+          "user_fixed"
+        ],
+        "title": "YMode",
+        "type": "string"
+      }
+    }
+  },
+  "info": {
+    "title": "Numra API",
+    "version": "0.1.5"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/analyses/follow-up": {
+      "post": {
+        "operationId": "analysis_follow_up_api_v1_analyses_follow_up_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisFollowUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisFollowUp"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Follow Up",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
+    "/api/v1/analyses/report": {
+      "post": {
+        "operationId": "analysis_report_api_v1_analyses_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Report",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
+    "/api/v1/health/live": {
+      "get": {
+        "operationId": "live_api_v1_health_live_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Live",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "operationId": "ready_api_v1_health_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "operationId": "meta_api_v1_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/api/v1/profiles/calculate": {
+      "post": {
+        "operationId": "calculate_api_v1_profiles_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileCalculationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileCalculationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Calculation rejected"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Request validation failed"
+          }
+        },
+        "summary": "Calculate",
+        "tags": [
+          "profiles"
+        ]
+      }
+    }
+  }
+}

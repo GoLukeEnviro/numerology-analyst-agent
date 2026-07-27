@@ -1,0 +1,135 @@
+{
+  "$defs": {
+    "KnowledgeEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "title": "Number",
+          "type": "integer"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "traditional_claims": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Traditional Claims",
+          "type": "array"
+        },
+        "reflection_prompts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reflection Prompts",
+          "type": "array"
+        },
+        "practical_suggestions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Practical Suggestions",
+          "type": "array"
+        },
+        "counter_hypotheses": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Counter Hypotheses",
+          "type": "array"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "number",
+        "title",
+        "traditional_claims",
+        "reflection_prompts",
+        "practical_suggestions",
+        "counter_hypotheses",
+        "source_refs"
+      ],
+      "title": "KnowledgeEntry",
+      "type": "object"
+    },
+    "KnowledgeSource": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "source_type",
+        "locator"
+      ],
+      "title": "KnowledgeSource",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "bundle_id": {
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "locale": {
+      "title": "Locale",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    },
+    "scientific_position": {
+      "title": "Scientific Position",
+      "type": "string"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeSource"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeEntry"
+      },
+      "title": "Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "bundle_id",
+    "locale",
+    "version",
+    "scientific_position",
+    "sources",
+    "entries"
+  ],
+  "title": "KnowledgeBundle",
+  "type": "object"
+}

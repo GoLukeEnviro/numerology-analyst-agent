@@ -35,6 +35,9 @@ jobs:
       - name: Verify exported JSON schemas
         run: uv run python scripts/export_schemas.py --check
 
+      - name: Verify OpenAPI contract
+        run: uv run python scripts/export_openapi.py --check
+
       - name: Ruff format check
         run: uv run ruff format --check .
 
@@ -43,6 +46,9 @@ jobs:
 
       - name: Mypy strict
         run: uv run mypy src tests scripts
+
+      - name: Audit Python dependencies
+        run: uv run pip-audit
 
       - name: Core coverage (numerology_engine ≥ 95%)
         run: uv run pytest --cov=src/numerology_engine --cov-report=term-missing --cov-fail-under=95
@@ -90,3 +96,106 @@ jobs:
             --name "Max Mustermann" \
             --birth 1985-07-25
           /tmp/release-venv/bin/python -c "import numerology_domain, numerology_engine, numerology_api, numerology_cli"
+
+  web-quality:
+    name: Web quality (lint, typecheck, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".node-version"
+          cache: "pnpm"
+
+      - name: Install uv for browser API
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Set up Python 3.12 for browser API
+        run: uv python install 3.12
+
+      - name: Install locked API runtime for browser tests
+        run: uv sync --locked --no-dev
+
+      - name: Install locked frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit frontend dependencies
+        # GHSA-qwww-vcr4-c8h2 only affects React Router's RSC Framework Mode.
+        # Numra uses the declarative BrowserRouter library mode without server actions.
+        # Remove this exception as soon as the registry publishes the stated patched version.
+        run: pnpm audit --audit-level high --ignore GHSA-qwww-vcr4-c8h2
+
+      - name: Verify generated API types
+        run: |
+          pnpm web:generate-api
+          git diff --exit-code -- apps/web/src/api/schema.d.ts
+
+      - name: Lint
+        run: pnpm web:lint
+
+      - name: Typecheck
+        run: pnpm web:typecheck
+
+      - name: Unit tests
+        run: pnpm web:test
+
+      - name: Production build
+        run: pnpm web:build
+
+      - name: Verify PWA cache policy and JavaScript budget
+        run: pnpm web:check-build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @numra/web exec playwright install --with-deps chromium firefox webkit
+
+      - name: Browser tests
+        run: pnpm web:e2e
+
+  container-smoke:
+    name: Container build and health smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Compose model
+        run: docker compose config --quiet
+
+      - name: Validate deployment shell syntax
+        run: |
+          for file in deploy/scripts/*.sh; do
+            sh -n "$file"
+          done
+
+      - name: Build pinned images
+        run: docker compose build
+
+      - name: Start private stack and await health
+        run: docker compose up -d --wait --wait-timeout 60
+
+      - name: Verify gateway and API
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:8080/ >/dev/null
+          curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/health/live
+          curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/health/ready
+
+      - name: Show container state on failure
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --no-color --tail=100
+
+      - name: Remove test stack
+        if: always()
+        run: docker compose down
