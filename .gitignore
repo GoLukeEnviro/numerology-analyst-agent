@@ -26,6 +26,10 @@ apps/web/test-results/
 tmp/
 deploy/*.env.local
 
+# Environment files (secrets)
+.env
+.env.*
+
 # Coverage / test artifacts
 .coverage
 .coverage.*

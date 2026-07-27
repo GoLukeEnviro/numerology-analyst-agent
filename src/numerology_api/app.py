@@ -67,7 +67,7 @@ class ApiSettings(BaseModel):
     llm_enabled: bool = False
     deepseek_api_key: SecretStr | None = None
     deepseek_base_url: str = "https://api.deepseek.com"
-    deepseek_model: str = "deepseek-v4-pro"
+    deepseek_model: str = "deepseek-reasoner"
     redis_url: SecretStr = SecretStr("redis://redis:6379/0")
     rate_limit_hmac_secret: SecretStr | None = None
     max_request_body_bytes: int = Field(default=65_536, ge=256, le=1_048_576)

@@ -17,7 +17,7 @@ class DeepSeekSettings(BaseModel):
 
     api_key: SecretStr
     base_url: str = "https://api.deepseek.com"
-    model: str = "deepseek-v4-pro"
+    model: str = "deepseek-reasoner"
     timeout_seconds: float = Field(default=90.0, gt=0, le=180)
 
 
