@@ -2,13 +2,20 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-07-27 (V1.4 — State Reconciliation nach Merge von PR #10)
+> **Stand:** 2026-07-28 (V1.5 — RC-Vorbereitung 0.3.0rc1)
 > **Sprache:** Deutsch
 > **Status:** PR #10 ist auf `main` integriert. Das jüngste getaggte Release
 > bleibt `v0.1.3`; die kumulativ integrierten Meilensteine 0.1.4, 0.1.5 sowie
 > große Teile von 0.2.0 und 0.3.0 sind bis zur geklärten SemVer-Zuordnung
 > unreleased. Nicht begonnen: 0.4.0 (Forschungsrahmen), MkDocs und
 > Committee-Prozess. Details: `docs/releases/unreleased-numra.md`.
+>
+> **RC-Normalisierung (28.07.2026, ADR 0015):** Der kumulierte `main`-Stand
+> wird als Release-Kandidat `0.3.0rc1` normalisiert. Die operative
+> Release-Sequenz ADR 0006 bleibt als Planungsfolie gültig; der kumulierte
+> Sonderfall wird durch `0.3.0rc1` aufgelöst, ohne nachträgliche
+> Zwischentags. Implementationsplan: `docs/plans/numra-0.3.0-rc1-implementation-plan.md`.
+> V2-Scope ist abgegrenzt (ADR 0016, `docs/product/numra-v2-guided-masterplan.md`).
 
 Diese Roadmap übersetzt die **15 Phasen (0–14)** des Master-Vertrags in eine
 strukturierte, nachvollziehbare Abfolge. Pro Phase: Ziel, Aufgaben, Gate,

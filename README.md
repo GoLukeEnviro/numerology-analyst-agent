@@ -38,6 +38,13 @@ Domain und DNS bereitgestellt, Betreiberangaben ergänzt, HTTPS aktiviert und
 die rechtlichen Launch-Gates bestätigt wurden. Die deterministische Anwendung
 bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist.
 
+> **RC-Vorbereitung (seit 28.07.2026):** Der kumulierte `main`-Stand wird als
+> Release-Kandidat `0.3.0rc1` normalisiert (ADR 0015), ohne die ADR-0006-Folge
+> nachträglich zu verfälschen. Der eigentliche Version-Bump erfolgt erst nach
+> erfolgreichem privatem Staging-Gate. Plan:
+> `docs/plans/numra-0.3.0-rc1-implementation-plan.md`; IST-Bestandsaufnahme:
+> `docs/audit/current-state-numra-rc.md`; V2-Grenze: ADR 0016.
+
 - **Repository:** `GoLukeEnviro/numerology-analyst-agent`
 - **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`
 - **Methoden-ADRs:** `docs/adr/0001`–`docs/adr/0004` (bindend)
