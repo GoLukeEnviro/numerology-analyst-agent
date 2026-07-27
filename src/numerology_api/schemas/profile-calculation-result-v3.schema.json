@@ -1,0 +1,791 @@
+{
+  "$defs": {
+    "AuditTrace": {
+      "additionalProperties": false,
+      "description": "Deterministic audit trail attached to every calculation result.\n\nThe trace is one component of the CalculationHashEnvelope.\nThe calculation hash also covers the schema version, relevant input\nfields, MethodPolicy and calculated results — not the trace alone.",
+      "properties": {
+        "normalization_steps": {
+          "items": {
+            "$ref": "#/$defs/NormalizationStep"
+          },
+          "title": "Normalization Steps",
+          "type": "array"
+        },
+        "calculation_steps": {
+          "items": {
+            "$ref": "#/$defs/CalculationStep"
+          },
+          "title": "Calculation Steps",
+          "type": "array"
+        },
+        "warnings": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "disambiguation_required": {
+          "default": false,
+          "description": "True iff an ambiguous Y (ADR 0001) or other ambiguity was hit.",
+          "title": "Disambiguation Required",
+          "type": "boolean"
+        }
+      },
+      "title": "AuditTrace",
+      "type": "object"
+    },
+    "CalculationStep": {
+      "additionalProperties": false,
+      "description": "A single auditable step in a calculation (Master Contract §6.3).\n\nThe deterministic hash of a result is computed over the sorted JSON of\nits steps, so every step must carry exactly the fields that influence\nthe outcome - nothing more, nothing less.",
+      "properties": {
+        "label": {
+          "description": "Human-readable step identifier (stable).",
+          "title": "Label",
+          "type": "string"
+        },
+        "inputs": {
+          "description": "Numeric inputs consumed by this step, in order.",
+          "items": {
+            "type": "integer"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "output": {
+          "description": "Numeric output produced by this step.",
+          "title": "Output",
+          "type": "integer"
+        },
+        "note": {
+          "default": "",
+          "description": "Optional deterministic note (no free text logic).",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "output"
+      ],
+      "title": "CalculationStep",
+      "type": "object"
+    },
+    "ClaimType": {
+      "description": "Statement classes (Master Contract §2.2).\n\nEvery artifact in the system is tagged with exactly one claim type so\nthat symbolic tradition, deterministic calculation, interpretive\nhypothesis and empirical evidence can never be silently conflated.",
+      "enum": [
+        "input_fact",
+        "calculation_fact",
+        "traditional_claim",
+        "interpretive_hypothesis",
+        "empirical_evidence",
+        "practical_suggestion"
+      ],
+      "title": "ClaimType",
+      "type": "string"
+    },
+    "ConsistencyStatus": {
+      "additionalProperties": false,
+      "description": "A-vs-B consistency report (Master Contract §3.2).",
+      "properties": {
+        "a_equals_b": {
+          "title": "A Equals B",
+          "type": "boolean"
+        },
+        "life_path_a": {
+          "title": "Life Path A",
+          "type": "integer"
+        },
+        "life_path_b": {
+          "title": "Life Path B",
+          "type": "integer"
+        },
+        "warning": {
+          "default": "",
+          "description": "Empty when A == B.",
+          "title": "Warning",
+          "type": "string"
+        }
+      },
+      "required": [
+        "a_equals_b",
+        "life_path_a",
+        "life_path_b"
+      ],
+      "title": "ConsistencyStatus",
+      "type": "object"
+    },
+    "CycleCalculationResult": {
+      "additionalProperties": false,
+      "description": "Personal date cycles and the four lifetime Pinnacle/Challenge phases.",
+      "properties": {
+        "as_of_date": {
+          "format": "date",
+          "title": "As Of Date",
+          "type": "string"
+        },
+        "personal_year": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "personal_month": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "personal_day": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "pinnacles": {
+          "items": {
+            "$ref": "#/$defs/CyclePhase"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Pinnacles",
+          "type": "array"
+        },
+        "challenges": {
+          "items": {
+            "$ref": "#/$defs/CyclePhase"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "title": "Challenges",
+          "type": "array"
+        }
+      },
+      "required": [
+        "as_of_date",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacles",
+        "challenges"
+      ],
+      "title": "CycleCalculationResult",
+      "type": "object"
+    },
+    "CyclePhase": {
+      "additionalProperties": false,
+      "description": "One numbered Pinnacle or Challenge phase with inclusive age boundaries.",
+      "properties": {
+        "ordinal": {
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "start_age": {
+          "minimum": 0,
+          "title": "Start Age",
+          "type": "integer"
+        },
+        "end_age": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End Age"
+        },
+        "number": {
+          "$ref": "#/$defs/NumberResult"
+        }
+      },
+      "required": [
+        "ordinal",
+        "start_age",
+        "number"
+      ],
+      "title": "CyclePhase",
+      "type": "object"
+    },
+    "DateMethod": {
+      "description": "Life Path reduction strategy.\n\n``BOTH`` runs A and B and emits a consistency warning when they\ndiverge (Master Contract §3.2, V1 minimal scope).",
+      "enum": [
+        "sum_all_digits",
+        "component_then_sum",
+        "both"
+      ],
+      "title": "DateMethod",
+      "type": "string"
+    },
+    "KarmicDebtInfo": {
+      "additionalProperties": false,
+      "description": "Methodically defined karmic debt number with its origin (Korrektur 1).\n\nThe marker is attached ONLY when the *unreduced core value* of a Life\nPath method (the raw total before the first reduction step) is one of\n{13, 14, 16, 19}. Random intermediate sums are NOT karmic markers.\n``origin`` records which methodical component produced the value, e.g.\n``'total_sum'`` (Life Path A) or ``'component_sum'`` (Life Path B).",
+      "properties": {
+        "number": {
+          "description": "Karmic debt number (13, 14, 16 or 19).",
+          "title": "Number",
+          "type": "integer"
+        },
+        "origin": {
+          "description": "Methodical component that produced the value (e.g. 'total_sum').",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "number",
+        "origin"
+      ],
+      "title": "KarmicDebtInfo",
+      "type": "object"
+    },
+    "LifePathResult": {
+      "additionalProperties": false,
+      "description": "Life Path result for one reduction method (A or B).\n\nCarries the *methodically defined unreduced core value* (``raw_total``)\nalongside the final reduced value, the slash-notation reduction path\n(``compound_notation``) and an optional karmic-debt marker attached to\nthat raw total (Korrektur 1).",
+      "properties": {
+        "method": {
+          "description": "'sum_all_digits' (A) or 'component_then_sum' (B).",
+          "title": "Method",
+          "type": "string"
+        },
+        "reduction": {
+          "$ref": "#/$defs/ReductionOutcome"
+        },
+        "raw_total": {
+          "description": "Methodically defined unreduced core value before the first reduction.",
+          "title": "Raw Total",
+          "type": "integer"
+        },
+        "reduced_value": {
+          "description": "Final reduced value (1-9 or a master number); mirrors reduction.value.",
+          "title": "Reduced Value",
+          "type": "integer"
+        },
+        "compound_notation": {
+          "description": "Reduction path as slash-notation, e.g. '19/10/1' or '37/10/1'.",
+          "title": "Compound Notation",
+          "type": "string"
+        },
+        "karmic_debt": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KarmicDebtInfo"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Karmic debt info iff raw_total is a karmic debt number, else None."
+        },
+        "components": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Per-component reductions (only for method B).",
+          "title": "Components",
+          "type": "object"
+        },
+        "steps": {
+          "description": "Ordered audit steps for this method.",
+          "items": {
+            "$ref": "#/$defs/CalculationStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "method",
+        "reduction",
+        "raw_total",
+        "reduced_value",
+        "compound_notation"
+      ],
+      "title": "LifePathResult",
+      "type": "object"
+    },
+    "Locale": {
+      "description": "Locale for normalization policy selection.\n\nV1 ships only ``DE``; other locales are extension points.",
+      "enum": [
+        "de",
+        "en"
+      ],
+      "title": "Locale",
+      "type": "string"
+    },
+    "MethodPolicy": {
+      "additionalProperties": false,
+      "description": "Explicit method configuration (Master Contract §6.2).\n\nNo silent defaults: every policy dimension relevant to 0.1.0 is an\nexplicit field with a documented canonical default. Mixing\nincompatible policies (e.g. two umlaut policies) is rejected.",
+      "properties": {
+        "system": {
+          "$ref": "#/$defs/MethodSystem",
+          "default": "pythagorean"
+        },
+        "version": {
+          "default": "v1",
+          "description": "Method version tag.",
+          "title": "Version",
+          "type": "string"
+        },
+        "y_mode": {
+          "$ref": "#/$defs/YMode",
+          "default": "phonetic",
+          "description": "Y classification (ADR 0001)."
+        },
+        "umlaut_policy": {
+          "$ref": "#/$defs/UmlautPolicy",
+          "default": "de-direct-v1",
+          "description": "Umlaut/accent normalization (ADR 0002)."
+        },
+        "name_basis": {
+          "$ref": "#/$defs/NameBasis",
+          "default": "both_separate",
+          "description": "core_name vs active_name selection (ADR 0004)."
+        },
+        "date_method": {
+          "$ref": "#/$defs/DateMethod",
+          "default": "both",
+          "description": "Life Path A/B selection (Master Contract §3.2)."
+        },
+        "locale": {
+          "$ref": "#/$defs/Locale",
+          "default": "de",
+          "description": "Normalization locale."
+        },
+        "master_numbers": {
+          "default": [
+            11,
+            22,
+            33
+          ],
+          "description": "Numbers held as-is during reduction.",
+          "items": {
+            "type": "integer"
+          },
+          "title": "Master Numbers",
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "title": "MethodPolicy",
+      "type": "object"
+    },
+    "MethodSystem": {
+      "description": "Numerological method systems.\n\nV1 implements only ``PYTHAGOREAN``. Other systems are documented\nextension points (Master Contract §3.1) and must never be silently\nmixed (calculation-engineer agent contract §4).",
+      "enum": [
+        "pythagorean",
+        "chaldean",
+        "kabbalistic"
+      ],
+      "title": "MethodSystem",
+      "type": "string"
+    },
+    "NameBasis": {
+      "description": "Two-level name model selector (ADR 0004).\n\nThere is intentionally no ``MIXED`` or ``WEIGHTED`` value: silently\nfusing ``core_name`` and ``active_name`` would violate the statement\nclass separation (Master Contract §2.2).",
+      "enum": [
+        "core_name_only",
+        "active_name_only",
+        "both_separate"
+      ],
+      "title": "NameBasis",
+      "type": "string"
+    },
+    "NameNumberSet": {
+      "additionalProperties": false,
+      "description": "All name-derived values for one explicitly separated name profile.",
+      "properties": {
+        "basis": {
+          "title": "Basis",
+          "type": "string"
+        },
+        "original_name": {
+          "title": "Original Name",
+          "type": "string"
+        },
+        "normalized_name": {
+          "title": "Normalized Name",
+          "type": "string"
+        },
+        "segments": {
+          "items": {
+            "$ref": "#/$defs/NameSegmentResult"
+          },
+          "title": "Segments",
+          "type": "array"
+        },
+        "expression": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "soul_urge": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "personality": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "maturity": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "y_classifications": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Y Classifications",
+          "type": "array"
+        },
+        "variants": {
+          "items": {
+            "$ref": "#/$defs/NameNumberVariant"
+          },
+          "title": "Variants",
+          "type": "array"
+        }
+      },
+      "required": [
+        "basis",
+        "original_name",
+        "normalized_name",
+        "segments",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity"
+      ],
+      "title": "NameNumberSet",
+      "type": "object"
+    },
+    "NameNumberVariant": {
+      "additionalProperties": false,
+      "description": "A complete vowel/consonant result for one explicit Y interpretation.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "expression": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "soul_urge": {
+          "$ref": "#/$defs/NumberResult"
+        },
+        "personality": {
+          "$ref": "#/$defs/NumberResult"
+        }
+      },
+      "required": [
+        "label",
+        "expression",
+        "soul_urge",
+        "personality"
+      ],
+      "title": "NameNumberVariant",
+      "type": "object"
+    },
+    "NameSegmentResult": {
+      "additionalProperties": false,
+      "description": "Auditable subtotal for one whitespace- or hyphen-delimited name segment.",
+      "properties": {
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "raw_total": {
+          "minimum": 1,
+          "title": "Raw Total",
+          "type": "integer"
+        },
+        "reduced_value": {
+          "title": "Reduced Value",
+          "type": "integer"
+        },
+        "compound_notation": {
+          "title": "Compound Notation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "raw_total",
+        "reduced_value",
+        "compound_notation"
+      ],
+      "title": "NameSegmentResult",
+      "type": "object"
+    },
+    "NormalizationStep": {
+      "additionalProperties": false,
+      "description": "A single normalization transformation (ADR 0002 §6).",
+      "properties": {
+        "step": {
+          "description": "Stable step identifier (e.g. 'unicode_nfc').",
+          "title": "Step",
+          "type": "string"
+        },
+        "input": {
+          "description": "Input string before the transformation.",
+          "title": "Input",
+          "type": "string"
+        },
+        "output": {
+          "description": "Output string after the transformation.",
+          "title": "Output",
+          "type": "string"
+        },
+        "note": {
+          "default": "",
+          "description": "Optional deterministic note.",
+          "title": "Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "step",
+        "input",
+        "output"
+      ],
+      "title": "NormalizationStep",
+      "type": "object"
+    },
+    "NumberResult": {
+      "additionalProperties": false,
+      "description": "One deterministic numerological value with a reproducible reduction path.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "raw_total": {
+          "minimum": 0,
+          "title": "Raw Total",
+          "type": "integer"
+        },
+        "reduced_value": {
+          "minimum": 0,
+          "title": "Reduced Value",
+          "type": "integer"
+        },
+        "compound_notation": {
+          "title": "Compound Notation",
+          "type": "string"
+        },
+        "is_master": {
+          "default": false,
+          "title": "Is Master",
+          "type": "boolean"
+        },
+        "components": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Components",
+          "type": "object"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/CalculationStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name",
+        "raw_total",
+        "reduced_value",
+        "compound_notation"
+      ],
+      "title": "NumberResult",
+      "type": "object"
+    },
+    "PersonInput": {
+      "additionalProperties": false,
+      "description": "Person input contract (Master Contract §6.1).\n\nThe Walking Skeleton (0.1.0) only consumes ``core_name`` and\n``birth_date`` for the Life Path calculation, but the full contract is\nmodelled here so later name-based numbers (Expression, Soul Urge,\nPersonality, Maturity - Phase 4+) can reuse the same input without a\nbreaking migration.\n\n* ``core_name`` - full birth name (authoritative for the core profile,\n  ADR 0004 §1). Required.\n* ``active_name`` - currently used name, optional. When present and\n  different from ``core_name`` it triggers the supplementary profile\n  (ADR 0004 §2). Never silently merged with ``core_name``.\n* ``birth_date`` - calendar date of birth. The Life Path A/B\n  calculations operate exclusively on this field.\n* ``as_of_date`` - explicit evaluation date for deterministic tests.\n  MUST be >= ``birth_date`` for a person profile (Korrektur 3); the\n  domain core never calls ``date.today()`` - the CLI defaults this at\n  its own boundary (Korrektur 2). General date analysis (later) will\n  not carry this constraint.",
+      "properties": {
+        "core_name": {
+          "description": "Full birth name (authoritative).",
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Core Name",
+          "type": "string"
+        },
+        "birth_date": {
+          "description": "Calendar date of birth (YYYY-MM-DD).",
+          "format": "date",
+          "title": "Birth Date",
+          "type": "string"
+        },
+        "as_of_date": {
+          "description": "Explicit evaluation date for deterministic tests. birth_date must be <= as_of_date for a person profile.",
+          "format": "date",
+          "title": "As Of Date",
+          "type": "string"
+        },
+        "active_name": {
+          "anyOf": [
+            {
+              "maxLength": 200,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Currently used name; optional supplementary profile basis.",
+          "title": "Active Name"
+        },
+        "locale": {
+          "$ref": "#/$defs/Locale",
+          "default": "de",
+          "description": "Normalization locale selector."
+        },
+        "consent_given": {
+          "default": false,
+          "description": "Whether the data subject consented to processing.",
+          "title": "Consent Given",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "core_name",
+        "birth_date",
+        "as_of_date"
+      ],
+      "title": "PersonInput",
+      "type": "object"
+    },
+    "ReductionOutcome": {
+      "additionalProperties": false,
+      "description": "A reduced numeric result with master-number metadata.\n\n``value`` is always in ``1..9`` or one of the configured master numbers.\n``intermediate`` is the pre-reduction sum (useful for the audit trace).\n\nKarmic-debt detection moved OFF this primitive (Korrektur 1): the marker\nis only meaningful on the *methodically defined unreduced core value*\nof a Life Path method, not on arbitrary intermediate sums. The karmic\ninfo therefore lives on :class:`LifePathResult` (``karmic_debt``), not\nhere. This primitive stays focused on numeric reduction + master-flag.",
+      "properties": {
+        "value": {
+          "description": "Reduced value (1..9 or a master number).",
+          "title": "Value",
+          "type": "integer"
+        },
+        "intermediate": {
+          "description": "Sum fed into the reduction.",
+          "title": "Intermediate",
+          "type": "integer"
+        },
+        "is_master": {
+          "default": false,
+          "description": "True iff value is a master number.",
+          "title": "Is Master",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "value",
+        "intermediate"
+      ],
+      "title": "ReductionOutcome",
+      "type": "object"
+    },
+    "UmlautPolicy": {
+      "description": "German umlaut / semantic normalization policy (ADR 0002).\n\n``DE_DIRECT_V1`` is the V1 default for ``locale=de``. The two policies\nmust never be mixed within a single calculation (ADR 0002 §7).",
+      "enum": [
+        "de-direct-v1",
+        "de-expanded-v1"
+      ],
+      "title": "UmlautPolicy",
+      "type": "string"
+    },
+    "YMode": {
+      "description": "Y classification policy (ADR 0001).\n\n``PHONETIC`` is the V1 canonical default for ``pythagorean-v1``.",
+      "enum": [
+        "phonetic",
+        "always_vowel",
+        "always_consonant",
+        "user_fixed"
+      ],
+      "title": "YMode",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Complete deterministic profile contract introduced for release 0.1.4.",
+  "properties": {
+    "claim_type": {
+      "$ref": "#/$defs/ClaimType",
+      "default": "calculation_fact"
+    },
+    "name": {
+      "default": "complete_profile",
+      "title": "Name",
+      "type": "string"
+    },
+    "schema_version": {
+      "default": "profile-calculation-result-v3",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "input_ref": {
+      "$ref": "#/$defs/PersonInput"
+    },
+    "policy": {
+      "$ref": "#/$defs/MethodPolicy"
+    },
+    "life_path_a": {
+      "$ref": "#/$defs/LifePathResult"
+    },
+    "life_path_b": {
+      "$ref": "#/$defs/LifePathResult"
+    },
+    "consistency": {
+      "$ref": "#/$defs/ConsistencyStatus"
+    },
+    "birthday": {
+      "$ref": "#/$defs/NumberResult"
+    },
+    "attitude": {
+      "$ref": "#/$defs/NumberResult"
+    },
+    "core_name": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NameNumberSet"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "active_name": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NameNumberSet"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "maturity": {
+      "$ref": "#/$defs/NumberResult"
+    },
+    "cycles": {
+      "$ref": "#/$defs/CycleCalculationResult"
+    },
+    "trace": {
+      "$ref": "#/$defs/AuditTrace"
+    },
+    "deterministic_hash": {
+      "default": "",
+      "title": "Deterministic Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "input_ref",
+    "policy",
+    "life_path_a",
+    "life_path_b",
+    "consistency",
+    "birthday",
+    "attitude",
+    "maturity",
+    "cycles",
+    "trace"
+  ],
+  "title": "ProfileCalculationResult",
+  "type": "object"
+}

@@ -98,7 +98,15 @@
             "type": "string"
           },
           "profile": {
-            "$ref": "#/components/schemas/ProfileCalculationResult"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileCalculationResult"
+              },
+              {
+                "$ref": "#/components/schemas/LegacyV2ProfileCalculationResult"
+              }
+            ],
+            "title": "Profile"
           },
           "question": {
             "maxLength": 500,
@@ -131,6 +139,19 @@
             "title": "Completion Tokens",
             "type": "integer"
           },
+          "context_signature": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Context Signature",
+            "type": "string"
+          },
+          "effective_sampling": {
+            "const": "provider_managed",
+            "default": "provider_managed",
+            "title": "Effective Sampling",
+            "type": "string"
+          },
           "knowledge_bundle": {
             "title": "Knowledge Bundle",
             "type": "string"
@@ -162,6 +183,12 @@
             ],
             "title": "Provider Fingerprint"
           },
+          "reasoning_effort": {
+            "const": "high",
+            "default": "high",
+            "title": "Reasoning Effort",
+            "type": "string"
+          },
           "temperature": {
             "title": "Temperature",
             "type": "number"
@@ -186,7 +213,8 @@
           "calculation_hash",
           "provider_fingerprint",
           "prompt_tokens",
-          "completion_tokens"
+          "completion_tokens",
+          "context_signature"
         ],
         "title": "AnalysisProvenance",
         "type": "object"
@@ -255,7 +283,15 @@
             "type": "string"
           },
           "profile": {
-            "$ref": "#/components/schemas/ProfileCalculationResult"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileCalculationResult"
+              },
+              {
+                "$ref": "#/components/schemas/LegacyV2ProfileCalculationResult"
+              }
+            ],
+            "title": "Profile"
           }
         },
         "required": [
@@ -550,6 +586,158 @@
         "title": "KarmicDebtInfo",
         "type": "object"
       },
+      "LegacyV2NameNumberSet": {
+        "additionalProperties": false,
+        "description": "Historical V2 name contract, accepted only for server-side recalculation.",
+        "properties": {
+          "basis": {
+            "title": "Basis",
+            "type": "string"
+          },
+          "expression": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "normalized_name": {
+            "title": "Normalized Name",
+            "type": "string"
+          },
+          "original_name": {
+            "title": "Original Name",
+            "type": "string"
+          },
+          "personality": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "segments": {
+            "items": {
+              "$ref": "#/components/schemas/NameSegmentResult"
+            },
+            "title": "Segments",
+            "type": "array"
+          },
+          "soul_urge": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "variants": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/NameNumberVariant"
+            },
+            "title": "Variants",
+            "type": "array"
+          },
+          "y_classifications": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Y Classifications",
+            "type": "array"
+          }
+        },
+        "required": [
+          "basis",
+          "original_name",
+          "normalized_name",
+          "segments",
+          "expression",
+          "soul_urge",
+          "personality"
+        ],
+        "title": "LegacyV2NameNumberSet",
+        "type": "object"
+      },
+      "LegacyV2ProfileCalculationResult": {
+        "additionalProperties": false,
+        "description": "Read-only V2 envelope; calculated fields are never trusted by the API.",
+        "properties": {
+          "active_name": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LegacyV2NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attitude": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "birthday": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "claim_type": {
+            "$ref": "#/components/schemas/ClaimType",
+            "default": "calculation_fact"
+          },
+          "consistency": {
+            "$ref": "#/components/schemas/ConsistencyStatus"
+          },
+          "core_name": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/LegacyV2NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cycles": {
+            "$ref": "#/components/schemas/CycleCalculationResult"
+          },
+          "deterministic_hash": {
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Deterministic Hash",
+            "type": "string"
+          },
+          "input_ref": {
+            "$ref": "#/components/schemas/PersonInput"
+          },
+          "life_path_a": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "life_path_b": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "maturity": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "name": {
+            "default": "complete_profile",
+            "title": "Name",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/MethodPolicy"
+          },
+          "schema_version": {
+            "const": "profile-calculation-result-v2",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace": {
+            "$ref": "#/components/schemas/AuditTrace"
+          }
+        },
+        "required": [
+          "schema_version",
+          "input_ref",
+          "policy",
+          "life_path_a",
+          "life_path_b",
+          "consistency",
+          "birthday",
+          "attitude",
+          "maturity",
+          "cycles",
+          "trace",
+          "deterministic_hash"
+        ],
+        "title": "LegacyV2ProfileCalculationResult",
+        "type": "object"
+      },
       "LifePathResult": {
         "additionalProperties": false,
         "description": "Life Path result for one reduction method (A or B).\n\nCarries the *methodically defined unreduced core value* (``raw_total``)\nalongside the final reduced value, the slash-notation reduction path\n(``compound_notation``) and an optional karmic-debt marker attached to\nthat raw total (Korrektur 1).",
@@ -784,13 +972,16 @@
       },
       "NameNumberSet": {
         "additionalProperties": false,
-        "description": "Expression, Soul Urge and Personality values for one separately held name.",
+        "description": "All name-derived values for one explicitly separated name profile.",
         "properties": {
           "basis": {
             "title": "Basis",
             "type": "string"
           },
           "expression": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "maturity": {
             "$ref": "#/components/schemas/NumberResult"
           },
           "normalized_name": {
@@ -836,7 +1027,8 @@
           "segments",
           "expression",
           "soul_urge",
-          "personality"
+          "personality",
+          "maturity"
         ],
         "title": "NameNumberSet",
         "type": "object"
@@ -1134,7 +1326,14 @@
             "$ref": "#/components/schemas/ConsistencyStatus"
           },
           "core_name": {
-            "$ref": "#/components/schemas/NameNumberSet"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "cycles": {
             "$ref": "#/components/schemas/CycleCalculationResult"
@@ -1165,7 +1364,7 @@
             "$ref": "#/components/schemas/MethodPolicy"
           },
           "schema_version": {
-            "default": "profile-calculation-result-v2",
+            "default": "profile-calculation-result-v3",
             "title": "Schema Version",
             "type": "string"
           },
@@ -1181,7 +1380,6 @@
           "consistency",
           "birthday",
           "attitude",
-          "core_name",
           "maturity",
           "cycles",
           "trace"
@@ -1202,7 +1400,7 @@
             "default": "disabled",
             "enum": [
               "disabled",
-              "ready"
+              "configured"
             ],
             "title": "Provider",
             "type": "string"
@@ -1211,14 +1409,18 @@
             "default": "not_configured",
             "enum": [
               "not_configured",
-              "ready"
+              "ready",
+              "unavailable"
             ],
             "title": "Redis",
             "type": "string"
           },
           "status": {
-            "const": "ready",
             "default": "ready",
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
             "title": "Status",
             "type": "string"
           }

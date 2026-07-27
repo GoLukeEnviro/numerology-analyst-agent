@@ -39,6 +39,16 @@ export interface ProfileListOptions {
 }
 
 interface ExportContents {
+  schemaVersion: 2;
+  exportedAt: string;
+  profiles: ProfileCalculationResult[];
+  runs: Array<Omit<LocalRunRecord, "payload"> & { payload: ProfileCalculationResult }>;
+  reports: Array<Omit<LocalReportRecord, "payload"> & { payload: AnalysisReport }>;
+  threads: Array<Omit<LocalThreadRecord, "payload"> & { payload: AnalysisFollowUp }>;
+  notes: Array<Omit<LocalNoteRecord, "payload"> & { payload: string }>;
+}
+
+interface LegacyExportContents {
   schemaVersion: 1;
   exportedAt: string;
   profiles: ProfileCalculationResult[];
@@ -50,6 +60,41 @@ interface ExportContents {
 
 function parseProfile(value: string): ProfileCalculationResult {
   return JSON.parse(value) as ProfileCalculationResult;
+}
+
+async function migrateLegacyExport(
+  contents: LegacyExportContents,
+  decode: <T>(payload: string | EncryptedPayload) => Promise<T>,
+): Promise<ExportContents> {
+  return {
+    schemaVersion: 2,
+    exportedAt: contents.exportedAt,
+    profiles: contents.profiles,
+    runs: await Promise.all(
+      contents.runs.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await decode<ProfileCalculationResult>(payload),
+      })),
+    ),
+    reports: await Promise.all(
+      contents.reports.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await decode<AnalysisReport>(payload),
+      })),
+    ),
+    threads: await Promise.all(
+      contents.threads.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await decode<AnalysisFollowUp>(payload),
+      })),
+    ),
+    notes: await Promise.all(
+      contents.notes.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await decode<string>(payload),
+      })),
+    ),
+  };
 }
 
 export class LocalProfileRepository {
@@ -103,7 +148,7 @@ export class LocalProfileRepository {
     const serialized = JSON.stringify(profile);
     const payload = protectedPayload ? await this.vault.encrypt(profile) : serialized;
     const record: StoredProfileRecord = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       id,
       calculationHash: profile.deterministic_hash,
       createdAt: existing?.createdAt ?? now,
@@ -270,26 +315,93 @@ export class LocalProfileRepository {
 
   async exportAll(passphrase: string): Promise<EncryptedArchive> {
     const profiles = await this.listProfiles({ query: "", sort: "updated" });
+    const runs = await this.database.runs.toArray();
+    const reports = await this.database.reports.toArray();
+    const threads = await this.database.threads.toArray();
+    const notes = await this.database.notes.toArray();
     return encryptArchive(
       {
-        schemaVersion: 1,
+        schemaVersion: 2,
         exportedAt: new Date().toISOString(),
         profiles: profiles.map((profile) => profile.profile),
-        runs: await this.database.runs.toArray(),
-        reports: await this.database.reports.toArray(),
-        threads: await this.database.threads.toArray(),
-        notes: await this.database.notes.toArray(),
+        runs: await Promise.all(
+          runs.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<ProfileCalculationResult>(payload),
+          })),
+        ),
+        reports: await Promise.all(
+          reports.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<AnalysisReport>(payload),
+          })),
+        ),
+        threads: await Promise.all(
+          threads.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<AnalysisFollowUp>(payload),
+          })),
+        ),
+        notes: await Promise.all(
+          notes.map(async ({ payload, ...record }) => ({
+            ...record,
+            payload: await this.decodePayload<string>(payload),
+          })),
+        ),
       } satisfies ExportContents,
       passphrase,
     );
   }
 
   async importAll(archive: EncryptedArchive, passphrase: string): Promise<void> {
-    const contents = await decryptArchive<ExportContents>(archive, passphrase);
-    if (contents.schemaVersion !== 1 || !Array.isArray(contents.profiles)) {
+    const decrypted = await decryptArchive<ExportContents | LegacyExportContents>(
+      archive,
+      passphrase,
+    );
+    let contents: ExportContents;
+    if (archive.format === "numra-export-v1" && decrypted.schemaVersion === 1) {
+      try {
+        contents = await migrateLegacyExport(
+          decrypted,
+          async <T>(payload: string | EncryptedPayload) =>
+            this.decodePayload<T>(payload),
+        );
+      } catch {
+        throw new Error(
+          "Geschützte Numra-V1-Daten können nur im ursprünglichen, entsperrten Vault migriert und anschließend als V2 exportiert werden.",
+        );
+      }
+    } else {
+      contents = decrypted as ExportContents;
+    }
+    if (contents.schemaVersion !== 2 || !Array.isArray(contents.profiles)) {
       throw new Error("Ungültiger Numra-Export.");
     }
     for (const profile of contents.profiles) await this.saveProfile(profile, true);
+    const runs = await Promise.all(
+      contents.runs.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const reports = await Promise.all(
+      contents.reports.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const threads = await Promise.all(
+      contents.threads.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
+    const notes = await Promise.all(
+      contents.notes.map(async ({ payload, ...record }) => ({
+        ...record,
+        payload: await this.encodePayload(payload),
+      })),
+    );
     await this.database.transaction(
       "rw",
       [
@@ -299,26 +411,27 @@ export class LocalProfileRepository {
         this.database.notes,
       ],
       async () => {
-        await this.database.runs.bulkPut(contents.runs);
-        await this.database.reports.bulkPut(contents.reports);
-        await this.database.threads.bulkPut(contents.threads);
-        await this.database.notes.bulkPut(contents.notes);
+        await this.database.runs.clear();
+        await this.database.runs.bulkPut(runs);
+        await this.database.reports.bulkPut(reports);
+        await this.database.threads.bulkPut(threads);
+        await this.database.notes.bulkPut(notes);
       },
     );
   }
 
   private async decodeProfile(record: StoredProfileRecord): Promise<LocalProfile> {
-    const profile = record.protected
+    const decoded = record.protected
       ? await this.vault.decrypt<ProfileCalculationResult>(record.payload as EncryptedPayload)
       : parseProfile(record.payload as string);
     return {
       id: record.id,
-      name: profile.input_ref.core_name,
+      name: decoded.input_ref.core_name,
       calculationHash: record.calculationHash,
       createdAt: record.createdAt,
       updatedAt: record.updatedAt,
       protected: record.protected,
-      profile,
+      profile: decoded,
     };
   }
 

@@ -1,6 +1,6 @@
 # Pythagoreisches Vollprofil V1
 
-Status: verbindliche Methodenspezifikation für `profile-calculation-result-v2`.
+Status: verbindliche Methodenspezifikation für `profile-calculation-result-v3`.
 
 ## Zahlen
 

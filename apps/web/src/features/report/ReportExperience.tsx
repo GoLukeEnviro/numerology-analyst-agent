@@ -28,17 +28,17 @@ interface Quota {
   followUps: number;
 }
 
-function quotaKey(hash: string, date = new Date()): string {
+function quotaKey(date = new Date()): string {
   const localDay = [
     date.getFullYear(),
     String(date.getMonth() + 1).padStart(2, "0"),
     String(date.getDate()).padStart(2, "0"),
   ].join("-");
-  return `numra:llm-quota:v1:${localDay}:${hash}`;
+  return `numra:llm-quota:v2:${localDay}`;
 }
 
-function readQuota(hash: string): Quota {
-  const value = localStorage.getItem(quotaKey(hash));
+function readQuota(): Quota {
+  const value = localStorage.getItem(quotaKey());
   if (value === null) return { reports: 0, followUps: 0 };
   try {
     return JSON.parse(value) as Quota;
@@ -47,8 +47,8 @@ function readQuota(hash: string): Quota {
   }
 }
 
-function writeQuota(hash: string, quota: Quota): void {
-  localStorage.setItem(quotaKey(hash), JSON.stringify(quota));
+function writeQuota(quota: Quota): void {
+  localStorage.setItem(quotaKey(), JSON.stringify(quota));
 }
 
 interface ReportExperienceProps {
@@ -71,7 +71,7 @@ export function ReportExperience({
   const [question, setQuestion] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const [quota, setQuota] = useState(() => readQuota(profile.deterministic_hash));
+  const [quota, setQuota] = useState(readQuota);
 
   useEffect(() => {
     if (typeof indexedDB === "undefined") return;
@@ -102,7 +102,7 @@ export function ReportExperience({
         setReport(created);
         const next = { ...quota, reports: 1 };
         setQuota(next);
-        writeQuota(profile.deterministic_hash, next);
+        writeQuota(next);
         if (saveLocally) await localProfiles.saveReport(profileId, created, true);
       })
       .catch((error: unknown) =>
@@ -129,7 +129,7 @@ export function ReportExperience({
         setFollowUps((current) => [...current, created]);
         const next = { ...quota, followUps: quota.followUps + 1 };
         setQuota(next);
-        writeQuota(profile.deterministic_hash, next);
+        writeQuota(next);
         if (saveLocally) await localProfiles.saveFollowUp(profileId, created, true);
         setQuestion("");
       })
@@ -187,6 +187,20 @@ export function ReportExperience({
           <div className="follow-up-box">
             <h2>Rückfragen <small>{quota.followUps}/2</small></h2>
             {followUps.map((item, index) => <article key={`${item.provenance.prompt_tokens}:${index}`}><p>{item.answer}</p></article>)}
+            <p>
+              Der Rückfragetext wird an DeepSeek übertragen. Erkennbare
+              Namensbestandteile aus diesem Profil und übliche vollständige
+              Datumsformen werden serverseitig abgewiesen. Gib keine weiteren
+              personenbezogenen Angaben ein.
+            </p>
+            <label className="check-row">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(event) => setConsent(event.target.checked)}
+              />
+              <span>Ich willige ein, diese Rückfrage ohne personenbezogene Daten zu übertragen.</span>
+            </label>
             <label><span>Deine Rückfrage</span><input maxLength={500} value={question} onChange={(event) => setQuestion(event.target.value)} /></label>
             <button className="button button-quiet" type="button" disabled={!consent || busy || !question.trim() || quota.followUps >= 2} onClick={askFollowUp}>Rückfrage senden</button>
           </div>

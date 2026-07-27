@@ -47,12 +47,15 @@ class AnalysisProvenance(_AgentModel):
     temperature: float
     top_p: float
     thinking: str
+    effective_sampling: Literal["provider_managed"] = "provider_managed"
+    reasoning_effort: Literal["high"] = "high"
     prompt_version: str
     knowledge_bundle: str
     calculation_hash: str
     provider_fingerprint: str | None
     prompt_tokens: int
     completion_tokens: int
+    context_signature: str = Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
 
 
 class AnalysisReport(_AgentModel):

@@ -74,6 +74,7 @@ def test_gateway_disables_sensitive_logs_and_api_caching() -> None:
     assert config.count("include /etc/nginx/snippets/security-headers.conf;") == 7
     assert "add_header Content-Security-Policy" in security_headers
     assert "try_files $uri $uri/ /index.html;" in config
+    assert "proxy_add_x_forwarded_for" not in config
 
 
 def test_images_run_as_non_root_and_have_no_embedded_secrets() -> None:
@@ -84,6 +85,15 @@ def test_images_run_as_non_root_and_have_no_embedded_secrets() -> None:
     assert "USER 101" in web_file
     assert "NUMRA_DEEPSEEK_API_KEY" not in api_file + web_file
     assert "NUMRA_RATE_LIMIT_HMAC_SECRET" not in api_file + web_file
+    assert "--forwarded-allow-ips=*" not in api_file
+    assert "--forwarded-allow-ips=172.30.0.10" in api_file
+
+
+def test_public_proxy_replaces_untrusted_forwarded_for() -> None:
+    config = (ROOT / "deploy" / "nginx" / "numra-https.conf.template").read_text(encoding="utf-8")
+
+    assert "proxy_set_header X-Forwarded-For $remote_addr;" in config
+    assert "proxy_add_x_forwarded_for" not in config
 
 
 def test_production_operations_are_documented_without_public_launch_shortcuts() -> None:

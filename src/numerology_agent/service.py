@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from hashlib import sha256
+import hmac
+import json
+import re
+
 from pydantic import ValidationError
 
 from numerology_agent.models import (
@@ -24,20 +29,95 @@ class AgentValidationError(ValueError):
     """Raised when generated content fails schema, provenance or safety validation."""
 
 
+_FULL_DATE_PATTERN = re.compile(r"\b(?:\d{4}-\d{1,2}-\d{1,2}|\d{1,2}[-./]\d{1,2}[-./]\d{2,4})\b")
+_GERMAN_MONTHS = (
+    "januar",
+    "februar",
+    "märz",
+    "april",
+    "mai",
+    "juni",
+    "juli",
+    "august",
+    "september",
+    "oktober",
+    "november",
+    "dezember",
+)
+
+
+def _contains_profile_pii(text: str, profile: ProfileCalculationResult) -> bool:
+    normalized = " ".join(text.casefold().split())
+    name_tokens = {
+        token.casefold()
+        for name in (profile.input_ref.core_name, profile.input_ref.active_name)
+        if name is not None
+        for token in re.findall(r"[^\W\d_]+", name, re.UNICODE)
+    }
+    if any(re.search(rf"(?<!\w){re.escape(token)}(?!\w)", normalized) for token in name_tokens):
+        return True
+    birth = profile.input_ref.birth_date
+    date_variants = {
+        birth.isoformat(),
+        f"{birth.day:02d}-{birth.month:02d}-{birth.year:04d}",
+        f"{birth.day}-{birth.month}-{birth.year:04d}",
+        f"{birth.day:02d}.{birth.month:02d}.{birth.year:04d}",
+        f"{birth.day:02d}/{birth.month:02d}/{birth.year:04d}",
+        f"{birth.day}. {_GERMAN_MONTHS[birth.month - 1]} {birth.year}",
+        f"{birth.day} {_GERMAN_MONTHS[birth.month - 1]} {birth.year}",
+    }
+    return _FULL_DATE_PATTERN.search(text) is not None or any(
+        variant in normalized for variant in date_variants
+    )
+
+
+def _assert_no_profile_pii(text: str, profile: ProfileCalculationResult) -> None:
+    if _contains_profile_pii(text, profile):
+        raise AgentValidationError("Text enthält erkennbare personenbezogene Profildaten")
+
+
+def _signature_payload(report: AnalysisReport) -> bytes:
+    payload = report.model_dump(mode="json")
+    provenance = payload["provenance"]
+    assert isinstance(provenance, dict)
+    provenance.pop("context_signature", None)
+    return json.dumps(
+        payload,
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+    ).encode("utf-8")
+
+
+def _sign_report(report: AnalysisReport, secret: bytes) -> str:
+    return hmac.new(secret, _signature_payload(report), sha256).hexdigest()
+
+
 def _facts(profile: ProfileCalculationResult) -> dict[str, int]:
-    return {
+    name_profiles = tuple(
+        names for names in (profile.core_name, profile.active_name) if names is not None
+    )
+    if not name_profiles:
+        raise AgentValidationError("profile contains no selected name profile")
+    facts = {
         "life_path_a": profile.life_path_a.reduced_value,
         "life_path_b": profile.life_path_b.reduced_value,
         "birthday": profile.birthday.reduced_value,
         "attitude": profile.attitude.reduced_value,
-        "core_name.expression": profile.core_name.expression.reduced_value,
-        "core_name.soul_urge": profile.core_name.soul_urge.reduced_value,
-        "core_name.personality": profile.core_name.personality.reduced_value,
-        "maturity": profile.maturity.reduced_value,
         "cycles.personal_year": profile.cycles.personal_year.reduced_value,
         "cycles.personal_month": profile.cycles.personal_month.reduced_value,
         "cycles.personal_day": profile.cycles.personal_day.reduced_value,
     }
+    for names in name_profiles:
+        facts.update(
+            {
+                f"{names.basis}.expression": names.expression.reduced_value,
+                f"{names.basis}.soul_urge": names.soul_urge.reduced_value,
+                f"{names.basis}.personality": names.personality.reduced_value,
+                f"{names.basis}.maturity": names.maturity.reduced_value,
+            }
+        )
+    return facts
 
 
 def build_provider_payload(profile: ProfileCalculationResult) -> ProviderRequest:
@@ -78,10 +158,13 @@ def _validate_draft(
     }
     try:
         assert_text_safe(draft.summary)
+        _assert_no_profile_pii(draft.summary, profile)
         for limitation in draft.limitations:
             assert_text_safe(limitation)
+            _assert_no_profile_pii(limitation, profile)
         for suggestion in draft.suggestions:
             assert_text_safe(suggestion)
+            _assert_no_profile_pii(suggestion, profile)
         for section in draft.sections:
             for claim in section.claims:
                 if claim.claim_type in {ClaimType.INPUT_FACT, ClaimType.CALCULATION_FACT}:
@@ -92,6 +175,7 @@ def _validate_draft(
                 if claim.knowledge_ref not in allowed_knowledge:
                     raise AgentValidationError("provider used an unknown knowledge reference")
                 assert_text_safe(claim.text)
+                _assert_no_profile_pii(claim.text, profile)
     except SafetyError as exc:
         raise AgentValidationError("generated content failed safety validation") from exc
 
@@ -107,8 +191,10 @@ def _validate_follow_up(
     }
     try:
         assert_text_safe(draft.answer)
+        _assert_no_profile_pii(draft.answer, profile)
         for limitation in draft.limitations:
             assert_text_safe(limitation)
+            _assert_no_profile_pii(limitation, profile)
         for claim in draft.claims:
             if claim.claim_type in {ClaimType.INPUT_FACT, ClaimType.CALCULATION_FACT}:
                 raise AgentValidationError("provider cannot emit reserved fact claim types")
@@ -117,13 +203,45 @@ def _validate_follow_up(
             if claim.knowledge_ref not in allowed_knowledge:
                 raise AgentValidationError("provider used an unknown knowledge reference")
             assert_text_safe(claim.text)
+            _assert_no_profile_pii(claim.text, profile)
     except SafetyError as exc:
         raise AgentValidationError("generated content failed safety validation") from exc
 
 
+def _validate_follow_up_context(
+    profile: ProfileCalculationResult,
+    report: AnalysisReport,
+    question: str,
+    *,
+    secret: bytes,
+) -> None:
+    if report.provenance.calculation_hash != profile.deterministic_hash:
+        raise AgentValidationError("Bericht ist nicht an das kanonische Profil gebunden")
+    if not hmac.compare_digest(
+        report.provenance.context_signature,
+        _sign_report(report, secret),
+    ):
+        raise AgentValidationError("Bericht besitzt keine gültige serverseitige Signatur")
+    try:
+        report_draft = AnalysisDraft(
+            summary=report.summary,
+            sections=report.sections,
+            limitations=report.limitations,
+            suggestions=report.suggestions,
+        )
+        _validate_draft(report_draft, profile)
+    except (ValidationError, AgentValidationError) as exc:
+        raise AgentValidationError("Berichtskontext ist nicht sicher oder kanonisch") from exc
+
+    _assert_no_profile_pii(question, profile)
+
+
 class AgentService:
-    def __init__(self, provider: LlmProvider) -> None:
+    def __init__(self, provider: LlmProvider, *, context_secret: bytes) -> None:
+        if len(context_secret) < 16:
+            raise ValueError("context_secret must contain at least 16 bytes")
         self._provider = provider
+        self._context_secret = context_secret
 
     async def generate_report(self, profile: ProfileCalculationResult) -> AnalysisReport:
         payload = build_provider_payload(profile)
@@ -137,7 +255,7 @@ class AgentService:
                 draft = AnalysisDraft.model_validate_json(result.content)
                 _validate_draft(draft, profile)
                 interpretation = compose_interpretation(profile)
-                return AnalysisReport(
+                report = AnalysisReport(
                     **draft.model_dump(),
                     provenance=AnalysisProvenance(
                         provider="deepseek",
@@ -151,7 +269,16 @@ class AgentService:
                         provider_fingerprint=result.provider_fingerprint,
                         prompt_tokens=result.prompt_tokens,
                         completion_tokens=result.completion_tokens,
+                        context_signature="0" * 64,
                     ),
+                )
+                signature = _sign_report(report, self._context_secret)
+                return report.model_copy(
+                    update={
+                        "provenance": report.provenance.model_copy(
+                            update={"context_signature": signature}
+                        )
+                    }
                 )
             except (ValidationError, AgentValidationError) as exc:
                 last_error = exc
@@ -171,6 +298,12 @@ class AgentService:
             assert_prompt_safe(question)
         except SafetyError as exc:
             raise AgentValidationError("follow-up contains prompt injection") from exc
+        _validate_follow_up_context(
+            profile,
+            report,
+            question,
+            secret=self._context_secret,
+        )
         payload = FollowUpProviderRequest(
             calculation_hash=profile.deterministic_hash,
             facts=tuple(
@@ -181,7 +314,7 @@ class AgentService:
                 }
                 for reference, number in _facts(profile).items()
             ),
-            report=report.model_dump(mode="json"),
+            report=report.model_dump(mode="json", exclude={"provenance"}),
             question=question,
             safety_rules=(
                 "Beantworte nur die Rückfrage im bestehenden Berichtskontext.",
@@ -211,6 +344,7 @@ class AgentService:
                         provider_fingerprint=result.provider_fingerprint,
                         prompt_tokens=result.prompt_tokens,
                         completion_tokens=result.completion_tokens,
+                        context_signature=report.provenance.context_signature,
                     ),
                 )
             except (ValidationError, AgentValidationError) as exc:

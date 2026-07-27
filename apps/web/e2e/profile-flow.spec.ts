@@ -1,6 +1,25 @@
 import { readFile } from "node:fs/promises";
 
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
+
+const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+
+async function expectNoWcagViolations(page: Page): Promise<void> {
+  const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+  expect(
+    results.violations,
+    JSON.stringify(
+      results.violations.map(({ id, impact, nodes }) => ({
+        id,
+        impact,
+        targets: nodes.map((node) => node.target),
+      })),
+      null,
+      2,
+    ),
+  ).toEqual([]);
+}
 
 async function completeAnalysis(page: Page): Promise<void> {
   await page.goto("/analyse/neu");
@@ -80,4 +99,17 @@ test("persists the light theme and explains installation", async ({ page }) => {
 
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.getByText(/iPhone und iPad/)).toBeVisible();
+});
+
+test("has no automated WCAG 2.2 AA violations in the primary flow", async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.goto("/");
+  await expectNoWcagViolations(page);
+
+  await page.goto("/analyse/neu");
+  await expectNoWcagViolations(page);
+
+  await completeAnalysis(page);
+  await expect(page.getByRole("heading", { name: "Dein Zahlenatlas" })).toBeVisible();
+  await expectNoWcagViolations(page);
 });

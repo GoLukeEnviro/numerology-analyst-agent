@@ -15,6 +15,8 @@ def pseudonymous_key(scope: str, source: str, secret: bytes) -> str:
 class RateLimiter(Protocol):
     async def consume(self, key: str, limit: int, window_seconds: int) -> int | None: ...
 
+    async def is_ready(self) -> bool: ...
+
 
 class RedisEvalClient(Protocol):
     async def eval(
@@ -25,6 +27,8 @@ class RedisEvalClient(Protocol):
         limit: int,
         window_seconds: int,
     ) -> object: ...
+
+    async def ping(self) -> object: ...
 
 
 _CONSUME_SCRIPT = """
@@ -48,3 +52,9 @@ class RedisRateLimiter:
         raw = await self._client.eval(_CONSUME_SCRIPT, 1, key, limit, window_seconds)
         result = cast(list[int], raw)
         return None if result[0] == 1 else max(result[1], 1)
+
+    async def is_ready(self) -> bool:
+        try:
+            return bool(await self._client.ping())
+        except Exception:
+            return False

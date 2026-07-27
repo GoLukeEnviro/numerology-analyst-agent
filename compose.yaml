@@ -29,8 +29,9 @@ services:
       retries: 5
       start_period: 10s
     networks:
-      - edge
-      - backend
+      edge:
+      backend:
+        ipv4_address: 172.30.0.10
 
   api:
     image: numra-api:${NUMRA_IMAGE_TAG:-local}
@@ -106,3 +107,6 @@ networks:
   edge:
   backend:
     internal: true
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24

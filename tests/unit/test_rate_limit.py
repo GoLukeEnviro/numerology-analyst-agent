@@ -30,6 +30,9 @@ class FakeRedis:
         self.calls.append((script, number_of_keys, key, limit, window_seconds))
         return self.result
 
+    async def ping(self) -> bool:
+        return True
+
 
 @pytest.mark.anyio
 async def test_redis_limiter_returns_ttl_only_when_limit_is_exceeded() -> None:
@@ -39,3 +42,4 @@ async def test_redis_limiter_returns_ttl_only_when_limit_is_exceeded() -> None:
     assert await RedisRateLimiter(allowed_redis).consume("key", 20, 86400) is None
     assert await RedisRateLimiter(denied_redis).consume("key", 20, 86400) == 713
     assert "EXPIRE" in denied_redis.calls[0][0]
+    assert await RedisRateLimiter(allowed_redis).is_ready() is True

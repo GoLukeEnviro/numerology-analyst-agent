@@ -22,4 +22,4 @@ COPY --from=builder --chown=10001:10001 /app/.venv /app/.venv
 USER 10001:10001
 EXPOSE 8000
 
-CMD ["uvicorn", "numerology_api.app:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--proxy-headers", "--forwarded-allow-ips=*"]
+CMD ["uvicorn", "numerology_api.app:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--proxy-headers", "--forwarded-allow-ips=172.30.0.10"]

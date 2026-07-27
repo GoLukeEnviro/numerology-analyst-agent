@@ -133,7 +133,8 @@ jobs:
       - name: Audit frontend dependencies
         # GHSA-qwww-vcr4-c8h2 only affects React Router's RSC Framework Mode.
         # Numra uses the declarative BrowserRouter library mode without server actions.
-        # Remove this exception as soon as the registry publishes the stated patched version.
+        # The available patch is React Router 8.3.0; remove the exception after that
+        # major upgrade has passed Numra's compatibility and browser gates.
         run: pnpm audit --audit-level high --ignore GHSA-qwww-vcr4-c8h2
 
       - name: Verify generated API types

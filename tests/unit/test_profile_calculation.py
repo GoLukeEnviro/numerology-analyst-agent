@@ -27,12 +27,13 @@ def person() -> PersonInput:
 def test_complete_reference_profile(person: PersonInput) -> None:
     result = calculate_profile(person, MethodPolicy())
 
-    assert result.schema_version == "profile-calculation-result-v2"
+    assert result.schema_version == "profile-calculation-result-v3"
     assert result.life_path_a.reduced_value == 1
     assert result.life_path_b.reduced_value == 1
     assert result.birthday.reduced_value == 7
     assert result.attitude.reduced_value == 5
 
+    assert result.core_name is not None
     assert result.core_name.expression.raw_total == 50
     assert result.core_name.expression.reduced_value == 5
     assert result.core_name.soul_urge.raw_total == 10
@@ -44,7 +45,10 @@ def test_complete_reference_profile(person: PersonInput) -> None:
 
     assert result.active_name is not None
     assert result.active_name.expression.reduced_value == 7
+    assert result.core_name.maturity.reduced_value == 6
+    assert result.active_name.maturity.reduced_value == 8
     assert result.maturity.reduced_value == 6
+    assert any(step.label.startswith("active_name_") for step in result.trace.calculation_steps)
     assert len(result.deterministic_hash) == 64
 
 
@@ -66,6 +70,7 @@ def test_phonetic_y_clear_cases(name: str, soul: int, personality: int) -> None:
         MethodPolicy(y_mode=YMode.PHONETIC),
     )
 
+    assert result.core_name is not None
     assert result.core_name.soul_urge.reduced_value == soul
     assert result.core_name.personality.reduced_value == personality
     assert result.trace.disambiguation_required is False
@@ -82,6 +87,7 @@ def test_ambiguous_y_emits_both_variants() -> None:
         MethodPolicy(y_mode=YMode.PHONETIC),
     )
 
+    assert result.core_name is not None
     assert result.trace.disambiguation_required is True
     assert {variant.label for variant in result.core_name.variants} == {
         "y_as_consonant",
@@ -115,6 +121,21 @@ def test_unsupported_or_incomplete_policies_fail_closed() -> None:
         calculate_profile(base, MethodPolicy(y_mode=YMode.USER_FIXED))
     with pytest.raises(PolicyError, match="requires active_name"):
         calculate_profile(base, MethodPolicy(name_basis=NameBasis.ACTIVE_NAME_ONLY))
+
+
+@pytest.mark.unit
+def test_active_name_only_returns_only_the_supplementary_name_profile(
+    person: PersonInput,
+) -> None:
+    result = calculate_profile(
+        person,
+        MethodPolicy(name_basis=NameBasis.ACTIVE_NAME_ONLY),
+    )
+
+    assert result.core_name is None
+    assert result.active_name is not None
+    assert result.active_name.maturity.reduced_value == 8
+    assert result.maturity == result.active_name.maturity
 
 
 @pytest.mark.unit

@@ -1,8 +1,11 @@
+import "fake-indexeddb/auto";
+
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, vi } from "vitest";
 
 import type { AnalysisReport, ProfileCalculationResult } from "../../api/types";
+import { localProfiles } from "../../storage/repository";
 import { ReportExperience } from "./ReportExperience";
 
 afterEach(() => {
@@ -25,6 +28,9 @@ describe("ReportExperience", () => {
         temperature: 0.2,
         top_p: 1,
         thinking: "enabled/high",
+        effective_sampling: "provider_managed",
+        reasoning_effort: "high",
+        context_signature: "a".repeat(64),
         prompt_version: "numra-report-de-v1",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "a".repeat(64),
@@ -88,6 +94,9 @@ describe("ReportExperience", () => {
         temperature: 0.2,
         top_p: 1,
         thinking: "enabled/high",
+        effective_sampling: "provider_managed",
+        reasoning_effort: "high",
+        context_signature: "a".repeat(64),
         prompt_version: "numra-report-de-v1",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "c".repeat(64),
@@ -136,6 +145,9 @@ describe("ReportExperience", () => {
         temperature: 0.2,
         top_p: 1,
         thinking: "enabled/high",
+        effective_sampling: "provider_managed",
+        reasoning_effort: "high",
+        context_signature: "a".repeat(64),
         prompt_version: "numra-report-de-v1",
         knowledge_bundle: "numra-knowledge-de-v1",
         calculation_hash: "d".repeat(64),
@@ -171,5 +183,49 @@ describe("ReportExperience", () => {
 
     await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
     expect(screen.getByRole("button", { name: /Bericht erzeugen/i })).toBeEnabled();
+  });
+
+  it("requires fresh consent before a follow-up to a loaded local report", async () => {
+    const report = {
+      schema_version: "analysis-report-v1",
+      summary: "Gespeicherter Bericht",
+      sections: [],
+      limitations: [],
+      suggestions: [],
+      provenance: {
+        provider: "deepseek",
+        model: "deepseek-v4-pro",
+        temperature: 0.2,
+        top_p: 1,
+        thinking: "enabled/high",
+        effective_sampling: "provider_managed",
+        reasoning_effort: "high",
+        context_signature: "a".repeat(64),
+        prompt_version: "numra-report-de-v1",
+        knowledge_bundle: "numra-knowledge-de-v1",
+        calculation_hash: "e".repeat(64),
+        provider_fingerprint: "test",
+        prompt_tokens: 10,
+        completion_tokens: 10,
+      },
+    } satisfies AnalysisReport;
+    vi.spyOn(localProfiles, "getReport").mockResolvedValue(report);
+    vi.spyOn(localProfiles, "listFollowUps").mockResolvedValue([]);
+    const requestFollowUp = vi.fn();
+
+    render(
+      <ReportExperience
+        profile={{ deterministic_hash: "e".repeat(64) } as ProfileCalculationResult}
+        profileId="saved-profile"
+        requestFollowUp={requestFollowUp}
+      />,
+    );
+
+    expect(await screen.findByText("Gespeicherter Bericht")).toBeVisible();
+    const button = screen.getByRole("button", { name: /Rückfrage senden/i });
+    await userEvent.type(screen.getByLabelText(/Deine Rückfrage/i), "Was passt dazu?");
+    expect(button).toBeDisabled();
+    await userEvent.click(screen.getByRole("checkbox", { name: /Rückfrage.*übertragen/i }));
+    expect(button).toBeEnabled();
   });
 });

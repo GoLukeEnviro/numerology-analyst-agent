@@ -11,7 +11,7 @@ describe("Numra encryption", () => {
   it("exports authenticated PBKDF2/AES-GCM envelopes", async () => {
     const archive = await encryptArchive({ profiles: [{ id: "p1" }] }, "correct horse");
 
-    expect(archive.format).toBe("numra-export-v1");
+    expect(archive.format).toBe("numra-export-v2");
     expect(archive.kdf).toEqual(
       expect.objectContaining({
         algorithm: "PBKDF2-HMAC-SHA256",

@@ -25,7 +25,14 @@ An den Provider gehen ausschließlich der deterministische Profilhash,
 Berechnungsreferenzen und Zahlen, Aussageklassen sowie die notwendigen Auszüge
 aus `numra-knowledge-de-v1`. Klarname, aktiver Name, Geburtsdatum und
 `input_ref` werden nicht in den Provider-Payload aufgenommen. Rückfragen werden
-vor dem Provider-Aufruf auf Prompt-Injection geprüft.
+vor dem Provider-Aufruf auf Prompt-Injection, bekannte Profilnamen und
+vollständige Datumsformen geprüft. Der vorhandene Bericht wird erneut an
+Profilhash, Rechenwerte, Wissensreferenzen und Safety-Regeln gebunden; seine
+serverseitige HMAC-Signatur muss gültig sein und seine Provenienz wird nicht
+an den Provider weitergereicht. Erkannt werden vollständige Namen,
+Namensbestandteile sowie numerische und deutsche Geburtsdatumsvarianten.
+Eine Rotation von `NUMRA_RATE_LIMIT_HMAC_SECRET` macht bewusst auch ältere
+lokale Berichte für neue Rückfragen ungültig; sie bleiben lokal lesbar.
 
 Provider-Ausgaben werden nur nach JSON-Schema-, Rechenwert-, Wissensreferenz-
 und Safety-Validierung zurückgegeben. Leere oder ungültige Antworten werden
@@ -37,16 +44,20 @@ Ausgabetokens, `thinking.type=enabled` und `reasoning_effort=high`. Die
 vereinbarte Sampling-Konfiguration `temperature=0.2` und `top_p=1` wird als
 Provenienz geführt und aus Kompatibilitätsgründen gesendet. Laut offizieller
 DeepSeek-Dokumentation werden beide Sampling-Parameter im Thinking-Modus
-ignoriert; die wirksame Steuerung ist dort `reasoning_effort=high`.
+ignoriert; deshalb weist die Provenienz zusätzlich
+`effective_sampling=provider_managed` und die wirksame Steuerung
+`reasoning_effort=high` aus.
 
 ## Kontingente
 
-- ein Bericht pro lokalem Profil, Gerät und Tag,
-- zwei Rückfragen pro lokalem Profil, Gerät und Tag,
+- ein Bericht pro Gerät und Tag,
+- zwei Rückfragen pro Gerät und Tag,
 - zusätzlich 20 Provider-Aufrufe pro pseudonymisierter IP und Tag.
 
 Redis erhält ausschließlich HMAC-Schlüssel mit Ablaufzeit. Roh-IP-Adressen,
-Profile und Gespräche werden nicht gespeichert.
+Profile und Gespräche werden nicht gespeichert. Der öffentliche Host-Proxy
+ersetzt eingehende `X-Forwarded-For`-Werte, und Uvicorn vertraut ausschließlich
+der fest adressierten internen Gateway-Adresse `172.30.0.10`.
 
 ## Externes Launch-Gate
 

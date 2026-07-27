@@ -10,10 +10,17 @@ export interface AtlasNumber {
 
 interface NumberAtlasProps {
   hash: string;
+  methodVersion?: string;
   numbers: AtlasNumber[];
+  schemaVersion?: string;
 }
 
-export function NumberAtlas({ hash, numbers }: NumberAtlasProps) {
+export function NumberAtlas({
+  hash,
+  methodVersion = "pythagorean-v1",
+  numbers,
+  schemaVersion = "profile-calculation-result-v3",
+}: NumberAtlasProps) {
   const [expert, setExpert] = useState(false);
   return (
     <section className="result-section" aria-labelledby="atlas-title">
@@ -36,7 +43,12 @@ export function NumberAtlas({ hash, numbers }: NumberAtlasProps) {
           </article>
         ))}
       </div>
-      <div className="table-scroll">
+      <div
+        aria-label="Horizontal scrollbar Zahlenatlas"
+        className="table-scroll"
+        role="region"
+        tabIndex={0}
+      >
         <table aria-label="Tabellarischer Zahlenatlas">
           <thead><tr><th>Zahl</th><th>Wert</th><th>Rechenweg</th><th>Aussageklasse</th></tr></thead>
           <tbody>
@@ -48,7 +60,11 @@ export function NumberAtlas({ hash, numbers }: NumberAtlasProps) {
       </div>
       {expert && (
         <Suspense fallback={<p>Expertendaten werden geladen …</p>}>
-          <ExpertDetails hash={hash} />
+          <ExpertDetails
+            hash={hash}
+            methodVersion={methodVersion}
+            schemaVersion={schemaVersion}
+          />
         </Suspense>
       )}
     </section>

@@ -16,7 +16,7 @@ export interface VaultMetadata {
 }
 
 export interface EncryptedArchive {
-  format: "numra-export-v1";
+  format: "numra-export-v1" | "numra-export-v2";
   kdf: {
     algorithm: "PBKDF2-HMAC-SHA256";
     iterations: 600000;
@@ -34,7 +34,7 @@ export function parseEncryptedArchive(value: unknown): EncryptedArchive {
     typeof value !== "object" ||
     value === null ||
     !("format" in value) ||
-    value.format !== "numra-export-v1" ||
+    (value.format !== "numra-export-v1" && value.format !== "numra-export-v2") ||
     !("kdf" in value) ||
     typeof value.kdf !== "object" ||
     value.kdf === null ||
@@ -120,7 +120,7 @@ export async function encryptArchive(
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const encrypted = await encryptWithKey(value, await deriveKey(passphrase, salt));
   return {
-    format: "numra-export-v1",
+    format: "numra-export-v2",
     kdf: {
       algorithm: "PBKDF2-HMAC-SHA256",
       iterations: PBKDF2_ITERATIONS,
@@ -139,7 +139,7 @@ export async function decryptArchive<T>(
   passphrase: string,
 ): Promise<T> {
   if (
-    archive.format !== "numra-export-v1" ||
+    (archive.format !== "numra-export-v1" && archive.format !== "numra-export-v2") ||
     archive.kdf.algorithm !== "PBKDF2-HMAC-SHA256" ||
     archive.kdf.iterations !== PBKDF2_ITERATIONS ||
     archive.cipher.algorithm !== "AES-GCM-256"
