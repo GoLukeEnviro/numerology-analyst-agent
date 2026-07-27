@@ -25,7 +25,7 @@ def test_interpretation_references_calculation_and_knowledge() -> None:
 
     interpretation = compose_interpretation(profile)
 
-    assert interpretation.knowledge_bundle == "numra-knowledge-de-v1"
+    assert interpretation.knowledge_bundle == "numra-knowledge-de-v2"
     assert interpretation.calculation_hash == profile.deterministic_hash
     assert {section.subject for section in interpretation.sections} >= {
         "life_path",

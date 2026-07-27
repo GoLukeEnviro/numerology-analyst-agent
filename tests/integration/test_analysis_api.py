@@ -29,7 +29,7 @@ class ContractProvider:
                         "claim_type": "interpretive_hypothesis",
                         "text": "Möglicherweise zeigt sich Eigenständigkeit situationsabhängig.",
                         "calculation_ref": "life_path_a",
-                        "knowledge_ref": f"numra-knowledge-de-v1:number:{life_path['number']}",
+                        "knowledge_ref": f"numra-knowledge-de-v2:number:{life_path['number']}",
                         "number": life_path["number"],
                     }
                 ],
@@ -47,7 +47,7 @@ class ContractProvider:
                                 "text": "Möglicherweise lohnt sich ein Blick auf Eigenständigkeit.",
                                 "calculation_ref": "life_path_a",
                                 "knowledge_ref": (
-                                    f"numra-knowledge-de-v1:number:{life_path['number']}"
+                                    f"numra-knowledge-de-v2:number:{life_path['number']}"
                                 ),
                                 "number": life_path["number"],
                             }
