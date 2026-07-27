@@ -8,7 +8,7 @@ export default function ExpertDetails({ hash }: ExpertDetailsProps) {
       <span>Berechnungshash</span>
       <code>{hash}</code>
       <span>Schema</span>
-      <code>profile-calculation-result-v2</code>
+      <code>profile-calculation-result-v3</code>
       <span>Methode</span>
       <code>pythagorean-v1</code>
     </div>

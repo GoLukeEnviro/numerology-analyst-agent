@@ -338,7 +338,7 @@ class AuditTrace(_FrozenModel):
 # Bumped when the JSON shape of CalculationResult changes in a way that
 # affects the deterministic hash.
 CALCULATION_RESULT_SCHEMA_VERSION = "calculation-result-v1"
-PROFILE_CALCULATION_RESULT_SCHEMA_VERSION = "profile-calculation-result-v2"
+PROFILE_CALCULATION_RESULT_SCHEMA_VERSION = "profile-calculation-result-v3"
 
 
 class CalculationHashEnvelope(_FrozenModel):

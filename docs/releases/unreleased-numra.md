@@ -20,10 +20,12 @@ Releasefreigabe ebenfalls in diesen unreleased Stand gehören:
 
 - serverseitige Neuberechnung und Integritätsprüfung aller an LLM-Endpunkte
   gesendeten Profile,
-- getrennte Core-/Active-Name-Reifezahlen einschließlich Active-Trace,
+- `profile-calculation-result-v3` mit getrennten Core-/Active-Name-Reifezahlen,
+  Active-Trace und lesender V2-Migration,
 - wiederherstellbare Voll-Exporte auch zwischen unterschiedlich geschützten
-  lokalen Bibliotheken,
-- erneute Reportvalidierung und PII-Sperren für Rückfragen,
+  lokalen Bibliotheken; neue Archive tragen explizit `numra-export-v2`,
+- HMAC-gebundene Reportkontexte, erneute Reportvalidierung und PII-Sperren
+  für Rückfragen,
 - geräteweite Tageskontingente sowie eine gehärtete Proxy-Vertrauenskette,
 - echte Redis-Readiness und explizite Thinking-/Sampling-Provenienz,
 - der aktuelle Providervertrag `deepseek-v4-pro`.

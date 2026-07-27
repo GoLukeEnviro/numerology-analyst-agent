@@ -28,7 +28,11 @@ aus `numra-knowledge-de-v1`. Klarname, aktiver Name, Geburtsdatum und
 vor dem Provider-Aufruf auf Prompt-Injection, bekannte Profilnamen und
 vollständige Datumsformen geprüft. Der vorhandene Bericht wird erneut an
 Profilhash, Rechenwerte, Wissensreferenzen und Safety-Regeln gebunden; seine
-Provenienz wird nicht an den Provider weitergereicht.
+serverseitige HMAC-Signatur muss gültig sein und seine Provenienz wird nicht
+an den Provider weitergereicht. Erkannt werden vollständige Namen,
+Namensbestandteile sowie numerische und deutsche Geburtsdatumsvarianten.
+Eine Rotation von `NUMRA_RATE_LIMIT_HMAC_SECRET` macht bewusst auch ältere
+lokale Berichte für neue Rückfragen ungültig; sie bleiben lokal lesbar.
 
 Provider-Ausgaben werden nur nach JSON-Schema-, Rechenwert-, Wissensreferenz-
 und Safety-Validierung zurückgegeben. Leere oder ungültige Antworten werden

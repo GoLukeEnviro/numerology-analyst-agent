@@ -16,7 +16,7 @@ versionierte Verträge auf:
 - `0.1.5`: persönliche Jahre, Monate und Tage sowie vier Pinnacles und Challenges.
 
 Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
-vollständige Profil verwendet `profile-calculation-result-v2`; sein Hash umfasst
+vollständige Profil verwendet `profile-calculation-result-v3`; sein Hash umfasst
 alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
 `consent_given` bleibt ausdrücklich ausgeschlossen.
 

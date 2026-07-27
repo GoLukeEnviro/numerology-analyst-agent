@@ -66,7 +66,7 @@ async def test_health_and_meta_are_versioned(client: AsyncClient) -> None:
     assert ready.status_code == 200
     assert ready.json()["engine"] == "ready"
     assert meta.status_code == 200
-    assert meta.json()["profile_schema_version"] == "profile-calculation-result-v2"
+    assert meta.json()["profile_schema_version"] == "profile-calculation-result-v3"
     assert meta.json()["knowledge_bundle"] == "numra-knowledge-de-v1"
     assert meta.json()["llm"]["enabled"] is False
 

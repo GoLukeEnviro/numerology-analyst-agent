@@ -55,6 +55,7 @@ class AnalysisProvenance(_AgentModel):
     provider_fingerprint: str | None
     prompt_tokens: int
     completion_tokens: int
+    context_signature: str = Field(min_length=64, max_length=64, pattern=r"^[0-9a-f]{64}$")
 
 
 class AnalysisReport(_AgentModel):

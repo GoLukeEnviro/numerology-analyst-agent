@@ -27,7 +27,7 @@ def person() -> PersonInput:
 def test_complete_reference_profile(person: PersonInput) -> None:
     result = calculate_profile(person, MethodPolicy())
 
-    assert result.schema_version == "profile-calculation-result-v2"
+    assert result.schema_version == "profile-calculation-result-v3"
     assert result.life_path_a.reduced_value == 1
     assert result.life_path_b.reduced_value == 1
     assert result.birthday.reduced_value == 7

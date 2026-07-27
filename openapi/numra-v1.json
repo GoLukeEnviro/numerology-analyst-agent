@@ -131,6 +131,13 @@
             "title": "Completion Tokens",
             "type": "integer"
           },
+          "context_signature": {
+            "maxLength": 64,
+            "minLength": 64,
+            "pattern": "^[0-9a-f]{64}$",
+            "title": "Context Signature",
+            "type": "string"
+          },
           "effective_sampling": {
             "const": "provider_managed",
             "default": "provider_managed",
@@ -198,7 +205,8 @@
           "calculation_hash",
           "provider_fingerprint",
           "prompt_tokens",
-          "completion_tokens"
+          "completion_tokens",
+          "context_signature"
         ],
         "title": "AnalysisProvenance",
         "type": "object"
@@ -1188,7 +1196,7 @@
             "$ref": "#/components/schemas/MethodPolicy"
           },
           "schema_version": {
-            "default": "profile-calculation-result-v2",
+            "default": "profile-calculation-result-v3",
             "title": "Schema Version",
             "type": "string"
           },

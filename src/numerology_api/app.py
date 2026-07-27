@@ -550,7 +550,11 @@ def create_app(
         if limited is not None:
             return limited
         try:
-            return await AgentService(provider).generate_report(canonical_profile)
+            assert resolved.rate_limit_hmac_secret is not None
+            return await AgentService(
+                provider,
+                context_secret=resolved.rate_limit_hmac_secret.get_secret_value().encode(),
+            ).generate_report(canonical_profile)
         except (AgentValidationError, ProviderError):
             return _problem_response(
                 ProblemDetails(
@@ -609,7 +613,11 @@ def create_app(
         if limited is not None:
             return limited
         try:
-            return await AgentService(provider).generate_follow_up(
+            assert resolved.rate_limit_hmac_secret is not None
+            return await AgentService(
+                provider,
+                context_secret=resolved.rate_limit_hmac_secret.get_secret_value().encode(),
+            ).generate_follow_up(
                 canonical_profile,
                 body.report,
                 body.question,

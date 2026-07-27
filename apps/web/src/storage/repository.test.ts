@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import type { ProfileCalculationResult } from "../api/types";
 import type { AnalysisFollowUp, AnalysisReport } from "../api/types";
 import { NumraDatabase, migrateLegacyProfile } from "./database";
-import { MemoryVault, VaultLockedError } from "./crypto";
-import { LocalProfileRepository } from "./repository";
+import { MemoryVault, VaultLockedError, encryptArchive } from "./crypto";
+import { LocalProfileRepository, migrateProfileContract } from "./repository";
 
 function profile(name: string, hashCharacter: string): ProfileCalculationResult {
   return {
@@ -28,6 +28,27 @@ afterEach(async () => {
 });
 
 describe("LocalProfileRepository", () => {
+  it("backfills nested maturity values when reading a stored V2 profile", () => {
+    const migrated = migrateProfileContract({
+      schema_version: "profile-calculation-result-v2",
+      life_path_a: { reduced_value: 1 },
+      policy: { master_numbers: [11, 22, 33] },
+      maturity: { reduced_value: 6 },
+      core_name: {
+        basis: "core_name",
+        expression: { reduced_value: 5 },
+      },
+      active_name: {
+        basis: "active_name",
+        expression: { reduced_value: 7 },
+      },
+    } as unknown as ProfileCalculationResult);
+
+    expect(migrated.core_name?.maturity.reduced_value).toBe(6);
+    expect(migrated.active_name?.maturity.reduced_value).toBe(8);
+    expect(migrated.schema_version).toBe("profile-calculation-result-v2");
+  });
+
   it("requires explicit opt-in and supports search, sorting and deletion", async () => {
     const { repository: profiles } = repository();
     await expect(profiles.saveProfile(profile("Max Mustermann", "a"), false)).rejects.toThrow(
@@ -111,6 +132,48 @@ describe("LocalProfileRepository", () => {
     expect(await target.repository.getNote(saved.id)).toBe("Protected note");
     expect(JSON.stringify(await target.database.reports.toArray())).not.toContain("Protected report");
     expect(JSON.stringify(await target.database.notes.toArray())).not.toContain("Protected note");
+  });
+
+  it("migrates an unprotected V1 archive and rejects unrecoverable protected V1 payloads", async () => {
+    const legacyProfile = profile("Legacy Export", "l");
+    const legacyContents = {
+      schemaVersion: 1 as const,
+      exportedAt: "2026-07-27T00:00:00.000Z",
+      profiles: [legacyProfile],
+      runs: [{
+        id: "legacy-run",
+        profileId: "l".repeat(16),
+        createdAt: 1,
+        payload: JSON.stringify(legacyProfile),
+      }],
+      reports: [],
+      threads: [],
+      notes: [],
+    };
+    const encrypted = await encryptArchive(legacyContents, "archive passphrase");
+    const legacyArchive = { ...encrypted, format: "numra-export-v1" as const };
+    const target = repository();
+
+    await target.repository.importAll(legacyArchive, "archive passphrase");
+    expect(await target.repository.listProfiles({ query: "", sort: "updated" })).toHaveLength(1);
+
+    const protectedContents = {
+      ...legacyContents,
+      runs: [{
+        ...legacyContents.runs[0],
+        payload: { version: 1 as const, iv: "AA==", ciphertext: "AA==" },
+      }],
+    };
+    const protectedEncrypted = await encryptArchive(
+      protectedContents,
+      "archive passphrase",
+    );
+    await expect(
+      repository().repository.importAll(
+        { ...protectedEncrypted, format: "numra-export-v1" },
+        "archive passphrase",
+      ),
+    ).rejects.toThrow(/ursprünglichen.*entsperrten Numra/i);
   });
 
   it("migrates legacy profile records to schema version two", () => {

@@ -11,7 +11,7 @@ export interface LegacyProfileRecord {
 }
 
 export interface StoredProfileRecord {
-  schemaVersion: 2;
+  schemaVersion: 2 | 3;
   id: string;
   calculationHash: string;
   createdAt: number;
@@ -94,6 +94,23 @@ export class NumraDatabase extends Dexie {
           .toCollection()
           .modify((record) => {
             Object.assign(record, migrateLegacyProfile(record));
+          });
+      });
+    this.version(3)
+      .stores({
+        profiles: "id,calculationHash,createdAt,updatedAt",
+        runs: "id,profileId,createdAt",
+        reports: "id,profileId,createdAt",
+        threads: "id,profileId,updatedAt",
+        notes: "id,profileId,reportId,updatedAt",
+        meta: "key",
+      })
+      .upgrade(async (transaction) => {
+        await transaction
+          .table<StoredProfileRecord, string>("profiles")
+          .toCollection()
+          .modify((record) => {
+            record.schemaVersion = 3;
           });
       });
   }

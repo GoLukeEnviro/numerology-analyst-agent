@@ -39,7 +39,7 @@ export interface ProfileListOptions {
 }
 
 interface ExportContents {
-  schemaVersion: 1;
+  schemaVersion: 2;
   exportedAt: string;
   profiles: ProfileCalculationResult[];
   runs: Array<Omit<LocalRunRecord, "payload"> & { payload: ProfileCalculationResult }>;
@@ -48,8 +48,104 @@ interface ExportContents {
   notes: Array<Omit<LocalNoteRecord, "payload"> & { payload: string }>;
 }
 
+interface LegacyExportContents {
+  schemaVersion: 1;
+  exportedAt: string;
+  profiles: ProfileCalculationResult[];
+  runs: LocalRunRecord[];
+  reports: LocalReportRecord[];
+  threads: LocalThreadRecord[];
+  notes: LocalNoteRecord[];
+}
+
 function parseProfile(value: string): ProfileCalculationResult {
   return JSON.parse(value) as ProfileCalculationResult;
+}
+
+function decodeLegacyArchivePayload<T>(payload: string | EncryptedPayload): T {
+  if (typeof payload !== "string") {
+    throw new Error(
+      "Ein passphrasesgeschützter Numra-V1-Export enthält nicht übertragbare Vault-Daten. Bitte exportiere ihn im ursprünglichen, entsperrten Numra erneut als V2.",
+    );
+  }
+  return JSON.parse(payload) as T;
+}
+
+function migrateLegacyExport(contents: LegacyExportContents): ExportContents {
+  return {
+    schemaVersion: 2,
+    exportedAt: contents.exportedAt,
+    profiles: contents.profiles,
+    runs: contents.runs.map(({ payload, ...record }) => ({
+      ...record,
+      payload: migrateProfileContract(
+        decodeLegacyArchivePayload<ProfileCalculationResult>(payload),
+      ),
+    })),
+    reports: contents.reports.map(({ payload, ...record }) => ({
+      ...record,
+      payload: decodeLegacyArchivePayload<AnalysisReport>(payload),
+    })),
+    threads: contents.threads.map(({ payload, ...record }) => ({
+      ...record,
+      payload: decodeLegacyArchivePayload<AnalysisFollowUp>(payload),
+    })),
+    notes: contents.notes.map(({ payload, ...record }) => ({
+      ...record,
+      payload: decodeLegacyArchivePayload<string>(payload),
+    })),
+  };
+}
+
+function reduceMigratedValue(rawTotal: number, masterNumbers: number[]): number {
+  let value = rawTotal;
+  const masters = new Set(masterNumbers);
+  while (value > 9 && !masters.has(value)) {
+    value = String(value)
+      .split("")
+      .reduce((sum, digit) => sum + Number(digit), 0);
+  }
+  return value;
+}
+
+export function migrateProfileContract(
+  profile: ProfileCalculationResult,
+): ProfileCalculationResult {
+  if (profile.core_name == null && profile.active_name == null) return profile;
+  const withMaturity = (names: NonNullable<ProfileCalculationResult["active_name"]>) => {
+    if ("maturity" in names && names.maturity != null) return names;
+    const rawTotal =
+      profile.life_path_a.reduced_value + names.expression.reduced_value;
+    const reducedValue = reduceMigratedValue(rawTotal, profile.policy.master_numbers);
+    return {
+      ...names,
+      maturity: {
+        name: `${names.basis}_maturity`,
+        raw_total: rawTotal,
+        reduced_value: reducedValue,
+        compound_notation:
+          rawTotal === reducedValue ? String(reducedValue) : `${rawTotal}/${reducedValue}`,
+        is_master: profile.policy.master_numbers.includes(reducedValue),
+        components: {
+          life_path: profile.life_path_a.reduced_value,
+          expression: names.expression.reduced_value,
+        },
+        steps: [
+          {
+            label: `${names.basis}_maturity`,
+            inputs: [profile.life_path_a.reduced_value, names.expression.reduced_value],
+            output: reducedValue,
+            note: `Migration aus Profil ${profile.schema_version}`,
+          },
+        ],
+      },
+    };
+  };
+  return {
+    ...profile,
+    core_name: profile.core_name == null ? null : withMaturity(profile.core_name),
+    active_name: profile.active_name == null ? null : withMaturity(profile.active_name),
+  };
 }
 
 export class LocalProfileRepository {
@@ -95,6 +191,7 @@ export class LocalProfileRepository {
     optIn: boolean,
   ): Promise<LocalProfile> {
     if (!optIn) throw new Error("Opt-in ist vor dauerhafter Speicherung erforderlich.");
+    profile = migrateProfileContract(profile);
     const now = Date.now();
     const id = profile.deterministic_hash.slice(0, 16);
     const existing = await this.database.profiles.get(id);
@@ -103,7 +200,7 @@ export class LocalProfileRepository {
     const serialized = JSON.stringify(profile);
     const payload = protectedPayload ? await this.vault.encrypt(profile) : serialized;
     const record: StoredProfileRecord = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       id,
       calculationHash: profile.deterministic_hash,
       createdAt: existing?.createdAt ?? now,
@@ -276,13 +373,15 @@ export class LocalProfileRepository {
     const notes = await this.database.notes.toArray();
     return encryptArchive(
       {
-        schemaVersion: 1,
+        schemaVersion: 2,
         exportedAt: new Date().toISOString(),
         profiles: profiles.map((profile) => profile.profile),
         runs: await Promise.all(
           runs.map(async ({ payload, ...record }) => ({
             ...record,
-            payload: await this.decodePayload<ProfileCalculationResult>(payload),
+            payload: migrateProfileContract(
+              await this.decodePayload<ProfileCalculationResult>(payload),
+            ),
           })),
         ),
         reports: await Promise.all(
@@ -309,8 +408,15 @@ export class LocalProfileRepository {
   }
 
   async importAll(archive: EncryptedArchive, passphrase: string): Promise<void> {
-    const contents = await decryptArchive<ExportContents>(archive, passphrase);
-    if (contents.schemaVersion !== 1 || !Array.isArray(contents.profiles)) {
+    const decrypted = await decryptArchive<ExportContents | LegacyExportContents>(
+      archive,
+      passphrase,
+    );
+    const contents =
+      archive.format === "numra-export-v1" && decrypted.schemaVersion === 1
+        ? migrateLegacyExport(decrypted)
+        : (decrypted as ExportContents);
+    if (contents.schemaVersion !== 2 || !Array.isArray(contents.profiles)) {
       throw new Error("Ungültiger Numra-Export.");
     }
     for (const profile of contents.profiles) await this.saveProfile(profile, true);
@@ -357,9 +463,10 @@ export class LocalProfileRepository {
   }
 
   private async decodeProfile(record: StoredProfileRecord): Promise<LocalProfile> {
-    const profile = record.protected
+    const decoded = record.protected
       ? await this.vault.decrypt<ProfileCalculationResult>(record.payload as EncryptedPayload)
       : parseProfile(record.payload as string);
+    const profile = migrateProfileContract(decoded);
     return {
       id: record.id,
       name: profile.input_ref.core_name,

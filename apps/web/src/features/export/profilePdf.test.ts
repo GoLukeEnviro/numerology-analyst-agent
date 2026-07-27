@@ -39,6 +39,7 @@ const report = {
     thinking: "enabled/high",
     effective_sampling: "provider_managed",
     reasoning_effort: "high",
+    context_signature: "a".repeat(64),
     prompt_version: "numra-report-de-v1",
     knowledge_bundle: "numra-knowledge-de-v1",
     calculation_hash: "a".repeat(64),

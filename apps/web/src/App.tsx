@@ -397,7 +397,7 @@ function ProfilePage() {
             <h1>{result.input_ref.core_name}</h1>
             <p>Berechnet für den Stand {result.input_ref.as_of_date}. Keine Deutung verändert diese Werte.</p>
           </div>
-          <div className="profile-seal"><span>Schema</span><strong>V2</strong><small>verifiziert</small></div>
+          <div className="profile-seal"><span>Schema</span><strong>V3</strong><small>verifiziert</small></div>
         </header>
         <div className="local-actions">
           <button

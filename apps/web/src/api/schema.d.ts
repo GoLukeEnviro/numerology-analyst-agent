@@ -158,6 +158,8 @@ export interface components {
             calculation_hash: string;
             /** Completion Tokens */
             completion_tokens: number;
+            /** Context Signature */
+            context_signature: string;
             /**
              * Effective Sampling
              * @default provider_managed
@@ -769,7 +771,7 @@ export interface components {
             policy: components["schemas"]["MethodPolicy"];
             /**
              * Schema Version
-             * @default profile-calculation-result-v2
+             * @default profile-calculation-result-v3
              */
             schema_version: string;
             trace: components["schemas"]["AuditTrace"];

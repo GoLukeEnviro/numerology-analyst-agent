@@ -389,7 +389,7 @@
     },
     "NameNumberSet": {
       "additionalProperties": false,
-      "description": "Expression, Soul Urge and Personality values for one separately held name.",
+      "description": "All name-derived values for one explicitly separated name profile.",
       "properties": {
         "basis": {
           "title": "Basis",
@@ -419,6 +419,9 @@
         "personality": {
           "$ref": "#/$defs/NumberResult"
         },
+        "maturity": {
+          "$ref": "#/$defs/NumberResult"
+        },
         "y_classifications": {
           "items": {
             "type": "string"
@@ -441,7 +444,8 @@
         "segments",
         "expression",
         "soul_urge",
-        "personality"
+        "personality",
+        "maturity"
       ],
       "title": "NameNumberSet",
       "type": "object"
@@ -708,7 +712,7 @@
       "type": "string"
     },
     "schema_version": {
-      "default": "profile-calculation-result-v2",
+      "default": "profile-calculation-result-v3",
       "title": "Schema Version",
       "type": "string"
     },
@@ -734,7 +738,15 @@
       "$ref": "#/$defs/NumberResult"
     },
     "core_name": {
-      "$ref": "#/$defs/NameNumberSet"
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NameNumberSet"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "active_name": {
       "anyOf": [
@@ -770,7 +782,6 @@
     "consistency",
     "birthday",
     "attitude",
-    "core_name",
     "maturity",
     "cycles",
     "trace"
