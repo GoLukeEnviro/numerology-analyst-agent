@@ -16,7 +16,6 @@
     "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
-    "@tanstack/react-query": "5.101.4",
     "dexie": "4.4.4",
     "pdfmake": "0.3.11",
     "react": "19.2.8",

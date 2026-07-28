@@ -1,19 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ApiProblem, generateFollowUp, generateReport } from "../../api/client";
+import { generateFollowUp, generateReport } from "../../api/client";
 import type {
   AnalysisFollowUp,
   AnalysisReport,
   ProfileCalculationResult,
 } from "../../api/types";
+import { isAbortError, quotaExhaustedMessage } from "../analysis/abort-utils";
+import { noteErrorMessage } from "../analysis/notes-utils";
 import { localProfiles } from "../../storage/repository";
 
 const DEVICE_ID_KEY = "numra:device-id:v1";
-const QUOTA_EXHAUSTED_CODES = new Set([
-  "rate_limit_exceeded",
-  "quota_exceeded",
-  "daily_quota_exceeded",
-]);
 
 function deviceId(): string {
   const existing = localStorage.getItem(DEVICE_ID_KEY);
@@ -21,17 +18,6 @@ function deviceId(): string {
   const created = `device-${crypto.randomUUID()}`;
   localStorage.setItem(DEVICE_ID_KEY, created);
   return created;
-}
-
-function isAbortError(error: unknown): boolean {
-  return error instanceof Error && error.name === "AbortError";
-}
-
-function quotaExhaustedMessage(error: unknown): string | null {
-  if (error instanceof ApiProblem && QUOTA_EXHAUSTED_CODES.has(error.code)) {
-    return "Das tägliche Kontingent ist ausgeschöpft. Bitte versuche es morgen wieder.";
-  }
-  return null;
 }
 
 interface SectionNoteState {
@@ -98,13 +84,6 @@ export function ReportExperience({
     return controller;
   };
 
-  const finishRequest = () => {
-    setBusy(false);
-    if (abortRef.current?.signal.aborted) {
-      abortRef.current = null;
-    }
-  };
-
   const createReport = () => {
     if (!navigator.onLine) {
       setMessage("Für einen neuen Bericht ist eine Internetverbindung erforderlich.");
@@ -121,18 +100,25 @@ export function ReportExperience({
       controller.signal,
     )
       .then(async (created) => {
+        if (abortRef.current !== controller) return;
         setReport(created);
         setFollowUpCount(0);
         if (saveLocally) await localProfiles.saveReport(profileId, created, true);
       })
       .catch((error: unknown) => {
         if (isAbortError(error)) return;
+        if (abortRef.current !== controller) return;
         setMessage(
           quotaExhaustedMessage(error) ??
             (error instanceof Error ? error.message : "Bericht konnte nicht erzeugt werden."),
         );
       })
-      .finally(finishRequest);
+      .finally(() => {
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+          setBusy(false);
+        }
+      });
   };
 
   const askFollowUp = () => {
@@ -154,6 +140,7 @@ export function ReportExperience({
       controller.signal,
     )
       .then(async (created) => {
+        if (abortRef.current !== controller) return;
         setFollowUps((current) => [...current, created]);
         setFollowUpCount((current) => current + 1);
         if (saveLocally) await localProfiles.saveFollowUp(profileId, created, true);
@@ -161,12 +148,18 @@ export function ReportExperience({
       })
       .catch((error: unknown) => {
         if (isAbortError(error)) return;
+        if (abortRef.current !== controller) return;
         setMessage(
           quotaExhaustedMessage(error) ??
             (error instanceof Error ? error.message : "Rückfrage konnte nicht beantwortet werden."),
         );
       })
-      .finally(finishRequest);
+      .finally(() => {
+        if (abortRef.current === controller) {
+          abortRef.current = null;
+          setBusy(false);
+        }
+      });
   };
 
   const cancelRequest = () => {
@@ -186,7 +179,7 @@ export function ReportExperience({
       }));
       setActiveNoteSection((current) => (current === sectionTitle ? null : current));
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Notiz konnte nicht gespeichert werden.");
+      setMessage(noteErrorMessage(error));
     }
   };
 

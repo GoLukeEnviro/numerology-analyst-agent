@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { ProfileCalculationResult } from "../../api/types";
+import { noteErrorMessage } from "../analysis/notes-utils";
 import { localProfiles } from "../../storage/repository";
 
 interface ProfileActionsProps {
@@ -58,9 +59,7 @@ export function ProfileActions({ profileId, profile }: ProfileActionsProps) {
             void localProfiles
               .saveNote(profileId, note, true)
               .then(() => setMessage("Notiz lokal gespeichert."))
-              .catch((error: unknown) =>
-                setMessage(error instanceof Error ? error.message : "Speichern fehlgeschlagen."),
-              );
+              .catch((error: unknown) => setMessage(noteErrorMessage(error)));
           }}
         >
           Notiz lokal speichern
