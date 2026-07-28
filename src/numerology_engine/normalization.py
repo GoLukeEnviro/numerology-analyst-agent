@@ -39,6 +39,20 @@ _DE_DIRECT_MAP: dict[str, str] = {
     "ü": "U",
 }
 
+# de-expanded-v1 replacement table (PR #19).
+# Umlauts are expanded phonetically: Ä→AE, Ö→OE, Ü→UE, ß→SS.
+# Accents are stripped transparently afterwards (same as de-direct-v1).
+# The two policies MUST NEVER be mixed in one calculation (ADR 0002 §7).
+_DE_EXPANDED_MAP: dict[str, str] = {
+    "Ä": "AE",
+    "Ö": "OE",
+    "Ü": "UE",
+    "ß": "SS",
+    "ä": "AE",
+    "ö": "OE",
+    "ü": "UE",
+}
+
 # Combining diacritical marks range stripped after NFD decomposition
 # (ADR 0002 §5). Covers common Latin combining marks.
 _COMBINING_RANGE_START = 0x0300
@@ -79,6 +93,32 @@ def _apply_de_direct(text: str) -> tuple[str, list[NormalizationStep]]:
     return "".join(out_chars), steps
 
 
+def _apply_de_expanded(text: str) -> tuple[str, list[NormalizationStep]]:
+    """Apply the de-expanded-v1 umlaut table (PR #19).
+
+    Ä→AE, Ö→OE, Ü→UE, ß→SS.  Accents are stripped in the subsequent step
+    (shared with de-direct-v1).  Mixed use of the two policies is forbidden
+    (ADR 0002 §7).
+    """
+    steps: list[NormalizationStep] = []
+    out_chars: list[str] = []
+    for idx, ch in enumerate(text):
+        if ch in _DE_EXPANDED_MAP:
+            replacement = _DE_EXPANDED_MAP[ch]
+            steps.append(
+                NormalizationStep(
+                    step="umlaut_policy_de_expanded_v1",
+                    input=ch,
+                    output=replacement,
+                    note=f"position={idx}",
+                )
+            )
+            out_chars.append(replacement)
+        else:
+            out_chars.append(ch)
+    return "".join(out_chars), steps
+
+
 def normalize_name(
     original: str,
     *,
@@ -90,20 +130,15 @@ def normalize_name(
     Returns the ``calculation_name`` and the ordered normalization audit
     trail. The original name is preserved by the caller (``PersonInput``).
 
+    Supported policies: ``de-direct-v1`` (Ä→A, Ö→O, Ü→U) and
+    ``de-expanded-v1`` (Ä→AE, Ö→OE, Ü→UE). Mixing them is forbidden
+    (ADR 0002 §7). PR #19 activates ``de-expanded-v1``.
+
     Raises :class:`PolicyError` for an unsupported policy/locale mix, and
     :class:`NormalizationError` for empty input.
     """
     if original is None or not original.strip():
         raise NormalizationError("cannot normalize an empty name")
-
-    if umlaut_policy is UmlautPolicy.DE_EXPANDED_V1:
-        # Documented but not activated in 0.1.0 (ADR 0002 §7). Activating it
-        # would require a separate code path; mixing it with de-direct-v1 is
-        # explicitly forbidden.
-        raise PolicyError(
-            "umlaut_policy 'de-expanded-v1' is documented but not active in 0.1.0; "
-            "use 'de-direct-v1' (and never mix the two)"
-        )
 
     if locale is not Locale.DE:
         # Only de is implemented in 0.1.0. Other locales are extension points.
@@ -122,8 +157,12 @@ def normalize_name(
         )
     )
 
-    # Step 2 - de-direct-v1 umlaut replacement (semantic, layer B).
-    after_umlaut, umlaut_steps = _apply_de_direct(nfc)
+    # Step 2 - umlaut policy replacement (semantic, layer B).
+    if umlaut_policy is UmlautPolicy.DE_EXPANDED_V1:
+        after_umlaut, umlaut_steps = _apply_de_expanded(nfc)
+    else:
+        # DE_DIRECT_V1 is the default and the only other supported policy.
+        after_umlaut, umlaut_steps = _apply_de_direct(nfc)
     audit.extend(umlaut_steps)
 
     # Step 3 - accent stripping (separate operation from the umlaut policy).

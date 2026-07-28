@@ -92,6 +92,9 @@ ignore = [
     "E501",  # line length handled by formatter
 ]
 
+[tool.ruff.lint.per-file-ignores]
+"*/__init__.py" = ["F401"]  # re-exports are intentional in package init files
+
 [tool.ruff.lint.isort]
 known-first-party = ["numerology_domain", "numerology_engine", "numerology_api", "numerology_cli", "numerology_knowledge", "numerology_interpretation", "numerology_safety", "numerology_agent"]
 force-sort-within-sections = true

@@ -36,8 +36,12 @@ from numerology_domain.enums import (
 MASTER_NUMBERS: frozenset[int] = frozenset({11, 22, 33})
 KARMIC_DEBTS: frozenset[int] = frozenset({13, 14, 16, 19})
 
-# Pythagorean method version tag (ADR set + Master Contract §3.2).
+# Pythagorean method version tags (ADR set + Master Contract §3.2).
 PYTHAGOREAN_V1_VERSION = "v1"
+PYTHAGOREAN_V2_VERSION = "v2"
+VALID_PYTHAGOREAN_VERSIONS: frozenset[str] = frozenset(
+    {PYTHAGOREAN_V1_VERSION, PYTHAGOREAN_V2_VERSION}
+)
 
 
 class _FrozenModel(BaseModel):
@@ -172,13 +176,14 @@ class MethodPolicy(_FrozenModel):
 
     @model_validator(mode="after")
     def _system_version_consistent(self) -> MethodPolicy:
-        # pythagorean-v1 is the only implemented version (calculation-engineer
-        # contract §4: "Methodenversionen vermischen" is forbidden). We do not
-        # hard-fail on other version strings yet (other systems are documented
-        # extension points), but we record the canonical pairing.
-        if self.system is MethodSystem.PYTHAGOREAN and self.version != PYTHAGOREAN_V1_VERSION:
+        # pythagorean-v1 and pythagorean-v2 are the only implemented versions
+        # (calculation-engineer contract §4: "Methodenversionen vermischen" is forbidden).
+        if (
+            self.system is MethodSystem.PYTHAGOREAN
+            and self.version not in VALID_PYTHAGOREAN_VERSIONS
+        ):
             raise ValueError(
-                f"pythagorean system requires version {PYTHAGOREAN_V1_VERSION!r}, "
+                f"pythagorean system requires one of {sorted(VALID_PYTHAGOREAN_VERSIONS)!r}, "
                 f"got {self.version!r}"
             )
         return self
@@ -478,5 +483,175 @@ class ProfileCalculationResult(_FrozenModel):
     active_name: NameNumberSet | None = None
     maturity: NumberResult
     cycles: CycleCalculationResult
+    trace: AuditTrace
+    deterministic_hash: str = ""
+
+
+# ---------------------------------------------------------------------------
+# V2 schema additions — pythagorean-v2 contract
+# ---------------------------------------------------------------------------
+
+PROFILE_CALCULATION_RESULT_V4_SCHEMA_VERSION = "profile-calculation-result-v4"
+
+_KARMIC_DEBT_ORIGIN_TYPES: frozenset[str] = frozenset(
+    {"direct_raw", "reduction_intermediate", "component_total"}
+)
+
+
+class KarmicOccurrence(_FrozenModel):
+    """A karmic debt value found during reduction with its precise origin type.
+
+    origin_type distinguishes three cases (PR #19):
+    * ``direct_raw`` — the methodically defined raw total itself is karmic
+      (e.g. birthday=16).
+    * ``reduction_intermediate`` — a karmic number appears as an intermediate
+      step in the chain (e.g. expression 59→14→5).
+    * ``component_total`` — the sum of reduced components is karmic
+      (e.g. Life Path B component sum = 13).
+    """
+
+    value: int = Field(..., description="Karmic debt number (13, 14, 16 or 19).")
+    origin_type: str = Field(
+        ...,
+        description="direct_raw | reduction_intermediate | component_total",
+    )
+
+    @model_validator(mode="after")
+    def _validate(self) -> KarmicOccurrence:
+        if self.value not in KARMIC_DEBTS:
+            raise ValueError(f"value must be one of {sorted(KARMIC_DEBTS)}, got {self.value}")
+        if self.origin_type not in _KARMIC_DEBT_ORIGIN_TYPES:
+            raise ValueError(
+                f"origin_type must be one of {sorted(_KARMIC_DEBT_ORIGIN_TYPES)}, "
+                f"got {self.origin_type!r}"
+            )
+        return self
+
+
+class NumberModel(_FrozenModel):
+    """Rich V2 numeric model (PR #19) with full reduction chain, karmic origin
+    differentiation, and master-number / compound classification.
+
+    Replaces ``NumberResult`` for pythagorean-v2 code paths.  The two models
+    coexist; pythagorean-v1 still uses ``NumberResult``.
+
+    Key invariants:
+    * ``root_value`` is ALWAYS in 1..9 (the final single-digit result).
+    * ``held_master_value`` is ``None`` unless the chain passes through 11/22/33.
+    * ``is_master`` is ``True`` iff ``held_master_value is not None``.
+    * 44 is NOT a master number (``is_master=False`` for raw_total=44).
+    * ``reduction_chain`` always ends at ``root_value`` (including past masters).
+    * ``display_notation`` renders the chain as slash-notation.
+    """
+
+    raw_total: int = Field(..., ge=0)
+    reduction_chain: tuple[int, ...] = Field(
+        ...,
+        description="Full chain from raw_total to root_value, e.g. (29,11,2).",
+    )
+    root_value: int = Field(
+        ..., ge=0, le=9, description="Final 0-9 result (0 only for challenge=0)."
+    )
+    held_master_value: int | None = Field(
+        default=None,
+        description="Master number in chain (11/22/33) or None.",
+    )
+    display_notation: str = Field(
+        ...,
+        description="Slash notation, e.g. '29/11/2', '40/4', '22/4'.",
+    )
+    is_master: bool = Field(
+        default=False,
+        description="True only when held_master_value is not None (11/22/33; NOT 44).",
+    )
+    compound_classification: str | None = Field(
+        default=None,
+        description="master_number | karmic_debt | compound | None.",
+    )
+    karmic_occurrences: tuple[KarmicOccurrence, ...] = Field(
+        default_factory=tuple,
+        description="Karmic debt hits in this reduction, with origin context.",
+    )
+    components: tuple[int, ...] = Field(
+        default_factory=tuple,
+        description="Original summation components before the raw_total.",
+    )
+    steps: tuple[str, ...] = Field(
+        default_factory=tuple,
+        description="Human-readable calculation steps for the audit trail.",
+    )
+
+    @model_validator(mode="after")
+    def _check_invariants(self) -> NumberModel:
+        if self.is_master and self.held_master_value is None:
+            raise ValueError("is_master=True requires held_master_value to be set")
+        if not self.is_master and self.held_master_value is not None:
+            raise ValueError("is_master=False requires held_master_value to be None")
+        if self.held_master_value is not None and self.held_master_value not in MASTER_NUMBERS:
+            raise ValueError(
+                f"held_master_value {self.held_master_value} is not in {sorted(MASTER_NUMBERS)}"
+            )
+        if not self.reduction_chain:
+            raise ValueError("reduction_chain must not be empty")
+        if self.reduction_chain[-1] != self.root_value:
+            raise ValueError(
+                f"reduction_chain last element {self.reduction_chain[-1]} "
+                f"must equal root_value {self.root_value}"
+            )
+        if self.reduction_chain[0] != self.raw_total:
+            raise ValueError(
+                f"reduction_chain first element {self.reduction_chain[0]} "
+                f"must equal raw_total {self.raw_total}"
+            )
+        return self
+
+
+class NameNumberSetV2(_FrozenModel):
+    """Name-derived numbers using the V2 NumberModel (pythagorean-v2)."""
+
+    basis: str
+    original_name: str
+    normalized_name: str
+    expression: NumberModel
+    soul_urge: NumberModel
+    personality: NumberModel
+    maturity: NumberModel
+    y_classifications: tuple[str, ...] = Field(default_factory=tuple)
+
+
+class CycleCalculationResultV2(_FrozenModel):
+    """Personal date cycles using V2 NumberModel and corrected formulas (PR #19)."""
+
+    as_of_date: date
+    personal_year: NumberModel
+    personal_month: NumberModel
+    personal_day: NumberModel
+    pinnacles: tuple[NumberModel, ...] = Field(..., min_length=4, max_length=4)
+    challenges: tuple[NumberModel, ...] = Field(..., min_length=4, max_length=4)
+
+
+class ProfileCalculationResultV4(_FrozenModel):
+    """Complete deterministic V2 profile contract (profile-calculation-result-v4, PR #19).
+
+    Uses ``NumberModel`` throughout, has explicit primary/secondary life path
+    roles and full MethodPolicy versioning.  Additive — does not alter V1/V3.
+    """
+
+    claim_type: ClaimType = ClaimType.CALCULATION_FACT
+    name: str = "complete_profile_v4"
+    schema_version: str = PROFILE_CALCULATION_RESULT_V4_SCHEMA_VERSION
+    input_ref: PersonInput
+    policy: MethodPolicy
+    life_path_primary: NumberModel = Field(
+        ..., description="sum_all_birth_date_digits (role=primary)."
+    )
+    life_path_secondary: NumberModel = Field(
+        ..., description="component_then_sum (role=secondary)."
+    )
+    birthday: NumberModel
+    attitude: NumberModel
+    core_name: NameNumberSetV2 | None = None
+    active_name: NameNumberSetV2 | None = None
+    cycles: CycleCalculationResultV2
     trace: AuditTrace
     deterministic_hash: str = ""

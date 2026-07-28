@@ -53,9 +53,12 @@ class TestNormalizationErrors:
         with pytest.raises(NormalizationError):
             normalize_name("   ")
 
-    def test_de_expanded_policy_not_active(self) -> None:
-        with pytest.raises(PolicyError):
-            normalize_name("Müller", umlaut_policy=UmlautPolicy.DE_EXPANDED_V1)
+    def test_de_expanded_policy_now_active(self) -> None:
+        """PR #19: de-expanded-v1 ist nun implementiert (kein PolicyError mehr)."""
+        normalized, steps = normalize_name("Müller", umlaut_policy=UmlautPolicy.DE_EXPANDED_V1)
+        assert "UE" in normalized  # ü → UE
+        step_ids = [s.step for s in steps]
+        assert "umlaut_policy_de_expanded_v1" in step_ids
 
     def test_non_german_locale_not_supported(self) -> None:
         with pytest.raises(PolicyError):

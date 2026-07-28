@@ -1,0 +1,301 @@
+# Golden Reference Corpus V2 — pythagorean-v2 (PR #19)
+#
+# Five hand-verified real project profiles. All values derived from the
+# pythagorean-v2 specification and manually cross-checked.
+#
+# SCHEMA VERSION: profile-calculation-result-v4
+# UMLAUT POLICY:  de-expanded-v1  (Ä→AE, Ö→OE, Ü→UE, ß→SS)
+# PRIMARY METHOD: sum_all_birth_date_digits
+# SECONDARY:      component_then_sum  (never overrides primary)
+#
+# Key invariants tested here:
+# * 44/8 is NOT a master number (is_master=false)
+# * Life Path B for Antoney gives component_total karmic 13/4
+# * Expression of Antoney contains reduction_intermediate karmic 14
+# * Stefanie soul_urge = 33/6 (master!)
+# * Sina birthday = 11/2 (master!)
+# * Challenges use root values (master numbers force-reduced)
+#
+# as_of_date is 2026-07-28 for all profiles (deterministic).
+
+version: "2"
+method:
+  system: pythagorean
+  version: v2
+  umlaut_policy: de-expanded-v1
+
+profiles:
+
+  - id: lukas-springer-v2
+    core_name: "Lukas Springer"
+    birth_date: "1986-07-18"
+    as_of_date: "2026-07-28"
+    derivation: |
+      A: 1+9+8+6+0+7+1+8 = 40 -> 4          (sum_all_birth_date_digits, primary)
+      B: month=7  day=reduce(18)=9  year=reduce(24)=6  sum=22 -> 22/4   (component_then_sum)
+      Birthday: 18 -> 9
+      Attitude: 7+18=25 -> 7
+      LUKAS: 3+3+2+1+1=10; SPRINGER: 1+7+9+9+5+7+5+9=52; total=62 -> 8
+      Soul (vowels: U=3,A=1,I=9,E=5): 18 -> 9
+      Personality (consonants: L=3,K=2,S=1,S=1,P=7,R=9,N=5,G=7,R=9): 44 -> 8 (NOT master!)
+      Maturity: lw.root(4) + expr.root(8) = 12 -> 3
+      PY2026: month.red(7)+day.red(9)+univ.year.red(reduce(10)=1) = 17 -> 8
+      Pinnacles (roots: month=7,day=9,year=6): P1=7+9=16->7; P2=9+6=15->6; P3=7+6=13->4; P4=7+6=13->4
+      Challenges: C1=|9-7|=2; C2=|9-6|=3; C3=|2-3|=1; C4=|7-6|=1
+    expected:
+      life_path_primary:
+        display_notation: "40/4"
+        root_value: 4
+        is_master: false
+      life_path_secondary:
+        display_notation: "22/4"
+        root_value: 4
+        is_master: true
+        held_master_value: 22
+      birthday:
+        display_notation: "18/9"
+        root_value: 9
+      attitude:
+        display_notation: "25/7"
+        root_value: 7
+      expression:
+        display_notation: "62/8"
+        root_value: 8
+        is_master: false
+      soul_urge:
+        display_notation: "18/9"
+        root_value: 9
+      personality:
+        display_notation: "44/8"
+        root_value: 8
+        is_master: false        # 44 is NOT a classic master number
+      maturity:
+        display_notation: "12/3"
+        root_value: 3
+      personal_year_2026:
+        display_notation: "17/8"
+        root_value: 8
+      pinnacles:
+        - display_notation: "16/7"
+          root_value: 7
+        - display_notation: "15/6"
+          root_value: 6
+        - display_notation: "13/4"
+          root_value: 4
+        - display_notation: "13/4"
+          root_value: 4
+      challenges:
+        - display_notation: "2"
+          root_value: 2
+        - display_notation: "3"
+          root_value: 3
+        - display_notation: "1"
+          root_value: 1
+        - display_notation: "1"
+          root_value: 1
+
+  - id: stella-jane-witt-v2
+    core_name: "Stella Jane Witt"
+    birth_date: "2011-04-18"
+    as_of_date: "2026-07-28"
+    derivation: |
+      A: 2+0+1+1+0+4+1+8 = 17 -> 8     (primary)
+      B: month=4  day=9  year=reduce(4)=4  sum=17 -> 8  (both agree)
+      Birthday: 18 -> 9
+      Attitude: 4+18=22 -> 22/4 (master!)
+      STELLA: 1+2+5+3+3+1=15; JANE: 1+1+5+5=12; WITT: 5+9+2+2=18; total=45 -> 9
+      Soul (vowels: STELLA E=5,A=1; JANE A=1,E=5; WITT I=9): 21 -> 3
+      Personality (cons: STELLA S=1,T=2,L=3,L=3; JANE J=1,N=5; WITT W=5,T=2,T=2): 24 -> 6
+      Maturity: lw.root(8)+expr.root(9)=17 -> 8
+      PY2026: 4+9+1=14 -> 5
+    expected:
+      life_path_primary:
+        display_notation: "17/8"
+        root_value: 8
+        is_master: false
+      life_path_secondary:
+        display_notation: "17/8"
+        root_value: 8
+        is_master: false
+      birthday:
+        display_notation: "18/9"
+        root_value: 9
+      attitude:
+        display_notation: "22/4"
+        root_value: 4
+        is_master: true
+        held_master_value: 22
+      expression:
+        display_notation: "45/9"
+        root_value: 9
+      soul_urge:
+        display_notation: "21/3"
+        root_value: 3
+      personality:
+        display_notation: "24/6"
+        root_value: 6
+      maturity:
+        display_notation: "17/8"
+        root_value: 8
+      personal_year_2026:
+        display_notation: "14/5"
+        root_value: 5
+
+  - id: antoney-newton-v2
+    core_name: "Antoney Newton"
+    birth_date: "1995-10-15"
+    as_of_date: "2026-07-28"
+    derivation: |
+      A: 1+9+9+5+1+0+1+5 = 31 -> 4     (primary)
+      B: month=reduce(10)=1  day=reduce(15)=6  year=reduce(24)=6  sum=13 -> 4
+         sum=13 = karmic debt! origin_type=component_total
+      Birthday: 15 -> 6
+      Attitude: 10+15=25 -> 7
+      ANTONEY: A=1,N=5,T=2,O=6,N=5,E=5,Y=7 = 31
+      NEWTON: N=5,E=5,W=5,T=2,O=6,N=5 = 28
+      Expression total: 59 -> 14 -> 5  (14=karmic, reduction_intermediate)
+      Y@6 in ANTONEYNEWTON: previous=E(vowel), following=N(consonant) -> vowel (phonetic_rule)
+      Soul (vowels, Y=vowel): ANTONEY A=1,O=6,E=5,Y=7=19; NEWTON E=5,O=6=11; total=30 -> 3
+      Personality (consonants, Y=vowel): ANTONEY N=5,T=2,N=5=12; NEWTON N=5,W=5,T=2,N=5=17; total=29->11->2 (master!)
+      Maturity: lw.root(4)+expr.root(5)=9
+      PY2026: reduce(10)=1 + reduce(15)=6 + reduce(10)=1 = 8
+    expected:
+      life_path_primary:
+        display_notation: "31/4"
+        root_value: 4
+        is_master: false
+      life_path_secondary:
+        display_notation: "13/4"
+        root_value: 4
+        is_master: false
+        karmic_occurrences:
+          - value: 13
+            origin_type: component_total
+      birthday:
+        display_notation: "15/6"
+        root_value: 6
+      attitude:
+        display_notation: "25/7"
+        root_value: 7
+      expression:
+        display_notation: "59/14/5"
+        root_value: 5
+        karmic_occurrences:
+          - value: 14
+            origin_type: reduction_intermediate
+      soul_urge:
+        display_notation: "30/3"
+        root_value: 3
+      personality:
+        display_notation: "29/11/2"
+        root_value: 2
+        is_master: true
+        held_master_value: 11
+      maturity:
+        display_notation: "9"
+        root_value: 9
+      personal_year_2026:
+        display_notation: "8"
+        root_value: 8
+
+  - id: sina-langner-v2
+    core_name: "Sina Langner"
+    birth_date: "1992-12-11"
+    as_of_date: "2026-07-28"
+    derivation: |
+      A: 1+9+9+2+1+2+1+1 = 26 -> 8   (primary)
+      B: month=reduce(12)=3  day=reduce(11)=11(master held)  year=reduce(21)=3  sum=17 -> 8
+      Birthday: 11 -> 11/2 (master!)
+      Attitude: 12+11=23 -> 5
+      SINA: S=1,I=9,N=5,A=1=16; LANGNER: L=3,A=1,N=5,G=7,N=5,E=5,R=9=35; total=51->6
+      Soul (vowels: SINA I=9,A=1=10; LANGNER A=1,E=5=6): 16 -> 7
+      Personality (consonants: SINA S=1,N=5=6; LANGNER L=3,N=5,G=7,N=5,R=9=29): 35 -> 8
+      Maturity: lw.root(8)+expr.root(6)=14 -> 5
+      PY2026: month.red(3)+day.red(11)+univ(1)=15->6
+    expected:
+      life_path_primary:
+        display_notation: "26/8"
+        root_value: 8
+        is_master: false
+      life_path_secondary:
+        display_notation: "17/8"
+        root_value: 8
+        is_master: false
+      birthday:
+        display_notation: "11/2"
+        root_value: 2
+        is_master: true
+        held_master_value: 11
+      attitude:
+        display_notation: "23/5"
+        root_value: 5
+      expression:
+        display_notation: "51/6"
+        root_value: 6
+      soul_urge:
+        display_notation: "16/7"
+        root_value: 7
+      personality:
+        display_notation: "35/8"
+        root_value: 8
+      maturity:
+        display_notation: "14/5"
+        root_value: 5
+      personal_year_2026:
+        display_notation: "15/6"
+        root_value: 6
+
+  - id: stefanie-scheulen-v2
+    core_name: "Stefanie Scheulen"
+    birth_date: "1981-04-16"
+    as_of_date: "2026-07-28"
+    derivation: |
+      A: 1+9+8+1+0+4+1+6 = 30 -> 3   (primary)
+      B: month=4  day=reduce(16)=7  year=reduce(19->10->1)=1  sum=12 -> 3
+      Birthday: 16 -> 7  (16=karmic, direct_raw!)
+      Attitude: 4+16=20 -> 2
+      STEFANIE: S=1,T=2,E=5,F=6,A=1,N=5,I=9,E=5=34
+      SCHEULEN: S=1,C=3,H=8,E=5,U=3,L=3,E=5,N=5=33  (no umlauts in this name)
+      Expression total: 67 -> 13 -> 4  (13=karmic, reduction_intermediate!)
+      Soul (vowels: STEFANIE E=5,A=1,I=9,E=5=20; SCHEULEN E=5,U=3,E=5=13): 33 -> 6 (master!)
+      Personality (consonants: STEFANIE S=1,T=2,F=6,N=5=14; SCHEULEN S=1,C=3,H=8,L=3,N=5=20): 34->7
+      Maturity: lw.root(3)+expr.root(4)=7
+      PY2026: 4+7+1=12->3
+    expected:
+      life_path_primary:
+        display_notation: "30/3"
+        root_value: 3
+        is_master: false
+      life_path_secondary:
+        display_notation: "12/3"
+        root_value: 3
+        is_master: false
+      birthday:
+        display_notation: "16/7"
+        root_value: 7
+        karmic_occurrences:
+          - value: 16
+            origin_type: direct_raw
+      attitude:
+        display_notation: "20/2"
+        root_value: 2
+      expression:
+        display_notation: "67/13/4"
+        root_value: 4
+        karmic_occurrences:
+          - value: 13
+            origin_type: reduction_intermediate
+      soul_urge:
+        display_notation: "33/6"
+        root_value: 6
+        is_master: true
+        held_master_value: 33
+      personality:
+        display_notation: "34/7"
+        root_value: 7
+      maturity:
+        display_notation: "7"
+        root_value: 7
+      personal_year_2026:
+        display_notation: "12/3"
+        root_value: 3
