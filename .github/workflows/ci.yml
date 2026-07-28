@@ -216,7 +216,7 @@ jobs:
 
       - name: Verify runtime markers are visible inside the API container
         run: |
-          cat <<'PYEOF' >/tmp/verify_runtime_markers.py
+          docker compose exec -T api python <<'PYEOF'
           from pathlib import Path
 
           for name in ("numra-legal-approved", "llm-transfer-approved"):
@@ -227,8 +227,6 @@ jobs:
               assert oct(st.st_mode)[-3:] == "600", f"{p} not mode 0600"
           print("runtime markers visible and correct: OK")
           PYEOF
-          docker compose cp /tmp/verify_runtime_markers.py api:/tmp/verify_runtime_markers.py
-          docker compose exec -T api python /tmp/verify_runtime_markers.py
 
       - name: Verify LLM path reports enabled
         run: |
