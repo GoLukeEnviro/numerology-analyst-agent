@@ -211,6 +211,7 @@ jobs:
         env:
           NUMRA_LLM_ENABLED: "true"
           DEEPSEEK_API_KEY: "ci-dummy-key-not-a-real-secret"
+          NUMRA_RATE_LIMIT_HMAC_SECRET: "ci-dummy-hmac-secret-not-a-real-secret-32bytes"
         run: docker compose -f compose.yaml -f compose.llm-staging.yaml up -d --wait --wait-timeout 60
 
       - name: Verify runtime markers are visible inside the API container
