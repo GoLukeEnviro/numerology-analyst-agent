@@ -157,20 +157,24 @@ async def test_ready_reports_configured_llm_dependencies(
 
 @pytest.mark.anyio
 async def test_ready_fails_when_the_rate_limit_store_is_unavailable() -> None:
-    app = create_app(
-        ApiSettings(
-            environment="test",
-            llm_enabled=True,
-            rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
-        ),
-        provider=ContractProvider(),
-        rate_limiter=MemoryLimiter(ready=False),
-    )
-    async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url="https://test",
-    ) as client:
-        response = await client.get("/api/v1/health/ready")
+    from unittest.mock import patch
+
+    with patch("numerology_api.app.verify_runtime_gates") as mock_gates:
+        mock_gates.return_value = None
+        app = create_app(
+            ApiSettings(
+                environment="test",
+                llm_enabled=True,
+                rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
+            ),
+            provider=ContractProvider(),
+            rate_limiter=MemoryLimiter(ready=False),
+        )
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="https://test",
+        ) as client:
+            response = await client.get("/api/v1/health/ready")
 
     assert response.status_code == 503
     assert response.json()["status"] == "unavailable"
