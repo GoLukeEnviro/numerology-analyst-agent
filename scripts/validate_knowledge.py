@@ -15,20 +15,20 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from numerology_knowledge.models import KnowledgeBundle, KnowledgeBundleV2
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _DATA_DIR = _REPO_ROOT / "src" / "numerology_knowledge" / "data"
 
-_BUNDLES: list[tuple[str, type]] = [
+_BUNDLES: list[tuple[str, type[BaseModel]]] = [
     ("de-v1.json", KnowledgeBundle),
     ("de-v2.json", KnowledgeBundleV2),
 ]
 
 
-def validate_bundle(filename: str, model: type) -> bool:
+def validate_bundle(filename: str, model: type[BaseModel]) -> bool:
     """Validate a single bundle file. Returns True on success."""
     path = _DATA_DIR / filename
     if not path.is_file():
@@ -52,14 +52,10 @@ def main() -> int:
         if not validate_bundle(filename, model):
             all_valid = False
     if all_valid:
-        print(f"\nAll {_len(_BUNDLES)} knowledge bundles valid.")
+        print(f"\nAll {len(_BUNDLES)} knowledge bundles valid.")
         return 0
     print("\nSome knowledge bundles failed validation.", file=sys.stderr)
     return 1
-
-
-def _len(items: list[tuple[str, type]]) -> int:
-    return len(items)
 
 
 if __name__ == "__main__":
