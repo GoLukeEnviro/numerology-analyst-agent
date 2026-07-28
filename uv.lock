@@ -619,7 +619,7 @@ wheels = [
 
 [[package]]
 name = "numerology-analyst-agent"
-version = "0.1.5"
+version = "0.3.0rc1"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
