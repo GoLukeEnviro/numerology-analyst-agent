@@ -28,7 +28,7 @@ function HomePage() {
         </nav>
       </header>
 
-      <main>
+      <main id="main-content">
         <section className="hero">
           <div className="hero-copy reveal reveal-one">
             <p className="eyebrow">DEIN PROFIL · DEIN RECHENWEG</p>
@@ -140,7 +140,7 @@ function InformationPage({
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main className="information-page">
+      <main id="main-content" className="information-page">
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <div className="information-content">{children}</div>
@@ -313,7 +313,7 @@ function NewAnalysisPage() {
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main><AnalysisWizard onComplete={complete} /></main>
+      <main id="main-content"><AnalysisWizard onComplete={complete} /></main>
     </div>
   );
 }
@@ -345,13 +345,13 @@ function ProfilePage() {
       .finally(() => setLoading(false));
   }, [id, result]);
   if (loading) {
-    return <div className="app-shell"><SiteHeader /><main className="empty-state"><p>Lokales Profil wird geladen …</p></main></div>;
+    return <div className="app-shell"><SiteHeader /><main id="main-content" className="empty-state"><p>Lokales Profil wird geladen …</p></main></div>;
   }
   if (result === null) {
     return (
       <div className="app-shell">
         <SiteHeader />
-        <main className="empty-state">
+        <main id="main-content" className="empty-state">
           <p className="eyebrow">PROFIL NICHT VERFÜGBAR</p>
           <h1>{message || "Dieser Atlas ist nicht lokal verfügbar."}</h1>
           <a className="button button-primary" href="/analyse/neu">Neue Analyse</a>
@@ -364,7 +364,7 @@ function ProfilePage() {
     return (
       <div className="app-shell">
         <SiteHeader />
-        <main className="empty-state">
+        <main id="main-content" className="empty-state">
           <h1>Das Profil enthält kein gültiges Namensprofil.</h1>
         </main>
       </div>
@@ -396,7 +396,7 @@ function ProfilePage() {
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main className="profile-page">
+      <main id="main-content" className="profile-page">
         <header className="profile-intro">
           <div>
             <p className="eyebrow">DETERMINISTISCHES PROFIL</p>
@@ -475,7 +475,7 @@ function ReportPage() {
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main>
+      <main id="main-content">
         {profile !== null && id !== undefined ? (
           <ReportExperience profile={profile} profileId={id} />
         ) : (
@@ -506,7 +506,7 @@ function LibraryPage() {
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main className="library-page">
+      <main id="main-content" className="library-page">
         <p className="eyebrow">NUR AUF DIESEM GERÄT</p>
         <h1>Deine Bibliothek</h1>
         <div className="library-tools">
@@ -550,7 +550,7 @@ function SettingsPage() {
   return (
     <div className="app-shell">
       <SiteHeader />
-      <main className="settings-page">
+      <main id="main-content" className="settings-page">
         <p className="eyebrow">LOKALER DATENSCHUTZ</p><h1>Einstellungen</h1>
         <section className="settings-card">
           <h2>Erscheinungsbild</h2>

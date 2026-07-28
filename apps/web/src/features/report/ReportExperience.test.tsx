@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, vi } from "vitest";
 
 import type { AnalysisReport, ProfileCalculationResult } from "../../api/types";
+import { ApiProblem } from "../../api/client";
 import { localProfiles } from "../../storage/repository";
 import { ReportExperience } from "./ReportExperience";
 
@@ -130,58 +131,29 @@ describe("ReportExperience", () => {
     ).toHaveTextContent(/Internetverbindung erforderlich/i);
   });
 
-  it("resets the local report quota on the next calendar day", async () => {
-    vi.useFakeTimers({ toFake: ["Date"] });
-    vi.setSystemTime(new Date("2026-07-25T12:00:00+02:00"));
-    const report = {
-      schema_version: "analysis-report-v2",
-      summary: "Tagesbericht",
-      sections: [],
-      limitations: [],
-      suggestions: [],
-      provenance: {
-        provider: "deepseek",
-        model: "deepseek-v4-pro",
-        temperature: null,
-        top_p: null,
-        thinking: "enabled",
-        effective_sampling: "provider_managed",
-        reasoning_effort: "high",
-        context_signature: "a".repeat(64),
-        prompt_version: "numra-report-de-v2",
-        knowledge_bundle: "numra-knowledge-de-v1",
-        calculation_hash: "d".repeat(64),
-        provider_fingerprint: "test",
-        prompt_tokens: 10,
-        completion_tokens: 10,
-      },
-    } satisfies AnalysisReport;
-    const profile = {
-      deterministic_hash: "d".repeat(64),
-    } as ProfileCalculationResult;
-    const first = render(
+  it("shows a server-quota message when the daily contingent is exhausted", async () => {
+    const quotaError = new ApiProblem({
+      title: "Kontingent überschritten",
+      detail: "Tageskontingent erschöpft",
+      code: "rate_limit_exceeded",
+      correlation_id: "corr-quota",
+    });
+    const requestReport = vi.fn().mockRejectedValue(quotaError);
+
+    render(
       <ReportExperience
-        profile={profile}
-        profileId="profile-daily-quota"
-        requestReport={vi.fn().mockResolvedValue(report)}
+        profile={{ deterministic_hash: "d".repeat(64) } as ProfileCalculationResult}
+        profileId="profile-server-quota"
+        requestReport={requestReport}
       />,
     );
 
     await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
     await userEvent.click(screen.getByRole("button", { name: /Bericht erzeugen/i }));
-    await screen.findByText("Tagesbericht");
-    first.unmount();
 
-    vi.setSystemTime(new Date("2026-07-26T12:00:00+02:00"));
-    render(
-      <ReportExperience
-        profile={profile}
-        profileId="profile-daily-quota"
-        requestReport={vi.fn().mockResolvedValue(report)}
-      />,
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      /tägliche Kontingent ist ausgeschöpft/i,
     );
-
-    await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
     expect(screen.getByRole("button", { name: /Bericht erzeugen/i })).toBeEnabled();
   });
 
