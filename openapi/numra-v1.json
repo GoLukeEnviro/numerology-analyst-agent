@@ -110,7 +110,12 @@
             "type": "string"
           }
         },
-        "required": ["answer", "claims", "limitations", "provenance"],
+        "required": [
+          "answer",
+          "claims",
+          "limitations",
+          "provenance"
+        ],
         "title": "AnalysisFollowUp",
         "type": "object"
       },
@@ -150,7 +155,13 @@
             "$ref": "#/components/schemas/AnalysisReport"
           }
         },
-        "required": ["consent", "device_id", "profile", "report", "question"],
+        "required": [
+          "consent",
+          "device_id",
+          "profile",
+          "report",
+          "question"
+        ],
         "title": "AnalysisFollowUpRequest",
         "type": "object"
       },
@@ -334,7 +345,11 @@
             "title": "Profile"
           }
         },
-        "required": ["consent", "device_id", "profile"],
+        "required": [
+          "consent",
+          "device_id",
+          "profile"
+        ],
         "title": "AnalysisReportRequest",
         "type": "object"
       },
@@ -357,7 +372,10 @@
             "type": "string"
           }
         },
-        "required": ["title", "claims"],
+        "required": [
+          "title",
+          "claims"
+        ],
         "title": "AnalysisSection",
         "type": "object"
       },
@@ -425,7 +443,10 @@
             "type": "integer"
           }
         },
-        "required": ["label", "output"],
+        "required": [
+          "label",
+          "output"
+        ],
         "title": "CalculationStep",
         "type": "object"
       },
@@ -465,7 +486,11 @@
             "type": "string"
           }
         },
-        "required": ["a_equals_b", "life_path_a", "life_path_b"],
+        "required": [
+          "a_equals_b",
+          "life_path_a",
+          "life_path_b"
+        ],
         "title": "ConsistencyStatus",
         "type": "object"
       },
@@ -548,13 +573,21 @@
             "type": "integer"
           }
         },
-        "required": ["ordinal", "start_age", "number"],
+        "required": [
+          "ordinal",
+          "start_age",
+          "number"
+        ],
         "title": "CyclePhase",
         "type": "object"
       },
       "DateMethod": {
         "description": "Life Path reduction strategy.\n\n``BOTH`` runs A and B and emits a consistency warning when they\ndiverge (Master Contract §3.2, V1 minimal scope).",
-        "enum": ["sum_all_digits", "component_then_sum", "both"],
+        "enum": [
+          "sum_all_digits",
+          "component_then_sum",
+          "both"
+        ],
         "title": "DateMethod",
         "type": "string"
       },
@@ -574,7 +607,11 @@
             "type": "string"
           }
         },
-        "required": ["field", "message", "code"],
+        "required": [
+          "field",
+          "message",
+          "code"
+        ],
         "title": "FieldError",
         "type": "object"
       },
@@ -593,7 +630,10 @@
             "type": "string"
           }
         },
-        "required": ["number", "origin"],
+        "required": [
+          "number",
+          "origin"
+        ],
         "title": "KarmicDebtInfo",
         "type": "object"
       },
@@ -852,7 +892,10 @@
       },
       "Locale": {
         "description": "Locale for normalization policy selection.\n\nV1 ships only ``DE``; other locales are extension points.",
-        "enum": ["de", "en"],
+        "enum": [
+          "de",
+          "en"
+        ],
         "title": "Locale",
         "type": "string"
       },
@@ -916,7 +959,11 @@
             "description": "Normalization locale."
           },
           "master_numbers": {
-            "default": [11, 22, 33],
+            "default": [
+              11,
+              22,
+              33
+            ],
             "description": "Numbers held as-is during reduction.",
             "items": {
               "type": "integer"
@@ -956,13 +1003,21 @@
       },
       "MethodSystem": {
         "description": "Numerological method systems.\n\nV1 implements only ``PYTHAGOREAN``. Other systems are documented\nextension points (Master Contract §3.1) and must never be silently\nmixed (calculation-engineer agent contract §4).",
-        "enum": ["pythagorean", "chaldean", "kabbalistic"],
+        "enum": [
+          "pythagorean",
+          "chaldean",
+          "kabbalistic"
+        ],
         "title": "MethodSystem",
         "type": "string"
       },
       "NameBasis": {
         "description": "Two-level name model selector (ADR 0004).\n\nThere is intentionally no ``MIXED`` or ``WEIGHTED`` value: silently\nfusing ``core_name`` and ``active_name`` would violate the statement\nclass separation (Master Contract §2.2).",
-        "enum": ["core_name_only", "active_name_only", "both_separate"],
+        "enum": [
+          "core_name_only",
+          "active_name_only",
+          "both_separate"
+        ],
         "title": "NameBasis",
         "type": "string"
       },
@@ -1047,7 +1102,12 @@
             "$ref": "#/components/schemas/NumberResult"
           }
         },
-        "required": ["label", "expression", "soul_urge", "personality"],
+        "required": [
+          "label",
+          "expression",
+          "soul_urge",
+          "personality"
+        ],
         "title": "NameNumberVariant",
         "type": "object"
       },
@@ -1073,7 +1133,12 @@
             "type": "string"
           }
         },
-        "required": ["text", "raw_total", "reduced_value", "compound_notation"],
+        "required": [
+          "text",
+          "raw_total",
+          "reduced_value",
+          "compound_notation"
+        ],
         "title": "NameSegmentResult",
         "type": "object"
       },
@@ -1103,7 +1168,11 @@
             "type": "string"
           }
         },
-        "required": ["step", "input", "output"],
+        "required": [
+          "step",
+          "input",
+          "output"
+        ],
         "title": "NormalizationStep",
         "type": "object"
       },
@@ -1149,7 +1218,12 @@
             "type": "array"
           }
         },
-        "required": ["name", "raw_total", "reduced_value", "compound_notation"],
+        "required": [
+          "name",
+          "raw_total",
+          "reduced_value",
+          "compound_notation"
+        ],
         "title": "NumberResult",
         "type": "object"
       },
@@ -1201,7 +1275,11 @@
             "description": "Normalization locale selector."
           }
         },
-        "required": ["core_name", "birth_date", "as_of_date"],
+        "required": [
+          "core_name",
+          "birth_date",
+          "as_of_date"
+        ],
         "title": "PersonInput",
         "type": "object"
       },
@@ -1264,7 +1342,10 @@
             "$ref": "#/components/schemas/MethodPolicy"
           }
         },
-        "required": ["person", "policy"],
+        "required": [
+          "person",
+          "policy"
+        ],
         "title": "ProfileCalculationRequest",
         "type": "object"
       },
@@ -1368,19 +1449,29 @@
           },
           "provider": {
             "default": "disabled",
-            "enum": ["disabled", "configured"],
+            "enum": [
+              "disabled",
+              "configured"
+            ],
             "title": "Provider",
             "type": "string"
           },
           "redis": {
             "default": "not_configured",
-            "enum": ["not_configured", "ready", "unavailable"],
+            "enum": [
+              "not_configured",
+              "ready",
+              "unavailable"
+            ],
             "title": "Redis",
             "type": "string"
           },
           "status": {
             "default": "ready",
-            "enum": ["ready", "unavailable"],
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
             "title": "Status",
             "type": "string"
           }
@@ -1409,19 +1500,30 @@
             "type": "integer"
           }
         },
-        "required": ["value", "intermediate"],
+        "required": [
+          "value",
+          "intermediate"
+        ],
         "title": "ReductionOutcome",
         "type": "object"
       },
       "UmlautPolicy": {
         "description": "German umlaut / semantic normalization policy (ADR 0002).\n\n``DE_DIRECT_V1`` is the V1 default for ``locale=de``. The two policies\nmust never be mixed within a single calculation (ADR 0002 §7).",
-        "enum": ["de-direct-v1", "de-expanded-v1"],
+        "enum": [
+          "de-direct-v1",
+          "de-expanded-v1"
+        ],
         "title": "UmlautPolicy",
         "type": "string"
       },
       "YMode": {
         "description": "Y classification policy (ADR 0001).\n\n``PHONETIC`` is the V1 canonical default for ``pythagorean-v1``.",
-        "enum": ["phonetic", "always_vowel", "always_consonant", "user_fixed"],
+        "enum": [
+          "phonetic",
+          "always_vowel",
+          "always_consonant",
+          "user_fixed"
+        ],
         "title": "YMode",
         "type": "string"
       }
@@ -1489,7 +1591,9 @@
           }
         },
         "summary": "Analysis Follow Up",
-        "tags": ["analyses"]
+        "tags": [
+          "analyses"
+        ]
       }
     },
     "/api/v1/analyses/report": {
@@ -1548,7 +1652,9 @@
           }
         },
         "summary": "Analysis Report",
-        "tags": ["analyses"]
+        "tags": [
+          "analyses"
+        ]
       }
     },
     "/api/v1/health/live": {
@@ -1567,7 +1673,9 @@
           }
         },
         "summary": "Live",
-        "tags": ["health"]
+        "tags": [
+          "health"
+        ]
       }
     },
     "/api/v1/health/ready": {
@@ -1586,7 +1694,9 @@
           }
         },
         "summary": "Ready",
-        "tags": ["health"]
+        "tags": [
+          "health"
+        ]
       }
     },
     "/api/v1/meta": {
@@ -1605,7 +1715,9 @@
           }
         },
         "summary": "Meta",
-        "tags": ["meta"]
+        "tags": [
+          "meta"
+        ]
       }
     },
     "/api/v1/profiles/calculate": {
@@ -1654,7 +1766,9 @@
           }
         },
         "summary": "Calculate",
-        "tags": ["profiles"]
+        "tags": [
+          "profiles"
+        ]
       }
     }
   }
