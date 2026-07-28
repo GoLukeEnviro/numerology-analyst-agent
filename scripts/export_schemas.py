@@ -26,7 +26,7 @@ from numerology_domain.models import (
     ProfileCalculationResult,
 )
 from numerology_interpretation.models import InterpretationResult
-from numerology_knowledge.models import KnowledgeBundle
+from numerology_knowledge.models import KnowledgeBundle, KnowledgeBundleV2
 
 SCHEMAS_DIR = Path(__file__).resolve().parent.parent / "src" / "numerology_api" / "schemas"
 
@@ -40,6 +40,7 @@ SCHEMA_SPECS: list[tuple[str, type, str]] = [
         "ProfileCalculationResult",
     ),
     ("knowledge-bundle-v1.schema.json", KnowledgeBundle, "KnowledgeBundle"),
+    ("knowledge-bundle-v2.schema.json", KnowledgeBundleV2, "KnowledgeBundleV2"),
     ("interpretation-result-v1.schema.json", InterpretationResult, "InterpretationResult"),
 ]
 

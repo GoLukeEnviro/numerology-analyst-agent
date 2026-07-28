@@ -11,6 +11,13 @@ from numerology_agent.models import ProviderResult
 from numerology_agent.service import AgentService, AgentValidationError
 from numerology_domain.models import MethodPolicy, PersonInput
 from numerology_engine.profile import calculate_profile
+from numerology_knowledge.loader import load_knowledge_bundle
+
+
+def _life_path_knowledge_ref(number: int) -> str:
+    """Return the stable_id for the life_path entry of the given number."""
+    bundle = load_knowledge_bundle("de", "v2")
+    return bundle.entry_for(number, context="life_path").stable_id
 
 
 class CapturingProvider:
@@ -46,6 +53,7 @@ def _profile() -> Any:
 
 
 def _valid_response(profile: Any) -> str:
+    knowledge_ref = _life_path_knowledge_ref(profile.life_path_a.reduced_value)
     return json.dumps(
         {
             "summary": "Dieses Profil kann als Einladung zur Reflexion gelesen werden.",
@@ -57,7 +65,7 @@ def _valid_response(profile: Any) -> str:
                             "claim_type": "interpretive_hypothesis",
                             "text": "Möglicherweise ist Eigenständigkeit ein hilfreiches Reflexionsthema.",
                             "calculation_ref": "life_path_a",
-                            "knowledge_ref": "numra-knowledge-de-v2:number:1",
+                            "knowledge_ref": knowledge_ref,
                             "number": profile.life_path_a.reduced_value,
                         }
                     ],

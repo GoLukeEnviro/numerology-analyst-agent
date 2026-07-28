@@ -9,8 +9,6 @@ from __future__ import annotations
 import pytest
 
 from numerology_agent.prompts import (
-    _prompts_root,
-    _resource_anchor,
     eval_criteria,
     follow_up_task_prompt,
     load_prompt,
@@ -21,18 +19,25 @@ from numerology_agent.prompts import (
 
 
 @pytest.mark.unit
-def test_prompts_root_exists() -> None:
-    """_prompts_root() zeigt auf ein existierendes Verzeichnis."""
-    root = _prompts_root()
-    assert root.is_dir(), f"Prompts-Verzeichnis nicht gefunden: {root}"
+def test_prompt_templates_package_accessible() -> None:
+    """prompt_templates ist als importlib.resources-Package erreichbar."""
+    from importlib.resources import files
+
+    pkg = files("numerology_agent.prompt_templates")
+    assert pkg is not None
 
 
 @pytest.mark.unit
-def test_prompts_root_contains_expected_subdirs() -> None:
-    root = _prompts_root()
-    assert (root / "system").is_dir()
-    assert (root / "tasks").is_dir()
-    assert (root / "eval").is_dir()
+def test_prompt_templates_contains_expected_subdirs() -> None:
+    """prompt_templates enthält system/, tasks/ und eval/."""
+    from importlib.resources import files
+
+    pkg = files("numerology_agent.prompt_templates")
+    # Traversable unterstützt iterdir()
+    child_names = {child.name for child in pkg.iterdir()}
+    assert "system" in child_names
+    assert "tasks" in child_names
+    assert "eval" in child_names
 
 
 @pytest.mark.unit
@@ -148,11 +153,3 @@ def test_eval_criteria_returns_non_empty_string() -> None:
 @pytest.mark.unit
 def test_eval_criteria_default_locale_de() -> None:
     assert eval_criteria() == eval_criteria("de")
-
-
-@pytest.mark.unit
-def test_resource_anchor_is_traversable() -> None:
-    from importlib.resources.abc import Traversable
-
-    anchor = _resource_anchor()
-    assert isinstance(anchor, Traversable)
