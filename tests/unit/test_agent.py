@@ -57,7 +57,7 @@ def _valid_response(profile: Any) -> str:
                             "claim_type": "interpretive_hypothesis",
                             "text": "Möglicherweise ist Eigenständigkeit ein hilfreiches Reflexionsthema.",
                             "calculation_ref": "life_path_a",
-                            "knowledge_ref": "numra-knowledge-de-v1:number:1",
+                            "knowledge_ref": "numra-knowledge-de-v2:number:1",
                             "number": profile.life_path_a.reduced_value,
                         }
                     ],

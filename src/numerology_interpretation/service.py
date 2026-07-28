@@ -15,7 +15,7 @@ from numerology_safety.validation import assert_claims_safe
 
 def compose_interpretation(profile: ProfileCalculationResult) -> InterpretationResult:
     """Resolve selected profile values without generating or changing calculations."""
-    bundle = load_knowledge_bundle(profile.input_ref.locale.value, "v1")
+    bundle = load_knowledge_bundle(profile.input_ref.locale.value, "v2")
     name_profiles = tuple(
         names for names in (profile.core_name, profile.active_name) if names is not None
     )

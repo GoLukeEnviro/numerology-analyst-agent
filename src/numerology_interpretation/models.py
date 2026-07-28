@@ -16,6 +16,9 @@ class InterpretationClaim(_InterpretationModel):
     text: str
     calculation_ref: str
     knowledge_ref: str
+    composer_rule_id: str | None = None
+    uncertainty: str | None = None
+    counter_hypothesis: str | None = None
 
 
 class InterpretationSection(_InterpretationModel):
