@@ -50,6 +50,7 @@ from numerology_domain.models import (
 )
 from numerology_engine.profile import calculate_profile
 from numerology_knowledge.loader import load_knowledge_bundle
+from numerology_safety.runtime_gate import verify_runtime_gates
 
 _CORRELATION_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,128}$")
 _PROBLEM_BASE = "https://numra.app/problems"
@@ -348,6 +349,7 @@ def _production_dependencies(
 ) -> tuple[LlmProvider | None, RateLimiter | None]:
     if not settings.llm_enabled:
         return provider, rate_limiter
+    verify_runtime_gates()
     if provider is None:
         if settings.deepseek_api_key is None:
             raise RuntimeError("NUMRA_DEEPSEEK_API_KEY is required when LLM is enabled")

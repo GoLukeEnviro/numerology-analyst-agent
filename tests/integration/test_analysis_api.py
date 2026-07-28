@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import AsyncIterator
 import json
 from typing import Any, cast
+from unittest.mock import MagicMock, patch
 
 from httpx import ASGITransport, AsyncClient
 from pydantic import SecretStr
@@ -97,20 +98,23 @@ async def disabled_client() -> AsyncIterator[AsyncClient]:
 @pytest.fixture
 async def enabled_state() -> AsyncIterator[tuple[AsyncClient, MemoryLimiter]]:
     limiter = MemoryLimiter()
-    app = create_app(
-        ApiSettings(
-            environment="test",
-            llm_enabled=True,
-            rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
-        ),
-        provider=ContractProvider(),
-        rate_limiter=limiter,
-    )
-    async with AsyncClient(
-        transport=ASGITransport(app=app, client=("203.0.113.42", 1234)),
-        base_url="https://test",
-    ) as client:
-        yield client, limiter
+    # Mock the runtime gate to always pass in tests
+    with patch("numerology_api.app.verify_runtime_gates") as mock_gate:
+        mock_gate.return_value = MagicMock(all_passed=True, platform_skipped=True)
+        app = create_app(
+            ApiSettings(
+                environment="test",
+                llm_enabled=True,
+                rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
+            ),
+            provider=ContractProvider(),
+            rate_limiter=limiter,
+        )
+        async with AsyncClient(
+            transport=ASGITransport(app=app, client=("203.0.113.42", 1234)),
+            base_url="https://test",
+        ) as client:
+            yield client, limiter
 
 
 @pytest.mark.anyio
@@ -153,20 +157,24 @@ async def test_ready_reports_configured_llm_dependencies(
 
 @pytest.mark.anyio
 async def test_ready_fails_when_the_rate_limit_store_is_unavailable() -> None:
-    app = create_app(
-        ApiSettings(
-            environment="test",
-            llm_enabled=True,
-            rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
-        ),
-        provider=ContractProvider(),
-        rate_limiter=MemoryLimiter(ready=False),
-    )
-    async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url="https://test",
-    ) as client:
-        response = await client.get("/api/v1/health/ready")
+    from unittest.mock import patch
+
+    with patch("numerology_api.app.verify_runtime_gates") as mock_gates:
+        mock_gates.return_value = None
+        app = create_app(
+            ApiSettings(
+                environment="test",
+                llm_enabled=True,
+                rate_limit_hmac_secret=SecretStr("test-only-rate-limit-secret"),
+            ),
+            provider=ContractProvider(),
+            rate_limiter=MemoryLimiter(ready=False),
+        )
+        async with AsyncClient(
+            transport=ASGITransport(app=app),
+            base_url="https://test",
+        ) as client:
+            response = await client.get("/api/v1/health/ready")
 
     assert response.status_code == 503
     assert response.json()["status"] == "unavailable"
