@@ -7,6 +7,7 @@ import type {
   ProfileCalculationRequest,
   ProfileCalculationResult,
 } from "../../api/types";
+import { isAbortError } from "./abort-utils";
 
 const formSchema = z
   .object({
@@ -115,16 +116,22 @@ export function AnalysisWizard({
     setPending(true);
     setApiError("");
     try {
-      onComplete(await calculate(toRequest(review), undefined, controller.signal));
+      const result = await calculate(toRequest(review), undefined, controller.signal);
+      if (abortRef.current !== controller) return;
+      onComplete(result);
     } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") return;
+      if (isAbortError(error)) return;
+      if (abortRef.current !== controller) return;
       setApiError(
         error instanceof ApiProblem
           ? `${error.message} Referenz: ${error.correlationId}`
           : "Die Berechnung ist gerade nicht erreichbar. Bitte versuche es erneut.",
       );
     } finally {
-      setPending(false);
+      if (abortRef.current === controller) {
+        abortRef.current = null;
+        setPending(false);
+      }
     }
   };
 

@@ -252,4 +252,109 @@ describe("ReportExperience", () => {
         );
         expect(button).toBeEnabled();
     });
+
+    it("does not clear busy when B starts immediately after A is cancelled (race guard)", async () => {
+        const user = userEvent.setup();
+
+        let rejectA!: (reason: DOMException) => void;
+        let resolveB!: (value: AnalysisReport) => void;
+
+        const reportB: AnalysisReport = {
+            schema_version: "analysis-report-v2",
+            summary: "Bericht B",
+            sections: [],
+            limitations: [],
+            suggestions: [],
+            provenance: {
+                provider: "deepseek",
+                model: "test-model",
+                temperature: null,
+                top_p: null,
+                thinking: "enabled",
+                effective_sampling: "provider_managed",
+                reasoning_effort: "high",
+                context_signature: "b".repeat(64),
+                prompt_version: "numra-report-de-v2",
+                knowledge_bundle: "numra-knowledge-de-v1",
+                calculation_hash: "f".repeat(64),
+                provider_fingerprint: "test",
+                prompt_tokens: 1,
+                completion_tokens: 1,
+            },
+        };
+
+        const requestReport = vi.fn()
+            .mockReturnValueOnce(
+                new Promise<AnalysisReport>((_, reject) => {
+                    rejectA = reject;
+                }),
+            )
+            .mockReturnValueOnce(
+                new Promise<AnalysisReport>((resolve) => {
+                    resolveB = resolve;
+                }),
+            );
+
+        render(
+            <ReportExperience
+                profile={{ deterministic_hash: "f".repeat(64) } as ProfileCalculationResult}
+                profileId="race-guard-test"
+                requestReport={requestReport}
+            />,
+        );
+
+        await user.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
+
+        // Step 1: A starts (busy=true)
+        await user.click(screen.getByRole("button", { name: /Bericht erzeugen/i }));
+
+        // Step 2: A is cancelled (cancelRequest: busy=false, abortRef=null)
+        await user.click(screen.getByRole("button", { name: /Abbrechen/i }));
+
+        // Step 3: B starts immediately (busy=true, new controller)
+        await user.click(screen.getByRole("button", { name: /Bericht erzeugen/i }));
+        expect(screen.getByRole("button", { name: /Bericht wird geprüft/i })).toBeInTheDocument();
+
+        // Step 4: A's promise settles late with AbortError
+        rejectA(new DOMException("Aborted", "AbortError"));
+        await Promise.resolve();
+        await Promise.resolve();
+
+        // Step 5 & 6: B is still busy — A's finally did NOT call setBusy(false)
+        expect(screen.getByRole("button", { name: /Bericht wird geprüft/i })).toBeInTheDocument();
+
+        // Step 7: B resolves — only B sets the final state
+        resolveB(reportB);
+        expect(await screen.findByText("Bericht B")).toBeVisible();
+    });
+
+    it("aborts the active request when the component is unmounted", async () => {
+        let capturedSignal: AbortSignal | undefined;
+
+        const requestReport = vi.fn().mockImplementation(
+            (_req: unknown, _fetcher: unknown, signal: AbortSignal | undefined) => {
+                capturedSignal = signal;
+                return new Promise<AnalysisReport>(() => {
+                    // never resolves — simulates in-flight request
+                });
+            },
+        );
+
+        const { unmount } = render(
+            <ReportExperience
+                profile={{ deterministic_hash: "g".repeat(64) } as ProfileCalculationResult}
+                profileId="unmount-test"
+                requestReport={requestReport}
+            />,
+        );
+
+        await userEvent.click(screen.getByRole("checkbox", { name: /Übertragung ein/i }));
+        await userEvent.click(screen.getByRole("button", { name: /Bericht erzeugen/i }));
+
+        expect(capturedSignal?.aborted).toBe(false);
+
+        unmount();
+
+        expect(capturedSignal?.aborted).toBe(true);
+    });
 });
