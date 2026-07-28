@@ -194,6 +194,45 @@ jobs:
           curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/health/live
           curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/health/ready
 
+      - name: Stop base stack before LLM-staging override
+        run: docker compose down
+
+      - name: Provision dummy runtime-marker fixtures
+        run: |
+          sudo mkdir -p /etc/numra
+          sudo touch /etc/numra/numra-legal-approved /etc/numra/llm-transfer-approved
+          sudo chown root:root /etc/numra/numra-legal-approved /etc/numra/llm-transfer-approved
+          sudo chmod 600 /etc/numra/numra-legal-approved /etc/numra/llm-transfer-approved
+
+      - name: Validate LLM-staging Compose override
+        run: docker compose -f compose.yaml -f compose.llm-staging.yaml config --quiet
+
+      - name: Start LLM-staging stack and await health
+        env:
+          NUMRA_LLM_ENABLED: "true"
+          DEEPSEEK_API_KEY: "ci-dummy-key-not-a-real-secret"
+          NUMRA_RATE_LIMIT_HMAC_SECRET: "ci-dummy-hmac-secret-not-a-real-secret-32bytes"
+        run: docker compose -f compose.yaml -f compose.llm-staging.yaml up -d --wait --wait-timeout 60
+
+      - name: Verify runtime markers are visible inside the API container
+        run: |
+          docker compose exec -T api python <<'PYEOF'
+          from pathlib import Path
+
+          for name in ("numra-legal-approved", "llm-transfer-approved"):
+              p = Path("/etc/numra") / name
+              assert p.is_file(), f"{p} not visible in container"
+              st = p.stat()
+              assert st.st_uid == 0 and st.st_gid == 0, f"{p} not root:root"
+              assert oct(st.st_mode)[-3:] == "600", f"{p} not mode 0600"
+          print("runtime markers visible and correct: OK")
+          PYEOF
+
+      - name: Verify LLM path reports enabled
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:8080/api/v1/meta \
+            | python3 -c "import json,sys; body = json.load(sys.stdin); assert body['llm']['enabled'] is True, body"
+
       - name: Show container state on failure
         if: failure()
         run: |
@@ -202,4 +241,6 @@ jobs:
 
       - name: Remove test stack
         if: always()
-        run: docker compose down
+        run: |
+          docker compose -f compose.yaml -f compose.llm-staging.yaml down
+          sudo rm -rf /etc/numra
