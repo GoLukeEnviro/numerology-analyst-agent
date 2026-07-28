@@ -4,85 +4,87 @@ import type { AnalysisReport, ProfileCalculationResult } from "../../api/types";
 import { buildPdfLines, createProfilePdf } from "./profilePdf";
 
 const profile = {
-  deterministic_hash: "a".repeat(64),
-  input_ref: { core_name: "Max Mustermann", as_of_date: "2026-07-26" },
-  life_path_a: { reduced_value: 1, compound_notation: "37/10/1" },
-  birthday: { reduced_value: 7, compound_notation: "25/7" },
-  attitude: { reduced_value: 5, compound_notation: "12/3" },
-  core_name: {
-    expression: { reduced_value: 5, compound_notation: "50/5" },
-    soul_urge: { reduced_value: 3, compound_notation: "21/3" },
-    personality: { reduced_value: 2, compound_notation: "29/11/2" },
-  },
-  maturity: { reduced_value: 6, compound_notation: "6" },
-  cycles: {
-    personal_year: { reduced_value: 6 },
-    personal_month: { reduced_value: 4 },
-    personal_day: { reduced_value: 3 },
-    pinnacles: [],
-    challenges: [],
-  },
-  trace: { steps: [{ operation: "sum", result: 37 }] },
+    deterministic_hash: "a".repeat(64),
+    input_ref: { core_name: "Max Mustermann", as_of_date: "2026-07-26" },
+    life_path_a: { reduced_value: 1, compound_notation: "37/10/1" },
+    birthday: { reduced_value: 7, compound_notation: "25/7" },
+    attitude: { reduced_value: 5, compound_notation: "12/3" },
+    core_name: {
+        expression: { reduced_value: 5, compound_notation: "50/5" },
+        soul_urge: { reduced_value: 3, compound_notation: "21/3" },
+        personality: { reduced_value: 2, compound_notation: "29/11/2" },
+    },
+    maturity: { reduced_value: 6, compound_notation: "6" },
+    cycles: {
+        personal_year: { reduced_value: 6 },
+        personal_month: { reduced_value: 4 },
+        personal_day: { reduced_value: 3 },
+        pinnacles: [],
+        challenges: [],
+    },
+    trace: { steps: [{ operation: "sum", result: 37 }] },
 } as unknown as ProfileCalculationResult;
 
 const report = {
-  schema_version: "analysis-report-v2",
-  summary: "Ein geprüfter Reflexionsbericht.",
-  sections: [],
-  limitations: ["Keine wissenschaftliche Persönlichkeitsdiagnostik."],
-  suggestions: [],
-  provenance: {
-    provider: "deepseek",
-    model: "deepseek-v4-pro",
-    temperature: null,
-    top_p: null,
-    thinking: "enabled",
-    effective_sampling: "provider_managed",
-    reasoning_effort: "high",
-    context_signature: "a".repeat(64),
-    prompt_version: "numra-report-de-v2",
-    knowledge_bundle: "numra-knowledge-de-v1",
-    calculation_hash: "a".repeat(64),
-    provider_fingerprint: null,
-    prompt_tokens: 10,
-    completion_tokens: 20,
-  },
+    schema_version: "analysis-report-v2",
+    summary: "Ein geprüfter Reflexionsbericht.",
+    sections: [],
+    limitations: ["Keine wissenschaftliche Persönlichkeitsdiagnostik."],
+    suggestions: [],
+    provenance: {
+        provider: "deepseek",
+        model: "deepseek-v4-pro",
+        temperature: null,
+        top_p: null,
+        thinking: "enabled",
+        effective_sampling: "provider_managed",
+        reasoning_effort: "high",
+        context_signature: "a".repeat(64),
+        prompt_version: "numra-report-de-v2",
+        knowledge_bundle: "numra-knowledge-de-v1",
+        calculation_hash: "a".repeat(64),
+        provider_fingerprint: null,
+        prompt_tokens: 10,
+        completion_tokens: 20,
+    },
 } satisfies AnalysisReport;
 
 describe("Numra PDF export", () => {
-  it("contains profile, claim boundary, trace, hash and provenance", () => {
-    const text = buildPdfLines(profile, report).join("\n");
+    it("contains profile, claim boundary, trace, hash and provenance", () => {
+        const text = buildPdfLines(profile, report).join("\n");
 
-    expect(text).toContain("Max Mustermann");
-    expect(text).toContain("Lebensweg: 1");
-    expect(text).toContain("Berechnung / Tradition / Hypothese");
-    expect(text).toContain("Keine wissenschaftliche Persönlichkeitsdiagnostik");
-    expect(text).toContain("a".repeat(64));
-    expect(text).toContain("deepseek-v4-pro");
-    expect(text).toContain("Rechenweg");
-  });
+        expect(text).toContain("Max Mustermann");
+        expect(text).toContain("Lebensweg: 1");
+        expect(text).toContain("Berechnung / Tradition / Hypothese");
+        expect(text).toContain(
+            "Keine wissenschaftliche Persönlichkeitsdiagnostik",
+        );
+        expect(text).toContain("a".repeat(64));
+        expect(text).toContain("deepseek-v4-pro");
+        expect(text).toContain("Rechenweg");
+    });
 
-  it("creates a readable multi-page PDF byte stream", async () => {
-    const bytes = await createProfilePdf(profile, report);
+    it("creates a readable multi-page PDF byte stream", async () => {
+        const bytes = await createProfilePdf(profile, report);
 
-    expect(new TextDecoder().decode(bytes.slice(0, 5))).toBe("%PDF-");
-    expect(bytes.byteLength).toBeGreaterThan(1_000);
-  });
+        expect(new TextDecoder().decode(bytes.slice(0, 5))).toBe("%PDF-");
+        expect(bytes.byteLength).toBeGreaterThan(1_000);
+    });
 
-  it("keeps a legacy V2 active-name profile exportable without inventing maturity data", () => {
-    const legacyProfile = {
-      ...profile,
-      schema_version: "profile-calculation-result-v2",
-      active_name: {
-        expression: { reduced_value: 7, compound_notation: "43/7" },
-        soul_urge: { reduced_value: 4, compound_notation: "22/4" },
-        personality: { reduced_value: 3, compound_notation: "21/3" },
-      },
-    } as unknown as ProfileCalculationResult;
+    it("keeps a legacy V2 active-name profile exportable without inventing maturity data", () => {
+        const legacyProfile = {
+            ...profile,
+            schema_version: "profile-calculation-result-v2",
+            active_name: {
+                expression: { reduced_value: 7, compound_notation: "43/7" },
+                soul_urge: { reduced_value: 4, compound_notation: "22/4" },
+                personality: { reduced_value: 3, compound_notation: "21/3" },
+            },
+        } as unknown as ProfileCalculationResult;
 
-    const text = buildPdfLines(legacyProfile, null).join("\n");
+        const text = buildPdfLines(legacyProfile, null).join("\n");
 
-    expect(text).toContain("Aktiver Ausdruck: 7");
-    expect(text).not.toContain("Aktive Reife");
-  });
+        expect(text).toContain("Aktiver Ausdruck: 7");
+        expect(text).not.toContain("Aktive Reife");
+    });
 });
