@@ -1,14 +1,15 @@
 # ADR 0016 — V2 User-Owned Masterplan Boundary
 
-> **Status:** Akzeptiert (28. Juli 2026)
-> **Kontext:** Numra V1 (Pythagoreischer Standard, Determinismus vor LLM) ist mit `0.3.0rc1` funktional abgeschlossen. Ein darüber hinausgehender "V2 Masterplan" (Mehrsprachigkeit, erweiterte Methodensysteme, Community-Forschungspipeline, Benutzerkonten) liegt als Vision vor, darf aber nicht in den V1-Scope übergreifen.
+> **Status:** Akzeptiert (28. Juli 2026); realignt auf den nutzergebauten
+> Guided Masterplan (29. Juli 2026)
+> **Kontext:** Numra V1 (Pythagoreischer Standard, Determinismus vor LLM) ist mit `0.3.0rc1` funktional abgeschlossen. Ein darüber hinausgehender "V2 Masterplan" liegt als Vision vor, darf aber nicht in den V1-Scope übergreifen. Die ursprüngliche V2-Spezifikation war von der eigentlichen Guided-Masterplan-Vision abgedriftet und enthielt Plattform-Erweiterungsideen, die separat gehören — siehe Realignment unten.
 > **Betrifft:** Produkt-Scope, V1/V2-Grenze, Roadmap, Spezifikation
 
 ---
 
 ## Entscheidung
 
-Ein separater, **nutzergebauter V2-Masterplan** wird als Spezifikation
+Ein separater, **nutzergebauter Guided Masterplan** wird als Spezifikation
 dokumentiert (`docs/product/numra-v2-guided-masterplan.md`), jedoch NICHT
 in den V1-Implementierungsscope aufgenommen. Diese ADR zieht die harte Grenze:
 
@@ -20,18 +21,42 @@ in den V1-Implementierungsscope aufgenommen. Diese ADR zieht die harte Grenze:
    - optionale, kontrollierte DeepSeek-Adapterschicht,
    - lokale-first PWA.
 
-2. **V2 (Spezifikation, keine Implementierung in diesem Release):**
-   - erweiterte Methodensysteme (chaldäisch, kabbalistisch),
-   - Mehrsprachigkeit über Deutsch hinaus,
-   - Forschungs-Community-Features (Präregistrierung, geteilte Datensätze),
-   - Benutzerkonten und cloudbasierte Synchronisation,
-   - Vektor-Retrieval / fortgeschrittene Agenten-Workflows,
-   - die in Master-Vertrag §11 genannten Zukunftsmodule.
+2. **V2 Guided Masterplan (Spezifikation, keine Implementierung in diesem
+   Release):** ein nutzergebauter Reflexions- und Zielsetzungsprozess auf
+   Basis des V1-Profils, mit den Core-Modellen `UserGoal`, `LifeArea`,
+   `ReflectionEntry`, `ObservedPattern`, `UserConstraint`,
+   `PriorityDecision`, `ActionOption`, `AcceptedAction`, `Milestone`,
+   `Habit`, `ReviewCheckpoint`, `MasterplanVersion` und der verbindlichen
+   Regel, dass nur der Nutzer eine Option in eine `AcceptedAction`
+   umwandeln kann (siehe `docs/product/numra-v2-guided-masterplan.md` §3).
+
+3. **Plattform-Erweiterung (separat ausgelagert, kein Teil des Guided
+   Masterplan):** erweiterte Methodensysteme (chaldäisch, kabbalistisch),
+   Mehrsprachigkeit über Deutsch hinaus, Forschungs-Community-Features,
+   Benutzerkonten und cloudbasierte Synchronisation, fortgeschrittene
+   Agenten-Workflows sowie die in Master-Vertrag §11 genannten
+   Zukunftsdomänen (Astrologie, Human Design, Enneagramm) — siehe
+   `docs/roadmaps/numra-platform-expansion-roadmap.md`.
 
 Die Spezifikation `docs/product/numra-v2-guided-masterplan.md` ist eine
-**Produktvision**, kein Implementierungsauftrag. Sie beschreibt, was V2
-enthalten könnte, damit die V1-Architektur die nötigen Erweiterungspunkte
-bereithält — ohne dass V2-Code in V1 eingeht.
+**Produktvision**, kein Implementierungsauftrag. Sie beschreibt, was der
+Guided Masterplan enthalten könnte, damit die V1-Architektur die nötigen
+Erweiterungspunkte bereithält — ohne dass V2-Code in V1 eingeht.
+
+## Realignment (29. Juli 2026)
+
+Die ursprüngliche Fassung von `docs/product/numra-v2-guided-masterplan.md`
+vermischte den nutzergebauten Guided Masterplan mit Plattform-
+Erweiterungsideen (Methodensysteme, Mehrsprachigkeit, Forschung, Cloud,
+Agenten-Workflows, Zukunftsdomänen). Diese Vermischung widersprach der
+ursprünglichen Guided-Masterplan-Vision und wurde korrigiert:
+
+- Die Guided-Masterplan-Spezifikation beschreibt jetzt primär den
+  nutzergebauten Flow und die Core-Modelle (Abschnitt 2 oben).
+- Alle Plattform-Erweiterungsideen wurden unverändert inhaltlich nach
+  `docs/roadmaps/numra-platform-expansion-roadmap.md` verschoben.
+- Die alte Fassung bleibt in der Git-Historie dieser Datei erhalten
+  (Rollback: `git log -- docs/product/numra-v2-guided-masterplan.md`).
 
 ## Begründung
 
@@ -61,6 +86,8 @@ bereithält — ohne dass V2-Code in V1 eingeht.
 ## Verweise
 
 - ADR 0015 — Kumulative Release-Normalisierung auf 0.3.0rc1
+- `docs/roadmaps/numra-platform-expansion-roadmap.md` — ausgelagerte
+  Plattform-Erweiterungsideen
 - Master-Vertrag §11 — Zukunftsmodule (nicht Teil von V1)
 - `docs/product/numra-v2-guided-masterplan.md` (Spezifikation)
 - `PROJECT_CHARTER.md`, `ROADMAP.md`
