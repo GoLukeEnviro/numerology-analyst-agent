@@ -13,6 +13,89 @@
       "title": "ClaimType",
       "type": "string"
     },
+    "ComposerObservationRecord": {
+      "additionalProperties": false,
+      "description": "A serialisable record of one composer rule observation.\n\nCarries the full context needed to surface relationship observations in\nreports and integration tests without referencing the internal\n:class:`~numerology_interpretation.rules.ComposerObservation` dataclass.",
+      "properties": {
+        "composer_rule_id": {
+          "title": "Composer Rule Id",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "resonance",
+            "tension"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "calculation_refs": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Calculation Refs",
+          "type": "array"
+        },
+        "knowledge_refs": {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "title": "Knowledge Refs",
+          "type": "array"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        },
+        "counter_hypothesis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Counter Hypothesis"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "composer_rule_id",
+        "relation",
+        "calculation_refs",
+        "knowledge_refs",
+        "description"
+      ],
+      "title": "ComposerObservationRecord",
+      "type": "object"
+    },
     "InterpretationClaim": {
       "additionalProperties": false,
       "properties": {
@@ -142,6 +225,14 @@
         "$ref": "#/$defs/InterpretationSection"
       },
       "title": "Sections",
+      "type": "array"
+    },
+    "observations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ComposerObservationRecord"
+      },
+      "title": "Observations",
       "type": "array"
     }
   },

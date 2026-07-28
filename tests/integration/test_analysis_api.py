@@ -13,7 +13,15 @@ import pytest
 
 from numerology_agent.models import ProviderResult
 from numerology_api.app import ApiSettings, create_app
+from numerology_knowledge.loader import load_knowledge_bundle
 from tests.integration.test_http_api import _request
+
+
+def _life_path_knowledge_ref(number: int) -> str:
+    """Return the stable_id for the life_path entry of the given number."""
+    bundle = load_knowledge_bundle("de", "v2")
+    entry = bundle.entry_for(number, context="life_path")
+    return entry.stable_id
 
 
 class ContractProvider:
@@ -21,6 +29,7 @@ class ContractProvider:
         facts = payload["facts"]
         assert isinstance(facts, list)
         life_path = next(fact for fact in facts if fact["calculation_ref"] == "life_path_a")
+        knowledge_ref = _life_path_knowledge_ref(life_path["number"])
         content: dict[str, Any]
         if payload.get("prompt_version") == "numra-follow-up-de-v2":
             content = {
@@ -30,7 +39,7 @@ class ContractProvider:
                         "claim_type": "interpretive_hypothesis",
                         "text": "Möglicherweise zeigt sich Eigenständigkeit situationsabhängig.",
                         "calculation_ref": "life_path_a",
-                        "knowledge_ref": f"numra-knowledge-de-v2:number:{life_path['number']}",
+                        "knowledge_ref": knowledge_ref,
                         "number": life_path["number"],
                     }
                 ],
@@ -47,9 +56,7 @@ class ContractProvider:
                                 "claim_type": "interpretive_hypothesis",
                                 "text": "Möglicherweise lohnt sich ein Blick auf Eigenständigkeit.",
                                 "calculation_ref": "life_path_a",
-                                "knowledge_ref": (
-                                    f"numra-knowledge-de-v2:number:{life_path['number']}"
-                                ),
+                                "knowledge_ref": knowledge_ref,
                                 "number": life_path["number"],
                             }
                         ],

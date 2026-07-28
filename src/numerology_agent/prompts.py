@@ -1,48 +1,35 @@
-"""Load versioned prompt templates from the ``prompts/`` directory.
+"""Load versioned prompt templates from the ``prompt_templates/`` package data.
 
-The prompts live in ``<repo-root>/prompts/`` (a sibling of ``src/``). They
-contain ONLY linguistic instructions — never secrets, never calculation logic.
-Loading is deterministic and cached per (kind, name, locale) tuple.
+Templates live in ``src/numerology_agent/prompt_templates/`` and are bundled
+as package data in the wheel.  They contain ONLY linguistic instructions —
+never secrets, never calculation logic.  Loading is deterministic and cached
+per (category, name) pair.
 """
 
 from __future__ import annotations
 
 from functools import lru_cache
-from importlib import resources
-from importlib.resources.abc import Traversable
-from pathlib import Path
-
-
-def _prompts_root() -> Path:
-    """Resolve the ``prompts/`` directory relative to this package.
-
-    Layout::
-
-        src/numerology_agent/prompts.py   (this file)
-        prompts/                          (target, two levels up)
-    """
-    here = Path(__file__).resolve()
-    # src/numerology_agent/prompts.py -> src/ -> repo root
-    return here.parent.parent.parent / "prompts"
+from importlib.resources import files as _pkg_files
 
 
 @lru_cache(maxsize=32)
 def load_prompt(category: str, name: str) -> str:
-    """Load a prompt file ``prompts/<category>/<name>.md`` as UTF-8 text.
+    """Load a prompt file from ``numerology_agent/prompt_templates/<category>/<name>.md``.
 
     ``category`` is one of ``system``, ``tasks``, ``eval``. The lookup is
-    cached because prompts are immutable per process; tests that swap the
-    directory should call :func:`reset_prompt_cache`.
+    cached because prompts are immutable per process; tests that need to reset
+    the cache should call :func:`reset_prompt_cache`.
     """
-    root = _prompts_root()
-    candidate = root / category / f"{name}.md"
-    if not candidate.is_file():
-        raise FileNotFoundError(f"prompt not found: {candidate}")
-    return candidate.read_text(encoding="utf-8")
+    pkg = _pkg_files("numerology_agent.prompt_templates")
+    candidate = pkg / category / f"{name}.md"
+    try:
+        return candidate.read_text(encoding="utf-8")
+    except (FileNotFoundError, TypeError) as exc:
+        raise FileNotFoundError(f"prompt not found: prompt_templates/{category}/{name}.md") from exc
 
 
 def reset_prompt_cache() -> None:
-    """Clear the LRU cache (test hook for swapping prompt directories)."""
+    """Clear the LRU cache (test hook)."""
     load_prompt.cache_clear()
 
 
@@ -74,12 +61,3 @@ __all__ = [
     "reset_prompt_cache",
     "system_prompt",
 ]
-
-
-# Defensive: ensure resource access via importlib.resources also works for
-# callers that prefer the resources API. ``resources.files`` requires the
-# target to be importable as a package; since ``prompts/`` is data-only we
-# expose a stable accessor for parity with the file-based loader above.
-def _resource_anchor() -> Traversable:
-    """Anchor for ``importlib.resources``-style access (parity helper)."""
-    return resources.files(__name__)

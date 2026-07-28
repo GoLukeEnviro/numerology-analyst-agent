@@ -1,0 +1,322 @@
+{
+  "$defs": {
+    "AuthoringProvenance": {
+      "additionalProperties": false,
+      "description": "Provenance for the authoring of a knowledge entry.",
+      "properties": {
+        "authored_at": {
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "title": "Authored At",
+          "type": "string"
+        },
+        "author": {
+          "maxLength": 80,
+          "minLength": 1,
+          "title": "Author",
+          "type": "string"
+        },
+        "review_status": {
+          "default": "draft",
+          "enum": [
+            "draft",
+            "reviewed",
+            "approved"
+          ],
+          "title": "Review Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "authored_at",
+        "author"
+      ],
+      "title": "AuthoringProvenance",
+      "type": "object"
+    },
+    "CompoundNotation": {
+      "additionalProperties": false,
+      "description": "Compound structure replacing ``number: int`` for compound entries.\n\nFor a compound like 13/4:\n- ``raw_value`` = 13 (the unreduced two-digit number)\n- ``reduced_value`` = 4 (the pythagorean reduction)\n- ``compound_notation`` = \"13/4\"\n\nCompounds reducing to a master number (e.g. 29/11, 38/11) carry the\nmaster number as ``reduced_value``.",
+      "properties": {
+        "raw_value": {
+          "maximum": 99,
+          "minimum": 10,
+          "title": "Raw Value",
+          "type": "integer"
+        },
+        "reduced_value": {
+          "maximum": 33,
+          "minimum": 1,
+          "title": "Reduced Value",
+          "type": "integer"
+        },
+        "compound_notation": {
+          "maxLength": 5,
+          "minLength": 3,
+          "pattern": "^\\d{2}/\\d{1,2}$",
+          "title": "Compound Notation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw_value",
+        "reduced_value",
+        "compound_notation"
+      ],
+      "title": "CompoundNotation",
+      "type": "object"
+    },
+    "KnowledgeEntryV2": {
+      "additionalProperties": false,
+      "description": "Canonical V2 knowledge entry with compound support and rich metadata.\n\nFor single/master/karmic entries ``compound`` is ``None`` and ``number``\nholds the integer. For compound entries ``compound`` carries the\n``CompoundNotation`` and ``number`` holds the ``reduced_value``.",
+      "properties": {
+        "stable_id": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Stable Id",
+          "type": "string"
+        },
+        "method_system": {
+          "const": "pythagorean-v1",
+          "default": "pythagorean-v1",
+          "title": "Method System",
+          "type": "string"
+        },
+        "classification": {
+          "enum": [
+            "single",
+            "master",
+            "compound",
+            "karmic_debt"
+          ],
+          "title": "Classification",
+          "type": "string"
+        },
+        "number": {
+          "maximum": 99,
+          "minimum": 0,
+          "title": "Number",
+          "type": "integer"
+        },
+        "compound": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CompoundNotation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "claim_class": {
+          "default": "traditional_claim",
+          "enum": [
+            "input_fact",
+            "calculation_fact",
+            "traditional_claim",
+            "interpretive_hypothesis",
+            "empirical_evidence",
+            "practical_suggestion"
+          ],
+          "title": "Claim Class",
+          "type": "string"
+        },
+        "constructive_expression": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Constructive Expression",
+          "type": "string"
+        },
+        "shadow_expression": {
+          "maxLength": 800,
+          "minLength": 1,
+          "title": "Shadow Expression",
+          "type": "string"
+        },
+        "development_theme": {
+          "maxLength": 400,
+          "minLength": 1,
+          "title": "Development Theme",
+          "type": "string"
+        },
+        "traditional_claims": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Traditional Claims",
+          "type": "array"
+        },
+        "reflection_prompts": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Reflection Prompts",
+          "type": "array"
+        },
+        "practical_suggestions": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Practical Suggestions",
+          "type": "array"
+        },
+        "counter_hypotheses": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Counter Hypotheses",
+          "type": "array"
+        },
+        "uncertainty": {
+          "anyOf": [
+            {
+              "maxLength": 600,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Uncertainty"
+        },
+        "result_contexts": {
+          "items": {
+            "enum": [
+              "life_path",
+              "birthday",
+              "attitude",
+              "expression",
+              "soul_urge",
+              "personality",
+              "maturity",
+              "personal_year",
+              "personal_month",
+              "personal_day",
+              "pinnacle",
+              "challenge",
+              "name_cycle"
+            ],
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Result Contexts",
+          "type": "array"
+        },
+        "source_refs": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Refs",
+          "type": "array"
+        },
+        "authoring_provenance": {
+          "$ref": "#/$defs/AuthoringProvenance"
+        }
+      },
+      "required": [
+        "stable_id",
+        "classification",
+        "number",
+        "title",
+        "constructive_expression",
+        "shadow_expression",
+        "development_theme",
+        "traditional_claims",
+        "reflection_prompts",
+        "practical_suggestions",
+        "counter_hypotheses",
+        "result_contexts",
+        "source_refs",
+        "authoring_provenance"
+      ],
+      "title": "KnowledgeEntryV2",
+      "type": "object"
+    },
+    "KnowledgeSource": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "source_type": {
+          "title": "Source Type",
+          "type": "string"
+        },
+        "locator": {
+          "title": "Locator",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "source_type",
+        "locator"
+      ],
+      "title": "KnowledgeSource",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Canonical V2 knowledge bundle.",
+  "properties": {
+    "bundle_id": {
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "locale": {
+      "title": "Locale",
+      "type": "string"
+    },
+    "version": {
+      "const": "v2",
+      "default": "v2",
+      "title": "Version",
+      "type": "string"
+    },
+    "scientific_position": {
+      "title": "Scientific Position",
+      "type": "string"
+    },
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeSource"
+      },
+      "title": "Sources",
+      "type": "array"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeEntryV2"
+      },
+      "title": "Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "bundle_id",
+    "locale",
+    "scientific_position",
+    "sources",
+    "entries"
+  ],
+  "title": "KnowledgeBundleV2",
+  "type": "object"
+}
