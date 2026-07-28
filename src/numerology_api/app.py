@@ -352,7 +352,7 @@ def _production_dependencies(
     verify_runtime_gates()
     if provider is None:
         if settings.deepseek_api_key is None:
-            raise RuntimeError("NUMRA_DEEPSEEK_API_KEY is required when LLM is enabled")
+            raise RuntimeError("DEEPSEEK_API_KEY is required when LLM is enabled")
         provider = DeepSeekProvider(
             DeepSeekSettings(
                 api_key=settings.deepseek_api_key,

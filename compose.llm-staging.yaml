@@ -1,0 +1,23 @@
+name: numra
+
+# LLM-Staging-Override: aktiviert den optionalen DeepSeek-Pfad fuer privates
+# Staging und macht die Runtime-Marker (/etc/numra/numra-legal-approved,
+# /etc/numra/llm-transfer-approved) im API-Container sichtbar.
+#
+# Nutzung (zusaetzlich zur Basis-compose.yaml, niemals allein):
+#   docker compose -f compose.yaml -f compose.llm-staging.yaml up -d --wait
+#
+# Die Marker-Dateien selbst werden NICHT durch dieses Override erzeugt.
+# Sie muessen vom Betreiber vorab auf dem Host unter /etc/numra angelegt
+# werden (root:root, Modus 0600) und werden read-only in den Container
+# gemountet. runtime_gate.py prueft ausschliesslich Existenz, Eigentuemer
+# und Modus per stat() — das erfordert nur Verzeichnis-Traversierung, kein
+# Lesen des Dateiinhalts, und funktioniert daher auch fuer den
+# Nicht-root-Containerprozess (uid 10001).
+
+services:
+  api:
+    environment:
+      NUMRA_LLM_ENABLED: ${NUMRA_LLM_ENABLED:-true}
+    volumes:
+      - /etc/numra:/etc/numra:ro
