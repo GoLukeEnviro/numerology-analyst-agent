@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
 interface PwaUpdateNoticeProps {
@@ -11,12 +12,21 @@ export function PwaUpdateNotice({
   onUpdate,
   onDismiss,
 }: PwaUpdateNoticeProps) {
+  const updateButtonRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (updateAvailable) updateButtonRef.current?.focus();
+  }, [updateAvailable]);
   if (!updateAvailable) return null;
   return (
     <aside className="pwa-toast" role="status" aria-live="polite">
       <p><strong>Eine neue Numra-Version ist bereit.</strong></p>
       <div>
-        <button className="button button-primary" type="button" onClick={() => void onUpdate(true)}>
+        <button
+          className="button button-primary"
+          type="button"
+          ref={updateButtonRef}
+          onClick={() => void onUpdate(true)}
+        >
           Jetzt aktualisieren
         </button>
         <button className="button button-quiet" type="button" onClick={onDismiss}>

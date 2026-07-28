@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -34,7 +34,7 @@ const formSchema = z
   });
 
 type FormValues = z.infer<typeof formSchema>;
-type Calculate = (request: ProfileCalculationRequest) => Promise<ProfileCalculationResult>;
+type Calculate = typeof calculateProfile;
 
 interface AnalysisWizardProps {
   calculate?: Calculate;
@@ -83,6 +83,8 @@ export function AnalysisWizard({
   const [methodAccepted, setMethodAccepted] = useState(false);
   const [pending, setPending] = useState(false);
   const [apiError, setApiError] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
+  useEffect(() => () => abortRef.current?.abort(), []);
   const {
     register,
     handleSubmit,
@@ -107,11 +109,15 @@ export function AnalysisWizard({
 
   const submit = async () => {
     if (review === null || !methodAccepted || !online) return;
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
     setPending(true);
     setApiError("");
     try {
-      onComplete(await calculate(toRequest(review)));
+      onComplete(await calculate(toRequest(review), undefined, controller.signal));
     } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
       setApiError(
         error instanceof ApiProblem
           ? `${error.message} Referenz: ${error.correlationId}`
@@ -120,6 +126,12 @@ export function AnalysisWizard({
     } finally {
       setPending(false);
     }
+  };
+
+  const cancelCalculation = () => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    setPending(false);
   };
 
   return (
@@ -205,6 +217,11 @@ export function AnalysisWizard({
               <button className="button button-primary" type="button" disabled={!methodAccepted || pending || !online} onClick={() => void submit()}>
                 {pending ? "Atlas wird berechnet …" : "Profil berechnen"}
               </button>
+              {pending && (
+                <button className="button button-quiet" type="button" onClick={cancelCalculation}>
+                  Abbrechen
+                </button>
+              )}
             </div>
           </>
         )}
