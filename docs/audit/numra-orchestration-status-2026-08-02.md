@@ -16,7 +16,9 @@ PHASE_4_HARDENING_STREAMS=PARTIAL
 PHASE_5_PRIVATE_STAGING=BLOCKED
 PHASE_5_RESTORE=NOT_EXECUTED
 PHASE_5_ROLLBACK=NOT_EXECUTED
-PHASE_6_COMMITTEE=NOT_STARTED
+PHASE_5_LOCAL_DOCKER_ROLLBACK_MECHANICS=PASS
+PHASE_6_COMMITTEE=COMPLETE_NO_GO_FOR_TAG
+
 PHASE_7_RC2_RELEASE=NOT_STARTED
 PHASE_8_CLOSED_BETA=NOT_STARTED
 PHASE_9_STABLE_RELEASE=NOT_STARTED
@@ -38,7 +40,7 @@ OPEN_CRITICAL_BLOCKERS=0
 OPEN_HIGH_PRODUCT_BLOCKERS=0
 EXTERNAL_BLOCKERS=private_staging_host;legal_llm_transfer;operator_identity;dns_tls;closed_beta_testers
 
-NEXT_TASK=Operator assigns approved Numra staging SSH alias; then execute Phase 5 deploy/backup/restore/rollback and update numra-rc2-private-staging-acceptance-2026-08-02.md to PASS with digests
+NEXT_TASK=Operator assigns approved Numra staging SSH alias; then host deploy/backup/restore/rollback; re-open committee to GO when host evidence lands
 ```
 
 ## Evidence pointers

@@ -44,7 +44,9 @@ def test_release_and_rollback_use_immutable_commit_tags() -> None:
     assert "docker compose --env-file" in release
     assert "up -d --wait --wait-timeout 60" in release
     assert "docker image inspect" in rollback
-    assert "up -d --no-build --wait --wait-timeout 60" in rollback
+    assert "up -d --no-build --wait --wait-timeout 90" in rollback
+    assert "Health check failed after rollback" in rollback
+    assert "NUMRA_RELEASE_DIR" in rollback
 
 
 def test_configuration_backup_is_encrypted_without_plaintext_archive() -> None:
