@@ -88,6 +88,8 @@ export default defineConfig({
         exclude: ["e2e/**", "node_modules/**"],
         globals: true,
         setupFiles: "./src/test/setup.ts",
+        // Coverage instrumentation + CI runners need more headroom than bare unit runs.
+        testTimeout: 20_000,
         coverage: {
             provider: "v8",
             reporter: ["text", "text-summary", "lcov", "json-summary"],

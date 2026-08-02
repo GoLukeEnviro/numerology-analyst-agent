@@ -11,10 +11,10 @@
     "generate:api": "openapi-typescript ../../openapi/numra-v1.json -o src/api/schema.d.ts",
     "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
+    "coverage": "vitest run --coverage",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b --pretty false",
-    "web:coverage": "vitest run --coverage"
+    "typecheck": "tsc -b --pretty false"
   },
   "dependencies": {
     "dexie": "4.4.4",

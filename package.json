@@ -5,6 +5,7 @@
   "scripts": {
     "web:build": "pnpm --filter @numra/web build",
     "web:check-build": "pnpm --filter @numra/web check:build",
+    "web:coverage": "pnpm --filter @numra/web coverage",
     "web:e2e": "pnpm --filter @numra/web e2e",
     "web:generate-api": "pnpm --filter @numra/web generate:api",
     "web:lint": "pnpm --filter @numra/web lint",
