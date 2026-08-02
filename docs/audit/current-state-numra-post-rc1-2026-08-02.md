@@ -1,7 +1,8 @@
 # Numra — aktueller Quellstand (post-RC1, 2026-08-02)
 
 > **Stand:** 2026-08-02  
-> **Basis-SHA:** `5976ae2299059451461f634cb89f525151fda8b2` (`origin/main`)  
+> **Code-Baseline-SHA (Gates):** `5976ae2299059451461f634cb89f525151fda8b2`  
+> **Docs-Merge post-Reconciliation:** `7f9795c807f06c721a8c67c32823e8897de7f359` (`origin/main` nach PR #36)  
 > **Paketversion:** `0.3.0rc1`  
 > **Unveränderlicher Tag:** `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a`  
 > **Zweck:** Frische Repository-Wahrheit nach Merge von PR #34 und #35.  
