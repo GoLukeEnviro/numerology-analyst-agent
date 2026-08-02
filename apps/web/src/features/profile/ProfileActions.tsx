@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { RiFilePdf2Line } from "@remixicon/react";
 
 import type { ProfileCalculationResult } from "../../api/types";
 import { noteErrorMessage } from "../analysis/notes-utils";
@@ -77,6 +78,7 @@ export function ProfileActions({ profileId, profile }: ProfileActionsProps) {
           Notiz löschen
         </button>
         <button className="button button-primary" type="button" disabled={exporting} onClick={exportPdf}>
+          <RiFilePdf2Line size={18} aria-hidden="true" />
           {exporting ? "PDF wird erstellt …" : "PDF exportieren"}
         </button>
       </div>
