@@ -105,6 +105,22 @@ def test_production_operations_are_documented_without_public_launch_shortcuts() 
     assert "Kein öffentlicher Launch" in guide
 
 
+def test_rollback_rehearsal_uses_sha_tags_compatible_with_rollback_script() -> None:
+    """rollback.sh accepts only 40-hex image tags; rehearsal must supply those."""
+    rehearsal = (ROOT / "deploy" / "scripts" / "rollback-rehearsal.sh").read_text(encoding="utf-8")
+    rollback = (ROOT / "deploy" / "scripts" / "rollback.sh").read_text(encoding="utf-8")
+
+    assert "rehearsal-baseline-" not in rehearsal
+    assert "rehearsal-rc-" not in rehearsal
+    assert "git rev-parse --verify HEAD~1" in rehearsal
+    assert "git rev-parse --verify HEAD" in rehearsal
+    assert r"^[0-9a-f]{40}$" in rehearsal
+    assert r"^[0-9a-f]{40}$" in rollback
+    assert "NUMRA_RELEASE_DIR" in rollback
+    assert 'NUMRA_RELEASE_DIR="$release_dir"' in rehearsal
+    assert "NUMRA_RELEASE_DIR" in rehearsal
+
+
 def test_local_deepseek_activation_keeps_secrets_out_of_git() -> None:
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     configure_path = ROOT / "deploy" / "scripts" / "configure-local-llm.ps1"

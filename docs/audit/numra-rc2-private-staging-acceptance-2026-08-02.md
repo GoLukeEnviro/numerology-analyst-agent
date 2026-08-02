@@ -71,12 +71,31 @@ NOTE=Scripts under deploy/scripts/ exist; existence ≠ execution
 ## 5. Stufe 3 — Rollback-Rehearsal
 
 ```text
-ROLLBACK_REHEARSAL=NOT_EXECUTED
+ROLLBACK_REHEARSAL_HOST=NOT_EXECUTED
 BASELINE_SMOKE=NOT_EXECUTED
 CANDIDATE_SMOKE=NOT_EXECUTED
 ROLLBACK_SMOKE=NOT_EXECUTED
 REDEPLOY_SMOKE=NOT_EXECUTED
 ```
+
+### 5b. Lokaler Docker-Mechanik-Nachweis (kein Host-Ersatz)
+
+Auf dem Entwickler-PC (Docker Desktop) mit **echten** Skripten
+`deploy/scripts/rollback-rehearsal.sh` / `rollback.sh` (SHA-Tag-Vertrag
+korrigiert, Health-Retry):
+
+```text
+LOCAL_DOCKER_ROLLBACK=PASS
+BASELINE_TAG=7f9795c807f06c721a8c67c32823e8897de7f359
+RC_TAG=8b0c711e510ebfb19f5cc814edab9d08e005c4eb
+AFTER_ROLLBACK_CURRENT=7f9795c807f06c721a8c67c32823e8897de7f359
+HEALTH_AFTER_ROLLBACK=PASS
+PROFILE_AFTER_ROLLBACK=PASS
+NUMRA_LLM_ENABLED=false
+CLASSIFICATION=local_mechanics_only_not_private_staging_host
+```
+
+Dieser Nachweis **ersetzt nicht** AC3 Private Staging Host.
 
 ## 6. Stufe 4 — LLM/Provider-Smoke
 
