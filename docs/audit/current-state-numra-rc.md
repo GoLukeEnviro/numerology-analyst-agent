@@ -1,14 +1,17 @@
-# Numra — aktueller Quellstand (RC-Vorbereitung)
+# Numra — Quellstand RC-Vorbereitung (historisch)
 
-> Stand: 28. Juli 2026
+> **HISTORISCH — kein Live-Status von main.**  
+> Stand der Messung: 28. Juli 2026 · Basis-SHA:
+> `8faba1b4442939a97252282c60b3f4f808d62235`  
+> **Aktueller post-RC1-Stand:**  
+> `docs/audit/current-state-numra-post-rc1-2026-08-02.md`
+> (`origin/main` = `5976ae2299059451461f634cb89f525151fda8b2`, Tag
+> `v0.3.0-rc.1` unveränderlich).
 >
-> Basis-SHA: `8faba1b4442939a97252282c60b3f4f808d62235` (origin/main)
->
-> Zweck: Vollständige NEU-Inventarisierung als Grundlage für die Release-Sequenz
-> `0.3.0rc1`. Diese Datei erfüllt die Bestandsaufnahmepflicht aus
-> Master-Vertrag §2.1 (Keine erfundenen Zustände) und liefert die
-> Abschlussbericht-Struktur aus §10. Sie ersetzt keine Verifizierung durch
-> ausführbaren Code.
+> Zweck (damals): Vollständige Inventarisierung als Grundlage für die
+> Release-Sequenz `0.3.0rc1`. Erfüllt die Bestandsaufnahmepflicht aus
+> Master-Vertrag §2.1 und die Abschlussbericht-Struktur aus §10. Ersetzt
+> keine Verifizierung durch ausführbaren Code.
 
 ---
 

@@ -1,9 +1,10 @@
 # Implementation Plan — Numerology Analyst Agent
 
-> **Dokumenttyp:** Übersetzungsplan Master-Prompt → ausführbare Schritte
-> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
-> **Sprache:** Deutsch
-> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger Profilkern (0.1.4) ausstehend
+> **Dokumenttyp:** Übersetzungsplan Master-Prompt → ausführbare Schritte  
+> **Stand der Kernabschnitte:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)  
+> **Sprache:** Deutsch  
+> **Hinweis 2026-08-02:** Historischer Plan ab Foundation. Operativer post-RC1-Pfad:
+> `ROADMAP.md` (V1.6) und `docs/audit/current-state-numra-post-rc1-2026-08-02.md`.
 
 Dieses Dokument übersetzt den Master-Prompt in einen ausführbaren Plan.
 **Nicht** die Roadmap (Phasen liegen in `ROADMAP.md`) — sondern die

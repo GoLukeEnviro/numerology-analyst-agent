@@ -6,14 +6,19 @@
 
 ---
 
-## Status: Release-Kandidat v0.3.0-rc.1 – öffentlicher Launch extern gesperrt
+## Status: post-RC1 main (0.3.0rc1) – nächster Meilenstein v0.3.0-rc.2 – Launch extern gesperrt
 
-Der Release-Kandidat **`v0.3.0-rc.1`** ist getaggt und zeigt auf Commit
-`21ba56ed0d918cea7c60090bcc50937adc16269a`. Er umfasst die vollständige
+Der Release-Kandidat **`v0.3.0-rc.1`** ist getaggt und zeigt unveränderlich auf
+Commit `21ba56ed0d918cea7c60090bcc50937adc16269a`. Er umfasst die vollständige
 **Integration Closure** (Backend, Frontend, API, Container) und baut auf dem
 stabilen `0.1.3`-Life-Path-Vertrag auf, der um die getrennt versionierten
 Verträge `0.1.4` (vollständiges Kernprofil) und `0.1.5` (deterministische
 Zyklen) erweitert wurde.
+
+Der aktuelle `main` (u. a. PR **#34** Ship-Hygiene inkl. Issue-**#32**-Fix und
+Frontend-Coverage-CI-Gate, PR **#35** Audit-Konsolidierung) bleibt bei
+Paketversion **`0.3.0rc1`**. Alle weiteren Änderungen gehören zu
+**`v0.3.0-rc.2`**. Live-Status: `docs/audit/current-state-numra-post-rc1-2026-08-02.md`.
 
 Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
 vollständige Profil verwendet `profile-calculation-result-v3`; sein Hash umfasst
@@ -40,8 +45,9 @@ bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist
 (`NUMRA_LLM_ENABLED=false`).
 
 Das LLM-Staging ist technisch vorbereitet (`compose.llm-staging.yaml` als
-additives Override); ein echtes Betreiber-/Legal-/VPS-Staging bleibt davon
-getrennt und ist noch nicht durchgeführt.
+additives Override); ein echtes Betreiber-/Legal-/VPS-Staging, Backup-Restore
+und Rollback-Rehearsal sind **noch nicht real ausgeführt** (Skripte allein
+gelten nicht als Nachweis).
 
 > **Tag-Status:** `v0.3.0-rc.1` existiert und zeigt auf
 > `21ba56ed0d918cea7c60090bcc50937adc16269a`. Der Tag wird nicht bewegt; alle

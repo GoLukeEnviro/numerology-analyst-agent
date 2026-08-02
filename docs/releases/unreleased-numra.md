@@ -1,67 +1,45 @@
-# Numra — kumulativer, noch nicht getaggter Quellstand
+# Numra — unreleased / post-RC1 Arbeitspfad
 
-> **Stand:** 27. Juli 2026
-> **Quellintegration:** PR #10 auf `main`
-> **Release-Status:** kein neuer Tag; jüngstes veröffentlichtes Release ist `v0.1.3`
+> **Stand:** 2026-08-02  
+> **Aktueller `main`:** `5976ae2299059451461f634cb89f525151fda8b2`  
+> **Paketversion auf main:** `0.3.0rc1`  
+> **Letzter immutable Tag:** `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a`
 
-## Integrierter Umfang
+## Was bereits getaggt ist
 
-Der aktuelle `main`-Quellstand enthält kumulativ:
+- **`v0.3.0-rc.1`** — Integration Closure (siehe `docs/releases/v0.3.0-rc.1.md`).
+  Tag wird **nicht** bewegt.
 
-- vollständiges pythagoreisches Profil und deterministische Zyklen,
-- versioniertes Wissen, regelbasierte Interpretation und Safety-Gates,
-- zustandslose FastAPI und eine React/Vite/TypeScript-PWA,
-- lokale IndexedDB-Speicherung, Verschlüsselung, PDF und Offline-Lesezugriff,
-- optionalen, pseudonymisierten DeepSeek-Adapter,
-- einen gehärteten Docker-/Nginx-Stack mit Release-/Rollback-Automation.
+## Was seit RC1 auf main liegt (noch kein neuer Tag)
 
-Der anschließende Abschlussreview identifizierte Korrekturen, die vor einer
-Releasefreigabe ebenfalls in diesen unreleased Stand gehören:
+- PR **#34** — Ship-Hygiene: Issue #32 Determinismus-Fix, API-/Domain-Modularisierung,
+  Frontend-Coverage-CI-Gate, README/Release-Truth.
+- PR **#35** — Konsolidierung von Audit-, Governance- und OpenAPI-Artefakten.
 
-- serverseitige Neuberechnung und Integritätsprüfung aller an LLM-Endpunkte
-  gesendeten Profile,
-- `profile-calculation-result-v3` mit getrennten Core-/Active-Name-Reifezahlen,
-  Active-Trace, unveränderter lokaler V2-Lesbarkeit und kontrollierter
-  serverseitiger V2-Neuberechnung als kanonisches V3-Profil,
-- wiederherstellbare Voll-Exporte auch zwischen unterschiedlich geschützten
-  lokalen Bibliotheken; neue Archive tragen explizit `numra-export-v2`.
-  Geschützte V1-Innenpayloads lassen sich ausschließlich im ursprünglichen,
-  entsperrten Vault entschlüsseln und anschließend als V2 exportieren,
-- HMAC-gebundene Reportkontexte, erneute Reportvalidierung und PII-Sperren
-  für Rückfragen,
-- geräteweite Tageskontingente sowie eine gehärtete Proxy-Vertrauenskette,
-- echte Redis-Readiness und explizite Thinking-/Sampling-Provenienz,
-- automatisierte WCAG-2.2-AA-Prüfung des primären Browserflusses mit axe
-  sowie tastaturzugängliche mobile Ergebnistabellen,
-- der aktuelle Providervertrag `deepseek-v4-pro`.
+Diese Commits gehören zur **RC2-Vorbereitung**, nicht zu einer stillen
+RC1-Tag-Verschiebung.
 
-Der öffentliche Launch ist nicht Bestandteil dieser Quellintegration.
+## Nächste geplante Code-Releases
 
-## Warum noch kein Release-Tag existiert
+1. **`v0.3.0-rc.2`** — erst nach frischem Gate, privatem Staging, Restore,
+   Rollback und Committee `GO` / `GO_WITH_CONDITIONS`.
+2. **`v0.3.0`** (stable) — erst nach Closed Beta mit P0/P1 = 0.
 
-ADR 0006 schreibt die Reihenfolge `0.1.4` → `0.1.5` → `0.2.0` → `0.3.0`
-und eigenständige Release-Gates vor. PR #10 integrierte diese Arbeitsstände
-kumulativ in einem einzigen Quellmerge:
+## Explizit unreleased / blockiert
 
-- `pyproject.toml` trägt formal `0.1.5`,
-- der Funktionsumfang reicht bis in die geplanten Bereiche `0.2.0`/`0.3.0`,
-- die Zwischenstände wurden nicht jeweils separat auf `main` getaggt und
-  freigegeben.
+| Thema | Status |
+|-------|--------|
+| Privates Staging (bestätigter Host) | NOT_EXECUTED |
+| Backup create + structural validate + restore + re-smoke | NOT_EXECUTED |
+| Rollback-Rehearsal | NOT_EXECUTED |
+| Committee Review | NOT_STARTED |
+| Closed Beta | NOT_STARTED |
+| Öffentlicher Launch | NO_GO |
+| Research Preview (historisch „0.4.0“) | NOT_STARTED |
+| V2 Guided Masterplan Implementierung | DEFERRED (ADR 0016) |
 
-Eine nachträgliche Versionsbehauptung wäre deshalb willkürlich. Der nächste
-Tag wird erst festgelegt, wenn die Governance entweder die kumulative
-Releaseversion bestätigt oder eine nachvollziehbare neue Sequenz beschließt.
-Schema- und Methodenverträge werden dafür nicht unnötig verändert.
+## Hinweis zur alten „unreleased“-Erzählung
 
-## Externe Launch-Gates
-
-Folgende Werte und Freigaben fehlen weiterhin und werden nicht erfunden:
-
-- DeepSeek API-Key und rechtliche Drittlandtransfer-Freigabe,
-- bestätigtes VPS-Ziel,
-- Domain, DNS und TLS-Kontaktadresse,
-- Betreiberanschrift, Impressums- und Datenschutzkontakt,
-- ausdrückliche Entscheidung für einen öffentlichen Launch.
-
-Bis dahin bleibt DeepSeek standardmäßig deaktiviert und es erfolgt kein
-öffentliches Deployment.
+Frühere Fassungen dieses Dokuments beschrieben den Stand nach PR #10 mit
+formal `0.1.5` und ohne RC1-Tag. Das ist durch ADR 0015 und den Tag
+`v0.3.0-rc.1` **ersetzt**. Nicht als aktuellen main-Status zitieren.
