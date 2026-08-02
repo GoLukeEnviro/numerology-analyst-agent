@@ -1,9 +1,14 @@
 # Gap-Analyse — Numerology Analyst Agent
 
-> **Dokumenttyp:** Audit / Lückenanalyse
-> **Stand:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)
-> **Sprache:** Deutsch
-> **Status:** Foundation Release 0.1.3 abgeschlossen — Vollständiger Profilkern (0.1.4) ausstehend
+> **Dokumenttyp:** Audit / Lückenanalyse  
+> **Stand der Kernabschnitte:** 2026-07-26 (V1.2 — State Reconciliation nach v0.1.3)  
+> **Sprache:** Deutsch  
+> **Hinweis 2026-08-02:** Die Abschnitte unten sind die **historische** Gap-Matrix
+> ab Foundation `v0.1.3`. Der **aktuelle** post-RC1-Stand (RC1 getaggt, PR #34/#35
+> gemergt, Staging/Committee/Beta noch offen) steht in
+> `docs/audit/current-state-numra-post-rc1-2026-08-02.md` und im Statusblock von
+> `ROADMAP.md`. Historische „0.1.4 ausstehend“-Formulierungen hier nicht als
+> Live-Status lesen.
 
 ## 1. Historische Baseline (25. Juli 2026)
 

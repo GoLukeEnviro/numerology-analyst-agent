@@ -2,20 +2,32 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-07-28 (V1.5 — RC-Vorbereitung 0.3.0rc1)
+> **Stand:** 2026-08-02 (V1.6 — post-RC1 → RC2 / Stable 0.3.0)
 > **Sprache:** Deutsch
-> **Status:** PR #10 ist auf `main` integriert. Das jüngste getaggte Release
-> bleibt `v0.1.3`; die kumulativ integrierten Meilensteine 0.1.4, 0.1.5 sowie
-> große Teile von 0.2.0 und 0.3.0 sind bis zur geklärten SemVer-Zuordnung
-> unreleased. Nicht begonnen: 0.4.0 (Forschungsrahmen), MkDocs und
-> Committee-Prozess. Details: `docs/releases/unreleased-numra.md`.
 >
-> **RC-Normalisierung (28.07.2026, ADR 0015):** Der kumulierte `main`-Stand
-> wird als Release-Kandidat `0.3.0rc1` normalisiert. Die operative
-> Release-Sequenz ADR 0006 bleibt als Planungsfolie gültig; der kumulierte
-> Sonderfall wird durch `0.3.0rc1` aufgelöst, ohne nachträgliche
-> Zwischentags. Implementationsplan: `docs/plans/numra-0.3.0-rc1-implementation-plan.md`.
-> V2-Scope ist abgegrenzt (ADR 0016, `docs/product/numra-v2-guided-masterplan.md`).
+> **Aktueller Steuerungsstand (post-RC1):**
+>
+> | Kennzeichen | Wert |
+> |---|---|
+> | `origin/main` | `5976ae2299059451461f634cb89f525151fda8b2` |
+> | Paketversion | `0.3.0rc1` |
+> | Unveränderlicher Tag | `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a` |
+> | Ship-Hygiene | PR **#34** gemergt (Issue **#32** Determinismus-Fix, API-/Domain-Modularisierung, Frontend-Coverage-CI-Gate, README/Release-Truth) |
+> | Audit-Konsolidierung | PR **#35** gemergt (Audit-/Governance-/OpenAPI-Artefakte) |
+> | Offene PRs / Issues (Baseline 2026-08-02) | 0 / 0 |
+> | Frische lokale Gates auf `5976ae2` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
+> | Privates Staging / Backup-Restore / Rollback | **NOT_EXECUTED** (kein bestätigter Numra-Staging-Host) |
+> | Committee Review | **NOT_STARTED** (für RC2 erforderlich) |
+> | Nächster Code-Release | **v0.3.0-rc.2**, danach Closed Beta, dann **stable v0.3.0** |
+> | Öffentlicher Launch | **NO_GO** bis Launch-Checkliste vollständig |
+> | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 + Sequenz-ADR |
+>
+> Historische RC1-Vorbereitungsangaben (Stand 2026-07-28: „jüngstes Tag v0.1.3“,
+> „große Teile von 0.3.0 unreleased“) sind **überholt**. Der North-Star-Text der
+> Phasen 0–14 bleibt als Architektur- und Gate-Beschreibung gültig; der
+> **operative** Release-Status steht in der Statusmatrix und Release-Roadmap
+> unten. Details: `docs/audit/current-state-numra-post-rc1-2026-08-02.md`,
+> `docs/releases/unreleased-numra.md`.
 
 Diese Roadmap übersetzt die **15 Phasen (0–14)** des Master-Vertrags in eine
 strukturierte, nachvollziehbare Abfolge. Pro Phase: Ziel, Aufgaben, Gate,
@@ -54,34 +66,56 @@ Commit-Message, Abhängigkeiten, Aufwandsschätzung, Delegations-Empfehlung, Ris
 - Verbindlich für das Endprodukt V1.
 - Lücken bleiben für North-Star relevant (siehe `docs/audit/gap-analysis.md`).
 
-### Operative Release-Roadmap
+### Operative Release-Roadmap (post-RC1)
 
-| Release | Titel | Phasen | Ziel | Zeitrahmen |
-|----------|-------|--------|------|------------|
-| **0.1.3** | Contract Integrity | 0–4 | Governance + Tooling + Methodenspec + Rechenkern (Life Path A/B) + CLI-Basis + Tests | ✅ **LIVE auf `main`**, getaggt `v0.1.3` |
-| **0.1.4** | Complete Core Profile | 4 (erweitert) | Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-, Persönlichkeits-, Reifezahl + Namenssegmentierung + Y-Klassifikation | ✅ auf `main` integriert; kein eigener Tag |
-| **0.1.5** | Deterministic Cycles | 4 (erweitert) | Persönliche Jahre/Monate/Tage, Pinnacles, Challenges | ✅ auf `main` integriert; kein eigener Tag |
-| **0.2.0** | Knowledge and Interpretation | 5–6 | Wissensmodell + regelbasierte Interpretation + Safety Minimum | ✅ auf `main` integriert; kein eigener Tag |
-| **0.3.0** | Interfaces, Safety and Agent | 8, 9, 10 | Vollständiges Safety-Subsystem + FastAPI + CLI-Erweiterung + Agent | 🟡 PWA, FastAPI, Safety und Agent integriert; ursprüngliche CLI-/Milestone-Gates nicht vollständig als separates Release abgenommen |
-| **0.4.0** | Research Preview | 7 | Forschungs-/Meta-Analyse-Rahmen — **explizit als Preview, nicht als wissenschaftliche Validierung** | ❌ nicht begonnen |
+Diese Begriffe sind **nicht synonym**:
 
-**Zusätzlich außerhalb der ursprünglichen 15-Phasen-Zählung**, aber bereits
-auf `main` integriert: eine vollständige React/Vite/
-TypeScript-PWA (`apps/web`) mit lokaler IndexedDB-Bibliothek, Verschlüsselung,
-PDF-Export und Offline-Betrieb, sowie ein gehärteter Docker-/Nginx-
-Produktionsstack mit Release-, Rollback- und Backup-Automation
-(`docker/`, `deploy/`). Dokumentiert in ADRs `0007`–`0014`. Der öffentliche
-Launch bleibt bewusst gesperrt (siehe `docs/operations/launch-checklist.md`).
+| Begriff | Bedeutung |
+|---------|-----------|
+| **Code Release** | Tag + GitHub Release einer Version (rc / stable) |
+| **Private Staging** | Realer Deploy auf bestätigtem Host inkl. Health/Profile |
+| **Closed Beta** | Informierte Tester, Geräte-Matrix, keine öffentliche Kommunikation |
+| **Public Deployment** | Separater GO nach Launch-Checkliste |
+| **V2 Product Program** | Guided Masterplan — erst nach stable 0.3.0 + Sequenz-ADR |
+| **Research Preview** | Phase-7-Forschungsrahmen (historisch als 0.4.0 reserviert; Version für V2 nicht erfunden) |
+| **Platform Expansion** | Weitere Methodensysteme, Cloud, Mehrsprachigkeit — nach V2-Programm |
 
-**Phasen 11–14** (Evaluation, Doku, Committee, Release) werden in die
-jeweiligen Releases eingebettet, sie sind **kein eigener Release**. MkDocs-
-Dokumentation (Phase 2/12) und der Committee-Review-Prozess (Phase 13) sind
-bislang **nicht begonnen**.
+| Release | Titel | Phasen | Status |
+|----------|-------|--------|--------|
+| **0.1.3** | Contract Integrity | 0–4 (Kern) | ✅ getaggt `v0.1.3` |
+| **0.1.4 / 0.1.5** | Core Profile + Cycles | 4 erweitert | ✅ auf `main` (Entwicklungsmeilensteine, keine eigenen Tags) |
+| **0.2.x-Umfang** | Knowledge + Interpretation | 5–6 | ✅ auf `main` (in RC1 kumulativ) |
+| **0.3.0-rc.1** | Integration Closure | 8–11 (+ PWA/Docker) | ✅ getaggt `v0.3.0-rc.1` @ `21ba56ed…` (unveränderlich) |
+| **post-RC1 main** | Ship-Hygiene #34 + Audit #35 | — | ✅ `5976ae2`, Version bleibt `0.3.0rc1` |
+| **0.3.0-rc.2** | Staging-bewiesener RC | 12–14 (teilw.) | ❌ **nächster** Code-Release — nach Staging Restore/Rollback + Committee |
+| **0.3.0** (stable) | Stable nach Closed Beta | 14 | ❌ nach RC2 + Beta; P0/P1 = 0 |
+| **Research / V2** | Research Preview + Guided Masterplan | 7 + Produkt-V2 | ❌ **DEFERRED** — keine Implementierung vor stable 0.3.0 + ADR |
 
-→ Details zu 0.1.3 siehe `docs/releases/v0.1.3.md` und `docs/audit/repository-baseline-v0.1.3.md`.
-→ Details zu 0.1.4/0.1.5 siehe `docs/releases/v0.1.4.md` und
-`docs/releases/v0.1.5.md`. Diese Dateien beschreiben Entwicklungsmeilensteine,
-nicht veröffentlichte Tags.
+**PWA + Docker** sind außerhalb der ursprünglichen 15-Phasen-Zählung bereits auf
+`main` (ADRs `0007`–`0014`). Der öffentliche Launch bleibt gesperrt
+(`docs/operations/launch-checklist.md`).
+
+**Phasen-Statusmatrix (post-RC1, 2026-08-02):**
+
+| Phase | Titel | Zustand |
+|-------|-------|---------|
+| 0 | Reality Check | **COMPLETE** |
+| 1 | Governance | **COMPLETE** (Committee-Prozess als Artefakt-Flow noch **NOT_STARTED**) |
+| 2 | Tooling | **COMPLETE** (MkDocs Material optional/separat **PARTIAL**) |
+| 3 | Methodenspezifikation | **COMPLETE** |
+| 4 | Rechenkern | **COMPLETE** |
+| 5 | Wissensmodell | **COMPLETE** |
+| 6 | Interpretation | **COMPLETE** |
+| 7 | Forschung | **NOT_STARTED** |
+| 8 | Safety/Privacy | Code **COMPLETE**; externe Rechtsfreigabe **EXTERNALLY_BLOCKED** |
+| 9 | CLI/API/Berichte | **COMPLETE** |
+| 10 | Agent | **COMPLETE** (optional / fail-closed, LLM default off) |
+| 11 | Evaluation | **COMPLETE** nach frischem Gate auf `5976ae2` |
+| 12 | Dokumentation | **PARTIAL** (Betriebs-/Release-Nachweise und Staging-Bericht offen) |
+| 13 | Committee Review | **NOT_STARTED** |
+| 14 | Release | RC1 **COMPLETE**; RC2/Stable **NOT_STARTED** |
+
+→ RC1 Notes: `docs/releases/v0.3.0-rc.1.md`. Foundation: `docs/releases/v0.1.3.md`.
 
 ### Warum die Trennung
 

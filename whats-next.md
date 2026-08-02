@@ -1,74 +1,64 @@
-# Handoff – Numra post-RC1 Audit-Artefakte (korrigiert)
+# Handoff – Numra post-RC1 → RC2 / Stable 0.3.0
 
-**Erstellt/korrigiert:** 2026-08-02 (Konsolidierung vor Commit)
-**Sprache der User-Fortsetzung:** Deutsch
-
----
-
-## Aktueller Bezug (Messkontext, kein Live-Ticker)
-
-Dieses Handoff ersetzt veraltete Angaben aus einer früheren Session.
-**Maßgebliche Verifikation** (historische Messung des lokalen
-Implementierungsstands mit 6 Commits über RC1-`main`):
-
-- [`docs/audit/numra-post-implementation-verification-2026-08-02.md`](docs/audit/numra-post-implementation-verification-2026-08-02.md)
-
-**Nicht vorhanden / nicht referenzieren:**
-
-- `docs/audit/comprehensive-audit-2026-07-28.md` — diese Datei existiert
-  **nicht** im Repository und darf nicht als Deliverable behauptet werden.
-
-### SHA-Bezüge (mit Zeitpunkt)
-
-| Label | SHA | Wann / Bedeutung |
-|-------|-----|------------------|
-| RC1-Tag / Phase-0/1-Baseline | `21ba56ed0d918cea7c60090bcc50937adc16269a` | Messbasis Phase-0/1 und Dependency-Report (2026-08-02) |
-| Lokaler Tip der Post-Impl-Verifikation | `562b0df5c0555f15383aa68acd432838b97ffaaf` | Mess-HEAD der Verifikation: **6** Commits über `21ba56ed` |
-| `main` zum Zeitpunkt der Artefakt-Konsolidierung | `7820accec13036aa8d1b2db887896d85d6f7effb` | Nach Merge PR #34 (Ship-Hygiene); **nicht** mit den älteren Mess-SHA verwechseln |
-
-Die Verifikation dokumentiert u. a. zum Messzeitpunkt:
-
-- `ruff format` / `ruff check` / `mypy` **FAIL** auf dem lokalen Tip
-- **CODE_MERGE = NO_GO**, **RC2_TAG = NO_GO**, **PUBLIC_LAUNCH = NO_GO**
-- Issue #32 damals OPEN; Staging/Betrieb **NOT_EXECUTED**
-
-Spätere Merges (z. B. Ship-Hygiene PR #34) ändern den historischen
-Messbericht nicht. Für den **aktuellen** `main`-Stand immer frische Gates
-laufen, nicht nur diese Dateien lesen.
+**Aktualisiert:** 2026-08-02  
+**Sprache:** Deutsch
 
 ---
 
-## Zugehörige Artefakte (dieses Bundle)
+## Aktueller Bezug (Live-Steuerung)
 
-1. `docs/audit/phase-0-gate-2026-08-02.md` — historische Phase-0-Baseline
-2. `docs/audit/phase-1-gate-2026-08-02.md` — historische Phase-1-Gates (PASS nur auf `21ba56ed`)
-3. `docs/audit/dependency-report-2026-08-02.md` — pip-audit / pnpm audit auf Mess-SHA
-4. `docs/audit/numra-post-implementation-verification-2026-08-02.md` — Verdict + NO-GO
-5. `openapi/numra-v1-pre-refactor.json` — unveränderliche OpenAPI-Vergleichsbasis
-   (kanonisch bleibt `openapi/numra-v1.json`)
-6. dieses `whats-next.md`
+| Label | Wert |
+|-------|------|
+| `origin/main` | `5976ae2299059451461f634cb89f525151fda8b2` |
+| Version | `0.3.0rc1` |
+| Immutable Tag | `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a` |
+| PR #34 / #35 | gemergt (Ship-Hygiene + Audit-Konsolidierung) |
+| Issue #32 | geschlossen (über PR #34) |
+| Frische Gates 2026-08-02 | PASS (Python, Determinismus, Web+E2E, Container, CI/CodeQL) |
+| Staging / Restore / Rollback | **NOT_EXECUTED** |
+| Öffentlicher Launch | **NO_GO** |
+
+**Aktuelle Statusquelle:**  
+`docs/audit/current-state-numra-post-rc1-2026-08-02.md`  
+`ROADMAP.md` (Statusblock V1.6)
+
+**Historisch (nicht extrapolieren):**
+
+- `docs/audit/numra-post-implementation-verification-2026-08-02.md` — Messung vor Merge #34
+- `docs/audit/phase-0-gate-2026-08-02.md` / `phase-1-gate-2026-08-02.md` — RC1-Mess-SHA
+- `docs/audit/current-state-numra-rc.md` — RC-Vorbereitung 28.07.2026
 
 ---
 
-## Nächste sinnvolle Aufgaben (nach Merge dieses Doc-PRs)
+## Kritischer Pfad (Reihenfolge)
 
-1. Frische Quality Gates auf aktuellem `main` laufen lassen (nicht die
-   historischen PASS/FAIL-Werte extrapolieren).
-2. Offene Launch-/Staging-Themen aus
-   `docs/operations/launch-checklist.md` und der Verifikation (Abschnitt E/G).
-3. Bewusste Folgeentscheidungen zu Documented Debt (react-router HIGH,
-   WCAG-Kontrast E2E), ohne sie mit „outdated“ zu verwechseln.
+```text
+Repository-Wahrheit (docs) aktualisieren
+→ main frisch verifiziert (done 2026-08-02)
+→ private Staging-Abnahme (NUMRA_LLM_ENABLED=false)
+→ Backup create + validate + restore + re-smoke
+→ Rollback-Rehearsal (baseline → candidate → rollback → redeploy)
+→ Committee Review (5 Perspektiven)
+→ release/v0.3.0-rc.2 taggen + GitHub-Prerelease
+→ Closed Beta (P0/P1 = 0)
+→ stable v0.3.0
+→ Public Deploy separat GO|NO_GO
+→ ADR Post-0.3 Sequenz (V2 erst danach)
+```
 
----
+## Nächste sinnvolle einzelne Maßnahme
 
-## Originaler Handoff-Kontext (gekürzt, nur Historie)
+1. **[P1]** Betreiber bestätigt **einen** Numra-Staging-SSH-Alias; Preflight
+   (`deploy/scripts/preflight.sh`) und deterministisches Deploy des
+   aktuellen main-SHA.
+2. Parallel (max. 3 Streams, nur nach grünem main): Security-Entscheidung
+   zu `react-router` GHSA-qwww-vcr4-c8h2, a11y/Geräte-Matrix, Ops-Readiness-
+   Doku — ohne Feature-Scope und ohne V2.
 
-Frühere Agent-Sessions produzierten Diagnose- und Audit-Arbeit rund um RC1.
-Ein früher Handoff verwies fälschlich auf
-`docs/audit/comprehensive-audit-2026-07-28.md` und auf veraltete HEAD-/Tag-
-Angaben (u. a. „kein v0.3.0-rc.1-Tag“). Das ist **überholt**:
+## Harte Grenzen
 
-- Tag `v0.3.0-rc.1` existiert und zeigte zum Phase-0-Messzeitpunkt auf `21ba56ed`.
-- Die belastbare Nachprüfung des lokalen Nacharbeitsstands ist die
-  Post-Implementation-Verifikation (siehe oben), nicht eine nicht
-  existierende Comprehensive-Audit-Datei vom 2026-07-28.
+- Kein Direct-/Force-Push auf `main`
+- Tag `v0.3.0-rc.1` niemals bewegen
+- Keine Secrets/PII in Git, Issues, Logs
+- Keine V2-/Research-/Platform-Implementierung vor stable 0.3.0 + ADR
+- Skript vorhanden ≠ ausgeführt
