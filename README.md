@@ -6,22 +6,22 @@
 
 ---
 
-## Status: Produktionskandidat – öffentlicher Launch extern gesperrt
+## Status: Release-Kandidat v0.3.0-rc.1 – öffentlicher Launch extern gesperrt
 
-Auf dem stabilen `0.1.3`-Life-Path-Vertrag bauen zwei neue, getrennt
-versionierte Verträge auf:
-
-- `0.1.4`: Geburtstags-, Einstellungs-, Ausdrucks-, Seelenstreben-,
-  Persönlichkeits- und Reifezahl, Namenssegmente, aktiver Name und Y-Varianten.
-- `0.1.5`: persönliche Jahre, Monate und Tage sowie vier Pinnacles und Challenges.
+Der Release-Kandidat **`v0.3.0-rc.1`** ist getaggt und zeigt auf Commit
+`21ba56ed0d918cea7c60090bcc50937adc16269a`. Er umfasst die vollständige
+**Integration Closure** (Backend, Frontend, API, Container) und baut auf dem
+stabilen `0.1.3`-Life-Path-Vertrag auf, der um die getrennt versionierten
+Verträge `0.1.4` (vollständiges Kernprofil) und `0.1.5` (deterministische
+Zyklen) erweitert wurde.
 
 Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
 vollständige Profil verwendet `profile-calculation-result-v3`; sein Hash umfasst
 alle fachlichen Eingaben einschließlich `as_of_date`, Policy, Resultate und Trace.
 `consent_given` bleibt ausdrücklich ausgeschlossen.
 
-Der aktuelle `main`-Quellstand enthält seit dem Merge von PR #10 den
-vollständigen vertikalen Produktschnitt:
+Der aktuelle `main`-Quellstand enthält den vollständigen vertikalen
+Produktschnitt:
 
 - React/Vite/TypeScript-PWA mit Dark/Light Theme und Offline-Lesezugriff
 - lokale Profile, Berichte, Rückfragen und Notizen in IndexedDB
@@ -36,12 +36,17 @@ vollständigen vertikalen Produktschnitt:
 Der öffentliche Launch bleibt gesperrt, bis ein VPS eindeutig zugeordnet,
 Domain und DNS bereitgestellt, Betreiberangaben ergänzt, HTTPS aktiviert und
 die rechtlichen Launch-Gates bestätigt wurden. Die deterministische Anwendung
-bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist.
+bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist
+(`NUMRA_LLM_ENABLED=false`).
 
-> **RC-Vorbereitung (seit 28.07.2026):** Der kumulierte `main`-Stand wird als
-> Release-Kandidat `0.3.0rc1` normalisiert (ADR 0015), ohne die ADR-0006-Folge
-> nachträglich zu verfälschen. Der eigentliche Version-Bump erfolgt erst nach
-> erfolgreichem privatem Staging-Gate. Plan:
+Das LLM-Staging ist technisch vorbereitet (`compose.llm-staging.yaml` als
+additives Override); ein echtes Betreiber-/Legal-/VPS-Staging bleibt davon
+getrennt und ist noch nicht durchgeführt.
+
+> **Tag-Status:** `v0.3.0-rc.1` existiert und zeigt auf
+> `21ba56ed0d918cea7c60090bcc50937adc16269a`. Der Tag wird nicht bewegt; alle
+> neuen Änderungen gehören zu `v0.3.0-rc.2`. Ausführliche Release Notes:
+> `docs/releases/v0.3.0-rc.1.md`; Plan:
 > `docs/plans/numra-0.3.0-rc1-implementation-plan.md`; IST-Bestandsaufnahme:
 > `docs/audit/current-state-numra-rc.md`; V2-Grenze: ADR 0016.
 
@@ -49,6 +54,12 @@ bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist.
 - **Source of Truth (intern):** `docs/governance/master-implementation-contract.md`
 - **Methoden-ADRs:** `docs/adr/0001`–`docs/adr/0004` (bindend)
 - **Roadmap:** `ROADMAP.md` (15 Phasen, 0–14, mit Gates)
+
+> **Screenshot:** Der Profil-Dashboard-Screenshot
+> (`docs/assets/numra-profile-dashboard-dark.png`, Dark Theme, synthetisches
+> Golden-Profil) wird beim nächsten Deployment aus dem finalen Build erzeugt
+> und hier eingebunden. Bis dahin wird bewusst kein Platzhalter-Bild
+> veröffentlicht.
 
 ---
 
@@ -85,6 +96,12 @@ Die folgenden Systeme sind ausdrücklich **ausgeschlossen** aus Version 1 und we
 - Astrologie
 - **Human Design**
 - Enneagramm
+
+Der **V2 Guided Masterplan** (`docs/product/numra-v2-guided-masterplan.md`) ist
+eine **Produktspezifikation**, kein vollständig implementiertes Feature (ADR
+0016). Forschungs- und Plattformerweiterungen (Methodensysteme,
+Mehrsprachigkeit, Cloud, Agenten-Workflows) sind **Zukunftsmodule** und in
+`docs/roadmaps/numra-platform-expansion-roadmap.md` dokumentiert.
 
 ---
 
@@ -284,35 +301,30 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-> **Stand:** 2026-07-27. Zwei Zustände sind zu unterscheiden: Der aktuelle
-> Quellstand ist über PR #10 auf `main` integriert; das jüngste veröffentlichte
-> und getaggte Release bleibt `v0.1.3`. Der kumulative Numra-Stand ist deshalb
-> bis zur geklärten SemVer-Zuordnung ausdrücklich **unreleased**.
+> **Stand:** 2026-08-02. Der Release-Kandidat `v0.3.0-rc.1` ist getaggt
+> (`21ba56ed0d918cea7c60090bcc50937adc16269a`) und umfasst die vollständige
+> Integration Closure. Der öffentliche Launch bleibt extern gesperrt.
 
 | Komponente | Status |
 | --- | --- |
 | Governance-Grundlagen | ✅ vorhanden und bindend |
-| Jüngstes getaggtes Release `v0.1.3` | ✅ veröffentlicht; Life Path A/B und Contract Integrity |
-| Vollständiges Profil und deterministische Zyklen | ✅ auf `main` integriert |
-| Wissensmodell, Interpretation und Safety-Gates | ✅ auf `main` integriert |
-| FastAPI und optionaler DeepSeek-Adapter | ✅ auf `main` integriert; LLM standardmäßig deaktiviert |
-| React/Vite/TypeScript-PWA | ✅ auf `main` integriert |
-| Gehärteter Docker-/Nginx-Stack | ✅ auf `main` integriert |
-| Kumulativer Numra-Release | ⏸️ Tag bewusst zurückgestellt; siehe `docs/releases/unreleased-numra.md` |
-| Forschungs-/Meta-Analyse-Rahmen (0.4.0) | ❌ nicht begonnen |
-| MkDocs-Dokumentation und Committee-Prozess | ❌ nicht begonnen |
+| Getaggtes Release `v0.1.3` | ✅ veröffentlicht; Life Path A/B und Contract Integrity |
+| Vollständiges Profil und deterministische Zyklen | ✅ in `v0.3.0-rc.1` enthalten |
+| Wissensmodell, Interpretation und Safety-Gates | ✅ in `v0.3.0-rc.1` enthalten |
+| FastAPI und optionaler DeepSeek-Adapter | ✅ in `v0.3.0-rc.1` enthalten; LLM standardmäßig deaktiviert |
+| React/Vite/TypeScript-PWA | ✅ in `v0.3.0-rc.1` enthalten |
+| Gehärteter Docker-/Nginx-Stack | ✅ in `v0.3.0-rc.1` enthalten |
+| Integration Closure (Backend, Frontend, API, Container) | ✅ abgeschlossen (PRs #26–#31) |
+| Release-Kandidat `v0.3.0-rc.1` | ✅ getaggt auf `21ba56e`; Details: `docs/releases/v0.3.0-rc.1.md` |
+| LLM-Staging | 🟡 technisch vorbereitet (`compose.llm-staging.yaml`); echtes Betreiber-/Legal-/VPS-Staging separat und noch offen |
+| V2 Guided Masterplan | 📄 Produktspezifikation, nicht implementiert (`docs/product/numra-v2-guided-masterplan.md`, ADR 0016) |
+| Forschungs-/Plattformerweiterungen | 📄 Zukunftsmodule (`docs/roadmaps/numra-platform-expansion-roadmap.md`) |
 | Öffentlicher Launch | 🔒 bis VPS, Domain, TLS, Betreiberangaben und Rechtsfreigaben bestätigt sind |
 
-**Versionshinweis:** `pyproject.toml` steht formal auf `0.1.5`, der integrierte
-Funktionsumfang reicht jedoch kumulativ bis in die geplanten Bereiche `0.2.0`
-und `0.3.0`. ADR 0006 verlangt streng sequenzielle Releases. Deshalb wird kein
-nachträglicher Tag erfunden; die konkrete Release-Zuordnung bleibt
-dokumentiert zurückgestellt.
-
-PR #10 wurde mit allen vier CI-Jobs grün gemergt. Frische lokale und
-post-merge CI-Ergebnisse werden im Abschlussaudit dokumentiert. Die Dateien
-`docs/releases/v0.1.4.md` und `v0.1.5.md` beschreiben Entwicklungsmeilensteine,
-aber keine veröffentlichten Tags.
+**Versionshinweis:** `pyproject.toml` steht formal auf `0.1.5`; der kumulierte
+Funktionsumfang ist über ADR 0015 als Release-Kandidat `v0.3.0-rc.1`
+normalisiert und getaggt. Die Dateien `docs/releases/v0.1.4.md` und
+`v0.1.5.md` beschreiben Entwicklungsmeilensteine, keine veröffentlichten Tags.
 
 ---
 
@@ -324,7 +336,8 @@ aber keine veröffentlichten Tags.
 | `ROADMAP.md`                                        | 15 Phasen (0–14) mit Gates, Commits, Aufwand, Delegation              |
 | `docs/v1-minimal-scope.md`                          | Scope von Release 0.1.0 Deterministic Core (vorhanden, bindend)       |
 | `docs/governance/master-implementation-contract.md` | Normativer Master-Vertrag (vorhanden, bindend)                        |
-| `docs/adr/`                                         | 4 ADRs zu Methodenentscheidungen (vorhanden, bindend)                 |
+| `docs/adr/`                                         | ADRs zu Methoden-, Architektur- und Release-Entscheidungen (bindend)  |
+| `docs/releases/`                                    | Ausführliche Release Notes (SSOT für Releases)                        |
 | `docs/audit/`                                       | Repository-Baseline, Gap-Analyse, Übersetzungsplan                    |
 | `docs/field/`                                       | Fachgebiet, Claim-Taxonomie, wissenschaftliche Positionierung (geplant) |
 
@@ -340,7 +353,10 @@ Agentenverträge: siehe `.github/agents/`.
 
 ## Beitragsweise
 
-Beitragsrichtlinien werden in einer späteren Phase in `CONTRIBUTING.md` veröffentlicht. Bis dahin: keine Direktpushes auf `main`, kein Force-Push, kein `--no-verify`, Commits auf Deutsch mit Fokus auf das Warum.
+Beiträge sind willkommen. Bitte [`CONTRIBUTING.md`](CONTRIBUTING.md) lesen —
+dort stehen Setup, Branch-/PR-Regeln, Quality Gates, Commit-Konventionen sowie
+die Security- und Datenschutzgrenzen. Grundregeln: keine Direktpushes auf
+`main`, kein Force-Push, kein `--no-verify`.
 
 ---
 

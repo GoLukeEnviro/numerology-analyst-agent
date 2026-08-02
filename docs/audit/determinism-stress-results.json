@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-08-02T17:25:52.353964+00:00",
+  "python": "3.12.11",
+  "platform": "win32",
+  "isolated_runs": {
+    "runs": 100,
+    "passes": 100,
+    "failures": 0,
+    "failure_details": []
+  },
+  "full_suite_runs": {
+    "runs": 20,
+    "passes": 20,
+    "failures": 0,
+    "failure_details": []
+  },
+  "hash_seed_matrix": {
+    "0": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 4.05s\n"
+    },
+    "1": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 4.26s\n"
+    },
+    "42": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 3.70s\n"
+    },
+    "123": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 3.89s\n"
+    },
+    "999": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 3.94s\n"
+    },
+    "random": {
+      "returncode": 0,
+      "passed": true,
+      "output_tail": "................                                                         [100%]\n16 passed in 4.06s\n"
+    }
+  }
+}

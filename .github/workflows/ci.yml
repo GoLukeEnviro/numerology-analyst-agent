@@ -151,13 +151,14 @@ jobs:
       - name: Typecheck
         run: pnpm web:typecheck
 
-      - name: Unit tests
-        run: pnpm web:test
+      - name: Unit tests with coverage
+        # Generates coverage/coverage-summary.json for check-build thresholds.
+        run: pnpm web:coverage
 
       - name: Production build
         run: pnpm web:build
 
-      - name: Verify PWA cache policy and JavaScript budget
+      - name: Verify PWA cache policy, JavaScript budget, and coverage gate
         run: pnpm web:check-build
 
       - name: Install Playwright browsers

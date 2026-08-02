@@ -1,20 +1,10 @@
-"""Compatibility facade — re-exports all public domain models.
+"""Private model submodules — fachliche Cluster der Domain-Modelle.
 
-This module is the stable public surface of the domain model layer.  The
-actual model definitions live in the private ``numerology_domain._models``
-submodules (fachliche Cluster: input, calculation, cycles, profile).
-
-Existing imports keep working unchanged::
-
-    from numerology_domain.models import PersonInput  # stable
-    from numerology_domain import PersonInput         # stable (via __init__.py)
-
-No schema, behaviour or serialization contract changes are introduced by
-this split — ``model_dump(mode="json")`` and ``model_validate()`` behave
-identically.
+Dieses Paket ist bewusst privat (``_models``): Der stabile öffentliche
+Einstiegspunkt ist ``numerology_domain.models`` (Compatibility Facade).
+Direkte Imports aus ``numerology_domain._models`` sind für interne
+Zwecke erlaubt, aber nicht Teil des öffentlichen Vertrags.
 """
-
-from __future__ import annotations
 
 from numerology_domain._models.calculation import (
     CALCULATION_RESULT_SCHEMA_VERSION,
@@ -56,9 +46,6 @@ from numerology_domain._models.profile import (
     ProfileCalculationResultV4,
 )
 
-# __all__ is grouped thematically (Constants/Models) for readability; the
-# grouping is intentionally documentative, hence RUF022 is suppressed on the
-# assignment line below.
 __all__ = [  # noqa: RUF022
     # Constants
     "CALCULATION_RESULT_SCHEMA_VERSION",

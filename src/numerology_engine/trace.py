@@ -42,6 +42,13 @@ def _canonicalize(value: object) -> object:
     * lists and tuples are recursively canonicalized element-wise.
     * All other values pass through unchanged.
 
+    Unordered collections (set/frozenset) are sorted by their canonical
+    JSON representation, NOT by direct Python comparison.  Direct
+    ``sorted()`` on heterogeneous elements (e.g. ``{1, 'a', 2.5}``) raises
+    ``TypeError: '<' not supported between instances of 'str' and 'float'``
+    (reproducible counter-evidence, Issue #32).  Sorting by canonical JSON
+    is total, deterministic and type-agnostic.
+
     This guarantees that two semantically identical payloads produce
     byte-identical JSON regardless of Python's hash seed or insertion
     order of unordered collections.
@@ -52,7 +59,15 @@ def _canonicalize(value: object) -> object:
             for key, item in sorted(value.items(), key=lambda pair: str(pair[0]))
         }
     if isinstance(value, set | frozenset):
-        return sorted(_canonicalize(item) for item in value)  # type: ignore[type-var]
+        # Härtung (Issue #32): erst kanonisches JSON je Element, dann sortieren.
+        # Vermeidet TypeError bei heterogenen Elementen (int/str/float/...).
+        canonical_items = [_canonicalize(item) for item in value]
+        return sorted(
+            canonical_items,
+            key=lambda item: _canonical_json(item)
+            if isinstance(item, dict)
+            else json.dumps(item, sort_keys=True, ensure_ascii=False, separators=(",", ":")),
+        )
     if isinstance(value, list):
         return [_canonicalize(item) for item in value]
     if isinstance(value, tuple):

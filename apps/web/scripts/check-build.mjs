@@ -35,3 +35,53 @@ if (serviceWorker.includes("/api/v1/") || serviceWorker.includes('method:"POST"'
 }
 
 console.log(`Build-Budget erfüllt: initial ${initialGzip} / ${initialBudget} Bytes gzip.`);
+
+// Coverage-Gate: validiert das json-summary-Artefakt aus `vitest run --coverage`
+// gegen die gemessene Baseline vom 2026-08-02 (docs/audit/web-coverage-baseline-2026-08-02.md).
+// Die Schwellenwerte sind identisch zu `coverage.thresholds` in vite.config.ts.
+const coverageThresholds = {
+  statements: 69.48,
+  branches: 59.39,
+  functions: 62,
+  lines: 73.95,
+};
+
+const coverageSummaryPath = path.resolve("coverage", "coverage-summary.json");
+let coverageSummary;
+try {
+  coverageSummary = JSON.parse(await readFile(coverageSummaryPath, "utf8"));
+} catch {
+  throw new Error(
+    `Coverage-Summary fehlt unter ${coverageSummaryPath}. ` +
+      "Bitte zuerst `pnpm web:coverage` ausführen.",
+  );
+}
+
+const total = coverageSummary.total;
+if (!total) throw new Error("Coverage-Summary enthält keinen Gesamtwert.");
+
+const pct = (key) => Number(total[key]?.pct ?? NaN);
+const measured = {
+  statements: pct("statements"),
+  branches: pct("branches"),
+  functions: pct("functions"),
+  lines: pct("lines"),
+};
+
+for (const key of Object.keys(coverageThresholds)) {
+  const threshold = coverageThresholds[key];
+  const value = measured[key];
+  if (!Number.isFinite(value)) {
+    throw new Error(`Coverage-Metrik "${key}" fehlt in der Summary.`);
+  }
+  if (value < threshold) {
+    throw new Error(
+      `Coverage-Gate verletzt: ${key} ${value}% < Schwellenwert ${threshold}%.`,
+    );
+  }
+}
+
+console.log(
+  `Coverage-Gate erfüllt: Statements ${measured.statements}%, Branches ${measured.branches}%, ` +
+    `Functions ${measured.functions}%, Lines ${measured.lines}%.`,
+);
