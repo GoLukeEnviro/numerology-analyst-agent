@@ -140,6 +140,7 @@ markers = [
     "integration: tests across package or HTTP boundaries",
     "property: hypothesis property-based tests",
     "unit: unit tests for isolated components",
+    "slow: subprocess-based determinism matrix tests (Issue #32)",
 ]
 
 [tool.coverage.run]
