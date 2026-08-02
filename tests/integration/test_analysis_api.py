@@ -106,7 +106,7 @@ async def disabled_client() -> AsyncIterator[AsyncClient]:
 async def enabled_state() -> AsyncIterator[tuple[AsyncClient, MemoryLimiter]]:
     limiter = MemoryLimiter()
     # Mock the runtime gate to always pass in tests
-    with patch("numerology_api.app.verify_runtime_gates") as mock_gate:
+    with patch("numerology_safety.runtime_gate.verify_runtime_gates") as mock_gate:
         mock_gate.return_value = MagicMock(all_passed=True, platform_skipped=True)
         app = create_app(
             ApiSettings(
@@ -166,7 +166,7 @@ async def test_ready_reports_configured_llm_dependencies(
 async def test_ready_fails_when_the_rate_limit_store_is_unavailable() -> None:
     from unittest.mock import patch
 
-    with patch("numerology_api.app.verify_runtime_gates") as mock_gates:
+    with patch("numerology_safety.runtime_gate.verify_runtime_gates") as mock_gates:
         mock_gates.return_value = None
         app = create_app(
             ApiSettings(

@@ -88,5 +88,25 @@ export default defineConfig({
         exclude: ["e2e/**", "node_modules/**"],
         globals: true,
         setupFiles: "./src/test/setup.ts",
+        coverage: {
+            provider: "v8",
+            reporter: ["text", "text-summary", "lcov", "json-summary"],
+            reportsDirectory: "./coverage",
+            include: ["src/**/*.{ts,tsx}"],
+            exclude: [
+                "src/api/schema.d.ts",
+                "src/vite-env.d.ts",
+                "src/test/**",
+                "src/**/*.test.{ts,tsx}",
+            ],
+            // Thresholds: gemessene Baseline vom 2026-08-02
+            // (docs/audit/web-coverage-baseline-2026-08-02.md)
+            thresholds: {
+                statements: 69.48,
+                branches: 59.39,
+                functions: 62,
+                lines: 73.95,
+            },
+        },
     },
 });
