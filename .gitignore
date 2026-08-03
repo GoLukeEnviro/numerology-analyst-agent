@@ -52,3 +52,4 @@ dist/
 Thumbs.db
 .venv-*/
 *.whl
+Claude Setup.exe
