@@ -1,0 +1,1371 @@
+# Aktueller GitHub-Stand
+
+## Was jetzt erledigt ist
+
+`main` steht aktuell auf:
+
+```text
+5976ae2299059451461f634cb89f525151fda8b2
+```
+
+PR **#34** wurde gemergt und hat die eigentliche Ship-Hygiene abgeschlossen:
+
+- Determinismus-Flake aus Issue #32 behoben
+- Root Cause und Regressionstests integriert
+- API modularisiert
+- Domain-Modelle modularisiert
+- Frontend-Coverage-Gate in CI integriert
+- README und Release-Truth korrigiert
+- Ruff, Mypy, Tests und Frontend-Gates erfolgreich ausgeführt
+
+PR **#35** wurde anschließend gemergt und hat die sechs zurückgebliebenen Audit-, Governance- und OpenAPI-Dateien sauber in drei Commits aufgenommen. Der Merge-Commit ist der aktuelle `main`-Stand.
+
+Aktuell beobachtet:
+
+```text
+OPEN_PULL_REQUESTS=0
+OPEN_ISSUES=0
+MAIN_SHA=5976ae2299059451461f634cb89f525151fda8b2
+CURRENT_CODE_VERSION=0.3.0rc1
+LATEST_IMMUTABLE_TAG=v0.3.0-rc.1
+```
+
+Die PR-Heads von #34 und #35 hatten jeweils erfolgreiche CI- und CodeQL-Läufe. Der letzte CI-Lauf umfasste Python-Quality-Gates, Frontend-Tests mit Coverage, Browser-E2E, Package-Smoke sowie Container- und LLM-Runtime-Gate-Smoke.
+
+## Was jetzt wirklich als Nächstes kommt
+
+Der Code- und Integrationszustand ist nicht mehr der Hauptblocker. Der nächste kritische Pfad ist:
+
+```text
+Repository-Wahrheit aktualisieren
+→ aktuellen main frisch verifizieren
+→ private Staging-Abnahme
+→ Backup/Restore und Rollback real durchführen
+→ RC2 vorbereiten und taggen
+→ geschlossene Beta
+→ stabilen 0.3.0-Release abnehmen
+→ erst danach V2 Guided Masterplan beginnen
+```
+
+Die vorhandene `ROADMAP.md` ist in ihrem Statusblock deutlich veraltet. Sie nennt noch `v0.1.3` als jüngstes Release, behandelt Teile von 0.3.0 als unvollständig und bezeichnet MkDocs sowie Committee Review als nicht begonnen. Gleichzeitig enthält sie weiterhin die langfristigen Phasen 11–14 mit Evaluation, Dokumentation, Committee Review und Release, die für die stabile Freigabe noch sauber abgeglichen werden müssen.
+
+Die README ist aktueller: `v0.3.0-rc.1` bleibt unveränderlich, alle Änderungen danach gehören zu RC2, und echtes Betreiber-/Legal-/VPS-Staging wurde noch nicht durchgeführt.
+
+Für den öffentlichen Launch fehlen weiterhin reale Betreiber-, Rechts-, DNS-, TLS-, Backup-/Restore-, Rollback- und Beta-Nachweise.
+
+Der Guided Masterplan ist ausdrücklich nur eine spätere Produktspezifikation. Er darf erst nach einem stabil freigegebenen `0.3.0` als separates Programm mit eigenen ADRs, eigener Roadmap und eigener Release-Sequenz begonnen werden. Plattformmodule wie weitere Numerologiesysteme, Cloud, Mehrsprachigkeit oder fortgeschrittene Agenten-Workflows liegen nochmals dahinter.
+
+---
+
+# Orchestrierungs-Roadmap-Prompt
+
+````text
+# GOAL: Numra von post-RC1-main über RC2 zur stabilen 0.3.0-Freigabe orchestrieren
+
+## Rolle
+
+Du bist der verantwortliche Lead Orchestrator, Release Engineer,
+Governance Maintainer und Staging Coordinator für:
+
+Repository:
+GoLukeEnviro/numerology-analyst-agent
+
+Lokaler Pfad:
+e:\VS-code-Projekte-5.2025\numerology-analyst-agent
+
+Default Branch:
+main
+
+Zu Beginn erwarteter Remote-Stand:
+5976ae2299059451461f634cb89f525151fda8b2
+
+Aktuelle Paketversion:
+0.3.0rc1
+
+Bestehender unveränderlicher Tag:
+v0.3.0-rc.1
+→ 21ba56ed0d918cea7c60090bcc50937adc16269a
+
+## Gesamtziel
+
+Führe das Projekt kontrolliert durch folgende Zustände:
+
+1. Repository-Wahrheit und Roadmap vollständig aktualisiert
+2. aktueller main-Stand frisch und reproduzierbar verifiziert
+3. verbliebene Release- und Launch-Risiken klassifiziert
+4. private Staging-Abnahme tatsächlich durchgeführt
+5. Backup-Wiederherstellung und Rollback real bewiesen
+6. Numra v0.3.0-rc.2 als GitHub-Prerelease veröffentlicht
+7. geschlossene Beta und Committee Review abgeschlossen
+8. stabiler Release v0.3.0 veröffentlicht
+9. öffentliche Bereitstellung separat freigegeben oder bewusst blockiert
+10. danach ein separates V2-Guided-Masterplan-Programm vorbereitet
+
+Du bist für fokussierte Pull Requests mergeberechtigt, sobald:
+
+- der Branch auf aktuellem main basiert,
+- alle Required Checks grün sind,
+- keine offenen Reviewthreads bestehen,
+- der exakt geprüfte Head-SHA verwendet wird,
+- kein Stop-Kriterium verletzt ist.
+
+Kein Human-Loop ist für normale, grüne Repository-Merges erforderlich.
+
+Nicht automatisch freigegeben sind:
+
+- öffentliche Produktionsbereitstellung,
+- Erzeugen echter Rechtsfreigabe-Marker,
+- Eintragen erfundener Betreiberangaben,
+- Verwendung unbekannter oder unbestätigter Secrets,
+- Verschieben bestehender Tags.
+
+---
+
+# VERIFIZIERTER AUSGANGSSTAND
+
+Behandle folgende Punkte als erwartete Ausgangslage, verifiziere sie aber frisch:
+
+```text
+EXPECTED_MAIN_SHA=5976ae2299059451461f634cb89f525151fda8b2
+EXPECTED_OPEN_PRS=0
+EXPECTED_OPEN_ISSUES=0
+EXPECTED_VERSION_PYTHON=0.3.0rc1
+EXPECTED_TAG=v0.3.0-rc.1
+EXPECTED_TAG_SHA=21ba56ed0d918cea7c60090bcc50937adc16269a
+````
+
+Bereits abgeschlossen:
+
+- RC1 Integration Closure
+- kanonischer pythagoreischer V2-Berechnungsvertrag
+- vollständiger deterministischer Profilkern
+- Zyklen
+- Wissensmodell de-v2
+- Interpretationsmodell
+- optionale DeepSeek-Schicht
+- Safety- und Runtime-Gates
+- React-PWA
+- lokale Speicherung und Verschlüsselung
+- FastAPI
+- Docker-/Nginx-Stack
+- Issue #32 Determinismus-Fix
+- API-Modularisierung
+- Domain-Modularisierung
+- Frontend-Coverage-Gate in CI
+- Audit-Reconciliation
+- Audit-/Governance-Artefakt-Konsolidierung
+
+Noch nicht als reale Betriebsleistung bewiesen:
+
+- privates Staging auf einem bestätigten Host
+- echter Provider-Smoke
+- reales Konfigurationsbackup
+- echte Wiederherstellung
+- reales Rollback-Rehearsal
+- geschlossene Beta
+- Committee Release Review
+- stabiler v0.3.0-Release
+- öffentlicher Launch
+
+---
+
+# GLOBALE ARBEITSREGELN
+
+1. Kein Direct Push auf main.
+2. Kein Force-Push.
+3. Bestehenden Tag v0.3.0-rc.1 niemals verändern.
+4. Keine Secrets in Git, Issues, Logs, PRs oder Auditberichten.
+5. Keine echten personenbezogenen Daten in Fixtures oder Screenshots.
+6. Kein neuer Feature-Scope vor Abschluss der Release-Closure.
+7. Keine V2-Guided-Masterplan-Implementierung vor stabilem v0.3.0.
+8. Keine Forschung, Cloud, Mehrsprachigkeit oder neue Methodensysteme nebenbei.
+9. Maximal drei parallele Arbeitsströme.
+10. Jeder Stream besitzt einen eigenen Branch und PR.
+11. Fachliche Änderungen, Refactoring und Release-Metadaten nicht vermischen.
+12. Vor jedem Merge Branch auf aktuellen main-Stand bringen.
+13. Merge nur gegen exakt geprüften Head-SHA.
+14. Jeder technische Befund benötigt Datei-, Test- oder Laufzeitevidenz.
+15. Historische Auditwerte niemals als aktuellen main-Status ausgeben.
+16. Skript vorhanden bedeutet nicht, dass das Skript real ausgeführt wurde.
+17. Backup vorhanden bedeutet nicht, dass Restore funktioniert.
+18. Rollback-Skript vorhanden bedeutet nicht, dass Rollback geprobt wurde.
+
+---
+
+# PHASE 0 – LOKALEN UND REMOTE-ZUSTAND SYNCHRONISIEREN
+
+## Ziel
+
+Ein sauberer lokaler main-Stand, der exakt origin/main entspricht.
+
+## Schritte
+
+```powershell
+Set-Location 'e:\VS-code-Projekte-5.2025\numerology-analyst-agent'
+
+git fetch --prune --tags
+git branch --show-current
+git status --short
+git status --porcelain=v2
+git rev-parse HEAD
+git rev-parse origin/main
+git log --oneline --decorate -20
+git worktree list --porcelain
+
+gh repo view GoLukeEnviro/numerology-analyst-agent
+gh pr list --state open
+gh issue list --state open
+gh run list --limit 20
+gh release list
+```
+
+Wenn der Working Tree nicht sauber ist:
+
+1. Änderungen inventarisieren.
+2. Patch und unversionierte Dateien außerhalb des Repositories sichern.
+3. Keine unbekannte Änderung löschen.
+4. Erst nach Sicherung fortfahren.
+
+Wenn der lokale main hinter origin/main liegt und sauber ist:
+
+```powershell
+git switch main
+git reset --hard origin/main
+```
+
+Nur nach nachweislich erfolgreicher Sicherung beziehungsweise sauberem Zustand.
+
+## Alte Branches und Worktrees
+
+Ermittle:
+
+- welche Branches vollständig gemergt sind,
+- welche Worktrees keine einzigartigen Commits mehr enthalten,
+- welche Branches nur noch historische RC1-Arbeit abbilden.
+
+Lösche nichts automatisch, solange nicht bewiesen ist:
+
+```text
+UNIQUE_COMMITS=0
+UNCOMMITTED_CHANGES=0
+REMOTE_PR_MERGED=YES
+```
+
+## Gate
+
+```text
+PHASE_0_STATUS=PASS
+LOCAL_MAIN_SHA=<sha>
+ORIGIN_MAIN_SHA=<sha>
+WORKTREE_CLEAN=YES
+OPEN_PRS=0
+OPEN_ISSUES=0
+DATA_LOSS_RISK=NO
+```
+
+---
+
+# PHASE 1 – AKTUELLEN MAIN VOLLSTÄNDIG VERIFIZIEREN
+
+## Ziel
+
+Nicht auf PR-Beschreibungen oder historische Auditberichte vertrauen.
+Alle Quality Gates auf einem frischen Checkout des aktuellen main ausführen.
+
+## Python-Gates
+
+```powershell
+uv lock --check
+uv sync --locked --all-groups
+
+uv run python scripts/export_schemas.py --check
+uv run python scripts/validate_knowledge.py
+uv run python scripts/export_openapi.py --check
+uv run python scripts/generate_examples.py --check
+
+uv run ruff format --check .
+uv run ruff check .
+uv run mypy src tests scripts
+uv run pip-audit
+
+uv run pytest `
+  --cov=src/numerology_engine `
+  --cov-report=term-missing `
+  --cov-fail-under=95
+
+uv run pytest `
+  --cov=src `
+  --cov-report=term-missing `
+  --cov-report=xml `
+  --cov-fail-under=85
+
+uv build
+```
+
+## Determinismus-Gates
+
+Prüfe insbesondere:
+
+- Issue-32-Regressionstest
+- mehrere PYTHONHASHSEED-Werte
+- separate Prozesse
+- kanonische Serialisierung
+- Golden-Profile
+- V1-Kompatibilität
+- V2-Hashstabilität
+
+Mindestens:
+
+```powershell
+$seeds = 0,1,2,42,123,999
+foreach ($seed in $seeds) {
+    $env:PYTHONHASHSEED = "$seed"
+    uv run pytest tests/property tests/golden -q
+    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+}
+Remove-Item Env:PYTHONHASHSEED -ErrorAction SilentlyContinue
+```
+
+## Frontend-Gates
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm audit --audit-level high
+pnpm web:lint
+pnpm web:typecheck
+pnpm web:coverage
+pnpm web:build
+pnpm web:check-build
+pnpm web:e2e
+```
+
+Falls eine Security-Ausnahme konfiguriert ist:
+
+- aktuelle Advisory-Quelle prüfen,
+- tatsächliche Betroffenheit des verwendeten Modus prüfen,
+- Fix-Version aus Primärquelle verifizieren,
+- dokumentierte Risikoentscheidung aktualisieren,
+- niemals eine alte Ausnahme blind weiterverwenden.
+
+## Container-Gates
+
+```powershell
+docker compose config --quiet
+docker compose -f compose.yaml -f compose.llm-staging.yaml config --quiet
+
+Get-ChildItem deploy/scripts/*.sh | ForEach-Object {
+    sh -n $_.FullName
+}
+
+docker compose build
+docker compose up -d --wait --wait-timeout 90
+
+curl.exe --fail http://127.0.0.1:8080/api/v1/health/live
+curl.exe --fail http://127.0.0.1:8080/api/v1/health/ready
+
+docker compose down
+```
+
+## Remote-CI
+
+Prüfe:
+
+- aktueller main-SHA,
+- letzter CI-Lauf auf diesem SHA,
+- CodeQL,
+- alle Required Checks,
+- übersprungene Jobs,
+- Branch Protection.
+
+## Gate
+
+```text
+PHASE_1_STATUS=PASS|FAIL
+MAIN_SHA=<sha>
+RUFF_FORMAT=PASS|FAIL
+RUFF_CHECK=PASS|FAIL
+MYPY=PASS|FAIL
+PYTHON_TESTS=PASS|FAIL
+ENGINE_COVERAGE=<percent>
+TOTAL_COVERAGE=<percent>
+DETERMINISM_MATRIX=PASS|FAIL
+WEB_COVERAGE=PASS|FAIL
+WEB_E2E=PASS|FAIL
+DEPENDENCY_AUDIT=PASS|FAIL
+CONTAINER_SMOKE=PASS|FAIL
+CURRENT_MAIN_CI=PASS|FAIL
+```
+
+Bei FAIL:
+
+- Issue erstellen,
+- Root Cause isolieren,
+- fokussierten Fix-PR erstellen,
+- erst nach Merge Phase 1 wiederholen.
+
+---
+
+# PHASE 2 – REPOSITORY-WAHRHEIT UND ROADMAP NEU AUSRICHTEN
+
+## Problem
+
+Die aktuelle ROADMAP enthält historische Angaben aus dem RC1-Aufbau und
+beschreibt den jetzigen post-RC1-main-Stand nicht zuverlässig.
+
+## Ziel
+
+Eine einzige aktuelle Steuerungsgrundlage erzeugen.
+
+## Zu aktualisierende Artefakte
+
+```text
+ROADMAP.md
+README.md
+whats-next.md
+docs/audit/current-state-numra-rc.md
+docs/audit/gap-analysis.md
+docs/audit/implementation-plan.md
+docs/releases/unreleased-numra.md
+```
+
+Nicht jedes Dokument muss geändert werden. Nur belegte Drifts ändern.
+
+## Verbindliche neue Statusmatrix
+
+Ermittle und dokumentiere für jede Phase:
+
+```text
+COMPLETE
+PARTIAL
+NOT_STARTED
+EXTERNALLY_BLOCKED
+DEFERRED
+```
+
+Erwartete Arbeitsannahme:
+
+| Phase                   | Erwarteter Zustand                            |
+| ----------------------- | --------------------------------------------- |
+| 0 Reality Check         | COMPLETE                                      |
+| 1 Governance            | COMPLETE oder PARTIAL wegen Committee-Prozess |
+| 2 Tooling               | COMPLETE, MkDocs separat prüfen               |
+| 3 Methodenspezifikation | COMPLETE                                      |
+| 4 Rechenkern            | COMPLETE                                      |
+| 5 Wissensmodell         | COMPLETE                                      |
+| 6 Interpretation        | COMPLETE                                      |
+| 7 Forschung             | NOT_STARTED                                   |
+| 8 Safety/Privacy        | Code COMPLETE, externe Rechtsfreigabe BLOCKED |
+| 9 CLI/API/Berichte      | COMPLETE                                      |
+| 10 Agent                | COMPLETE, optional/fail-closed                |
+| 11 Evaluation           | COMPLETE nach frischem Gate                   |
+| 12 Dokumentation        | PARTIAL, da Betriebs-/Release-Doku noch offen |
+| 13 Committee Review     | NOT_STARTED                                   |
+| 14 Release              | RC1 COMPLETE, RC2/STABLE NOT_STARTED          |
+
+Diese Tabelle ist nur eine Hypothese und muss gegen das Repository geprüft werden.
+
+## Release-Roadmap neu formulieren
+
+Trenne eindeutig:
+
+```text
+Code Release
+Private Staging
+Closed Beta
+Public Deployment
+V2 Product Program
+Research Preview
+Platform Expansion
+```
+
+Diese Begriffe dürfen nicht synonym verwendet werden.
+
+## Versionskonflikt lösen
+
+Die alte Roadmap reserviert `0.4.0` für Research Preview.
+Der Guided Masterplan besitzt noch keine freigegebene Versionsnummer.
+
+Keine Version für V2 erfinden.
+
+Erstelle stattdessen eine Entscheidung:
+
+```text
+ADR_REQUIRED=YES
+TOPIC=Post-0.3 version and program sequencing
+```
+
+## PR A
+
+```text
+Branch:
+docs/post-rc1-roadmap-reconciliation
+
+Titel:
+docs: reconcile post-RC1 repository state and release roadmap
+```
+
+## Akzeptanzkriterien
+
+- aktueller main-SHA dokumentiert,
+- PR #34 und #35 berücksichtigt,
+- Issue #32 als geschlossen geführt,
+- Frontend-Coverage als CI-Gate geführt,
+- historische NO-GO-Audits als historisch markiert,
+- reale Staging-Lücke sichtbar,
+- RC2 vor stable 0.3.0,
+- V2 nicht als aktuelle Implementierung dargestellt,
+- keine doppelte oder widersprüchliche Roadmap-Wahrheit.
+
+Nach grüner CI darf PR A automatisch gemergt werden.
+
+---
+
+# PHASE 3 – RELEASE-EPIC UND ISSUE-GRAPH ERSTELLEN
+
+## Ziel
+
+Keine unsichtbare Arbeit mehr. Der gesamte Weg zu RC2 und Stable wird als
+GitHub-Epic mit klaren Teilaufgaben abgebildet.
+
+## Epic
+
+Erstelle:
+
+```text
+[EPIC] Numra v0.3.0-rc.2 → Stable v0.3.0
+```
+
+## Mindest-Issues
+
+1. `[P0] Fresh main release baseline`
+2. `[P1] Private staging environment and deployment evidence`
+3. `[P1] Backup restore and rollback rehearsal`
+4. `[P1] Provider and API end-to-end smoke`
+5. `[P1] Security advisory and dependency decision`
+6. `[P1] Accessibility and cross-device beta matrix`
+7. `[P1] Committee release review`
+8. `[P1] Prepare v0.3.0-rc.2`
+9. `[P1] Closed beta acceptance`
+10. `[P1] Prepare stable v0.3.0`
+11. `[P2] Public launch external gates`
+12. `[P2] Post-0.3 program sequencing ADR`
+
+Jedes Issue erhält:
+
+- Ausgangs-SHA,
+- Scope,
+- Nicht-Ziele,
+- Akzeptanzkriterien,
+- Testplan,
+- Risiken,
+- Abhängigkeiten,
+- erwartete Artefakte,
+- Go/No-Go-Bedingungen.
+
+---
+
+# PHASE 4 – PARALLELE RC2-HARDENING-STREAMS
+
+Nach Phase 1 und Phase 2 dürfen maximal drei Streams parallel laufen.
+
+## Stream A – Security und Dependencies
+
+Prüfe aktuell:
+
+- Python-CVEs
+- Node-CVEs
+- konfigurierte Audit-Ausnahmen
+- tatsächliche Verwendung betroffener Features
+- mögliche Major-Upgrade-Risiken
+- CSP, CORS, HSTS, Log-Redaktion
+- Secret-Handling
+- Container-User und read-only Filesystem
+
+Keine Major-Version blind aktualisieren.
+
+Bei erforderlichem Upgrade:
+
+```text
+Branch:
+fix/rc2-dependency-security
+```
+
+Pflichtgates:
+
+- alle Browser-E2Es,
+- PWA-Offline,
+- Routing,
+- Deep Links,
+- Build,
+- Bundle-Budget,
+- Accessibility,
+- Dependency-Audit.
+
+## Stream B – Accessibility und Gerätekompatibilität
+
+Prüfe:
+
+- Chromium
+- Firefox
+- WebKit
+- Mobile Chrome
+- Mobile WebKit
+- Tastatur
+- Screenreader-relevante Semantik
+- Kontrast
+- Fokusmanagement
+- Offline-Neustart
+- Export/Import
+- Verschlüsselung
+- Löschen
+- PDF
+- Installierbarkeit als PWA
+
+Nur aktuelle Fehler beheben. Historische Fehler nicht ungeprüft übernehmen.
+
+Branch bei Bedarf:
+
+```text
+fix/rc2-accessibility-compatibility
+```
+
+## Stream C – Operations und Observability
+
+Prüfe:
+
+- Deployment-Skripte
+- Preflight
+- Healthchecks
+- Release nach Commit-SHA
+- Image-Digests
+- Log-Redaktion
+- Backup-Kontrakt
+- Restore-Kontrakt
+- Rollback-Kontrakt
+- Ressourcenlimits
+- Disk-/Memory-Verhalten
+- Restart-Verhalten
+- Container- und Gateway-Logs
+
+Branch bei Bedarf:
+
+```text
+fix/rc2-operational-readiness
+```
+
+## Stream-Gate
+
+Alle drei Streams müssen:
+
+```text
+SCOPE_FOCUSED=YES
+MAIN_REBASED=YES
+LOCAL_GATES=PASS
+REMOTE_CI=PASS
+REVIEW_THREADS=0
+ROLLBACK_DOCUMENTED=YES
+```
+
+Danach automatischer Squash-Merge gegen exakten Head-SHA.
+
+---
+
+# PHASE 5 – PRIVATE STAGING-ABNAHME
+
+## Ziel
+
+Erstmals die vorhandenen Betriebsverträge real ausführen.
+
+## Infrastrukturentscheidung
+
+Bevorzugt:
+
+```text
+separater Numra-Staging-VPS
+```
+
+Nicht ungeprüft auf einem produktionsnahen Trading- oder Hermes-Host deployen.
+
+Falls ein geteilter Host verwendet werden soll, muss vorher bewiesen sein:
+
+- eigener Unix-Pfad,
+- eigener Compose-Projektname,
+- eigene Netzwerke,
+- eigene Volumes,
+- keine gemeinsamen Secrets,
+- keine öffentlichen Ports außer genehmigt,
+- feste CPU-/RAM-Limits,
+- kein Docker-Socket im Numra-Container,
+- keine Beeinträchtigung anderer Dienste.
+
+## Staging Preflight
+
+Dokumentiere:
+
+```text
+HOST_ALIAS=
+HOST_OS=
+CPU=
+RAM=
+FREE_DISK=
+DOCKER_VERSION=
+COMPOSE_VERSION=
+FIREWALL=
+TAILSCALE=
+DEPLOY_PATH=
+DEPLOY_SHA=
+API_IMAGE_DIGEST=
+WEB_IMAGE_DIGEST=
+```
+
+## Stufe 1 – Deterministischer Stack ohne LLM
+
+Verbindlich:
+
+```text
+NUMRA_LLM_ENABLED=false
+```
+
+Prüfe:
+
+- Deployment des exakten main-SHA
+- Health live/ready
+- Profilberechnung
+- Zyklen
+- lokale PWA
+- Import/Export
+- PDF
+- Offline
+- Restart
+- Logs ohne Name/Geburtsdatum/Payload
+- CPU/RAM
+- Container-Neustart
+
+## Stufe 2 – Backup und Restore
+
+Erstelle echtes verschlüsseltes Konfigurationsbackup.
+
+Danach:
+
+1. Backup entschlüsseln.
+2. Inhalt strukturell validieren.
+3. In isoliertem Ziel wiederherstellen.
+4. Stack aus Restore starten.
+5. Health und Profilberechnung prüfen.
+6. Evidenz dokumentieren.
+
+## Stufe 3 – Rollback-Rehearsal
+
+Pflichtsequenz:
+
+```text
+Deploy bekannte Baseline
+→ Smoke Baseline
+→ Deploy aktueller RC2-Kandidat
+→ Smoke Kandidat
+→ Rollback auf Baseline
+→ Smoke Baseline
+→ Redeploy Kandidat
+→ finaler Smoke
+```
+
+Dokumentiere:
+
+- SHAs
+- Image-Digests
+- Laufzeiten
+- Datenintegrität
+- Health-Ergebnisse
+- Fehler
+- Rollbackdauer
+
+## Stufe 4 – Optionaler echter LLM-Smoke
+
+Nur wenn reale Freigaben vorliegen.
+
+Verboten:
+
+- Dummy-Rechtsmarker auf echtem Host
+- erfundene Betreiberfreigabe
+- echte Namen
+- echte vollständige Geburtsdaten
+- API-Key in Shell-History oder Logs
+
+Voraussetzungen:
+
+```text
+LEGAL_APPROVAL=CONFIRMED
+TRANSFER_APPROVAL=CONFIRMED
+SECRET_PROVISIONED=YES
+```
+
+Danach:
+
+- synthetisches Profil
+- Provider-Smoke
+- API-End-to-End-Bericht
+- Follow-up
+- Circuit-Breaker
+- Rate Limit
+- Fehlerszenarien
+- reasoning_content-Hygiene
+- Log-Redaktion
+
+Falls Rechtsfreigabe fehlt:
+
+```text
+LLM_STAGING=BLOCKED_LEGAL
+DETERMINISTIC_STAGING=PASS
+```
+
+Das blockiert nicht zwingend den deterministischen RC2, solange LLM deaktiviert bleibt.
+
+## Staging-Bericht
+
+Erstelle:
+
+```text
+docs/audit/numra-rc2-private-staging-acceptance-2026-08-XX.md
+```
+
+---
+
+# PHASE 6 – COMMITTEE REVIEW FÜR RC2
+
+## Ziel
+
+Die in der North-Star-Roadmap vorgesehene multidisziplinäre Prüfung real
+durchführen, ohne einen fiktiven Ausschuss vorzutäuschen.
+
+## Fünf Review-Perspektiven
+
+1. Engineering und Architektur
+2. Numerologische Methodologie
+3. Forschung und wissenschaftliche Positionierung
+4. Safety, Datenschutz und Minderjährigenschutz
+5. Produkt, UX und Accessibility
+
+Jede Perspektive erstellt:
+
+- Findings,
+- Severity,
+- Evidenz,
+- Empfehlung,
+- Release-Blocker,
+- akzeptiertes Restrisiko.
+
+Artefakte:
+
+```text
+docs/committee/rc2-engineering-review.md
+docs/committee/rc2-methodology-review.md
+docs/committee/rc2-research-review.md
+docs/committee/rc2-safety-privacy-review.md
+docs/committee/rc2-product-ux-review.md
+docs/committee/rc2-findings.md
+docs/committee/rc2-release-decision.md
+```
+
+## Gate
+
+```text
+CRITICAL_FINDINGS_OPEN=0
+HIGH_FINDINGS_OPEN=0
+HIGH_FINDINGS_ACCEPTED_WITH_OWNER=<number>
+RELEASE_DECISION=GO|GO_WITH_CONDITIONS|NO_GO
+```
+
+Keine RC2-Release-Aktion bei `NO_GO`.
+
+---
+
+# PHASE 7 – V0.3.0-RC.2 VORBEREITEN
+
+Erst nach:
+
+```text
+MAIN_GATES=PASS
+PRIVATE_STAGING=PASS
+RESTORE=PASS
+ROLLBACK=PASS
+COMMITTEE_DECISION=GO|GO_WITH_CONDITIONS
+```
+
+## Versionen
+
+Synchronisiere:
+
+```text
+pyproject.toml             0.3.0rc2
+apps/web/package.json      0.3.0-rc.2
+openapi info.version       0.3.0rc2
+uv.lock                    synchron
+pnpm-lock.yaml             synchron
+```
+
+## Artefakte
+
+```text
+docs/releases/v0.3.0-rc.2.md
+docs/releases/migration-to-v0.3.0-rc.2.md
+docs/audit/numra-rc2-closure-report-2026-08-XX.md
+CHANGELOG.md
+README.md
+```
+
+## Release-PR
+
+```text
+Branch:
+release/v0.3.0-rc.2
+
+Titel:
+release: prepare Numra v0.3.0-rc.2
+```
+
+## Release-Gates
+
+- frischer Checkout,
+- gesamte Python-Matrix,
+- Determinismus-Matrix,
+- Frontend-Coverage,
+- Browser-E2E,
+- Package-Smoke,
+- Container-Smoke,
+- Staging-Nachweis,
+- Backup-/Restore-Nachweis,
+- Rollback-Nachweis,
+- Committee-Entscheidung,
+- keine Schema- oder OpenAPI-Drift.
+
+## Merge und Tag
+
+Nach grünem Merge:
+
+1. Merge-SHA frisch lesen.
+2. CI auf Merge-SHA bestätigen.
+3. annotierten Tag erstellen:
+
+```text
+v0.3.0-rc.2
+```
+
+4. GitHub-Prerelease erstellen.
+5. Tag-SHA verifizieren.
+6. RC1-Tag unverändert bestätigen.
+
+```text
+RC1_TAG_UNCHANGED=YES
+RC2_TAG_SHA=<sha>
+```
+
+---
+
+# PHASE 8 – GESCHLOSSENE BETA
+
+## Ziel
+
+RC2 mit realen Testpersonen und realen Geräten prüfen, ohne öffentlichen Launch.
+
+## Umfang
+
+- Desktop
+- Android
+- iOS
+- Installation
+- Profil
+- Expertenansicht
+- Wissen
+- lokale Bibliothek
+- Notizen
+- PDF
+- Export/Import
+- Verschlüsselung
+- Sperren/Entsperren
+- Offline
+- Updatefluss
+- optionaler Bericht, falls rechtlich freigegeben
+
+## Datenschutz
+
+- nur informierte Testpersonen,
+- keine Debug-Logs mit persönlichen Daten,
+- keine Analytics ohne separate Freigabe,
+- Löschweg testen,
+- Exportdaten prüfen.
+
+## Beta-Findings
+
+Alle Findings als Issues:
+
+```text
+P0 – Datenverlust, falsche Berechnung, Security, Privacy
+P1 – blockiert Stable
+P2 – blockiert Public Launch
+P3 – spätere Verbesserung
+```
+
+## Beta-Gate
+
+```text
+P0_OPEN=0
+P1_OPEN=0
+DATA_LOSS=NO
+CALCULATION_DRIFT=NO
+PRIVACY_INCIDENT=NO
+BETA_DECISION=GO|NO_GO
+```
+
+---
+
+# PHASE 9 – STABILES V0.3.0
+
+Stabiler Code-Release und öffentliche Bereitstellung sind getrennte Entscheidungen.
+
+Ein stabiler GitHub-Release darf möglich sein, während öffentlicher Betrieb
+weiterhin blockiert bleibt.
+
+## Voraussetzungen
+
+- RC2 ausreichend erprobt
+- Beta-Gate grün
+- Committee Stable Review
+- keine P0/P1
+- Berechnungs- und Hashverträge stabil
+- Migrationsweg dokumentiert
+- aktuelle Dependency-Entscheidungen
+- vollständige Release Notes
+
+## Release-PR
+
+```text
+Branch:
+release/v0.3.0
+
+Titel:
+release: publish stable Numra v0.3.0
+```
+
+Versionen:
+
+```text
+Python:  0.3.0
+Web:     0.3.0
+OpenAPI: 0.3.0
+Tag:     v0.3.0
+```
+
+Nach Merge:
+
+- Tag
+- GitHub Release
+- Checksums
+- Release Notes
+- finaler Closure-Bericht
+
+## Öffentlicher Launch
+
+Separat bewerten:
+
+```text
+PUBLIC_DEPLOYMENT=GO|NO_GO
+```
+
+Public Deployment bleibt `NO_GO`, solange irgendeine Pflichtzeile der
+Launch-Checkliste fehlt.
+
+---
+
+# PHASE 10 – POST-0.3-PROGRAMMENTScheidung
+
+Erst nach stabilem v0.3.0.
+
+## Konflikt
+
+Zwei große Programme existieren:
+
+1. Research Preview aus der alten 0.4-Roadmap
+2. V2 Guided Masterplan
+
+Zusätzlich existiert eine spätere Platform Expansion.
+
+Diese Programme dürfen nicht still vermischt oder parallel begonnen werden.
+
+## ADR
+
+Erstelle:
+
+```text
+ADR 0017 – Post-0.3 program and version sequencing
+```
+
+ADR entscheidet:
+
+- welches Programm zuerst kommt,
+- welche Versionsnummer verwendet wird,
+- welche Abhängigkeiten bestehen,
+- ob 0.4.0 weiterhin Research Preview bleibt,
+- welche Version der Guided Masterplan erhält,
+- welche Programme explizit zurückgestellt werden.
+
+Bis ADR angenommen ist:
+
+```text
+NEW_MAJOR_PROGRAMS=BLOCKED
+```
+
+---
+
+# PHASE 11 – V2 GUIDED MASTERPLAN ALS SEPARATES PROGRAMM
+
+Nur starten, wenn ADR 0017 dies freigibt.
+
+## Harte Scope-Grenze
+
+V2 Guided Masterplan umfasst ausschließlich:
+
+- Nutzerziele
+- Lebensbereiche
+- Reflexionen
+- gespiegelte Muster
+- Nutzergrenzen
+- Prioritätsentscheidungen
+- Handlungsoptionen
+- vom Nutzer angenommene Maßnahmen
+- Meilensteine
+- Gewohnheiten
+- Checkpoints
+- versionierte Masterpläne
+
+Nicht enthalten:
+
+- Cloud-Synchronisation
+- Benutzerkonten
+- Mehrsprachigkeit
+- Chaldäische oder kabbalistische Systeme
+- Astrologie
+- Human Design
+- Enneagramm
+- Forschungs-Community
+- autonom priorisierender Agent
+
+## Hard-Gate
+
+Nur der Nutzer darf:
+
+```text
+ActionOption → AcceptedAction
+```
+
+Kein Regelwerk, kein LLM und kein Agent darf diesen Übergang selbst ausführen.
+
+## V2-Arbeitswellen
+
+### Welle V2-0 – ADR und Datenverträge
+
+- eigene Roadmap
+- eigene Versionierung
+- 12 Core-Modelle
+- Event-/Versionsvertrag
+- lokale Persistenz
+- Export-/Import-Vertrag
+- Safety-Modell
+
+### Welle V2-1 – Deterministischer Masterplan-Core
+
+- reine Domain-Logik
+- keine UI
+- kein LLM
+- immutable Versionen
+- vollständiger Audit-Trace
+
+### Welle V2-2 – Lokale Speicherung
+
+- IndexedDB
+- Migration
+- Verschlüsselung
+- Löschen
+- Backup/Export
+
+### Welle V2-3 – Guided Flow UI
+
+Die zwölf Schritte der Spezifikation vollständig als Nutzerfluss.
+
+### Welle V2-4 – Suggestions und Gegenhypothesen
+
+- unverbindliche Optionen
+- kein Ranking
+- keine automatische Annahme
+- klare Aussageklassen
+
+### Welle V2-5 – Optionaler LLM-Support
+
+- nur Formulierung und Spiegelung
+- keine Entscheidungen
+- keine Priorisierung
+- keine AcceptedAction
+- fail-closed
+
+### Welle V2-6 – Evaluation und Release
+
+- Autonomie-Regel Property Tests
+- Storage-Migration
+- Accessibility
+- Offline
+- Export/Import
+- Threat Model
+- Beta
+- eigenes Release
+
+---
+
+# PHASE 12 – PLATFORM EXPANSION
+
+Erst nach:
+
+```text
+STABLE_0_3_RELEASED=YES
+GUIDED_MASTERPLAN_PROGRAM_COMPLETE=YES
+SEPARATE_ADR_APPROVED=YES
+```
+
+Jedes Modul ist ein eigenes Programm:
+
+- Research Community
+- weitere Numerologiesysteme
+- Mehrsprachigkeit
+- Cloud-Synchronisation
+- fortgeschrittene Agenten-Workflows
+- Zukunftsdomänen
+
+Keine stille Aufnahme in V2.
+
+---
+
+# EMPFOHLENE PR-SEQUENZ
+
+```text
+PR A  docs: post-RC1 roadmap reconciliation
+  ↓
+PR B  optional: current security/dependency hardening
+  ↓
+PR C  optional: accessibility/device hardening
+  ↓
+PR D  optional: operational readiness fixes
+  ↓
+Private Staging Execution
+  ↓
+PR E  docs: staging/restore/rollback acceptance evidence
+  ↓
+PR F  docs: RC2 committee review
+  ↓
+PR G  release: v0.3.0-rc.2
+  ↓
+Closed Beta
+  ↓
+PR H  fix: beta findings, falls erforderlich
+  ↓
+PR I  release: stable v0.3.0
+  ↓
+ADR 0017
+  ↓
+separates V2- oder Research-Programm
+```
+
+---
+
+# STOP-BEDINGUNGEN
+
+Sofort stoppen bei:
+
+- dirty Working Tree ohne Backup
+- unbekannten einzigartigen lokalen Commits
+- Secretfund
+- PII in Logs, Fixtures oder Screenshots
+- Berechnungsdrift
+- Golden-Hash-Drift ohne Versionierung
+- V1-Kompatibilitätsbruch
+- OpenAPI-/Schema-Drift ohne Vertrag
+- rotem Required Check
+- nicht reproduzierbarem Test-Flake
+- fehlgeschlagenem Restore
+- fehlgeschlagenem Rollback
+- erfundenen Rechtsfreigaben
+- ungeklärtem Hostingziel
+- Versuch, RC1-Tag zu verschieben
+- Beginn von V2 vor stabilem 0.3.0
+- Vermischung von Guided Masterplan und Platform Expansion
+
+---
+
+# ABSCHLUSSBERICHT
+
+Erzeuge fortlaufend:
+
+```text
+docs/audit/numra-orchestration-status-2026-08-XX.md
+```
+
+Pflichtinhalt:
+
+1. Ausgangs-SHA
+2. aktueller main-SHA
+3. PRs und Merge-SHAs
+4. offene und geschlossene Issues
+5. aktuelle Phase
+6. Quality-Gates
+7. Staging-Status
+8. Backup-/Restore-Status
+9. Rollback-Status
+10. Release-Status
+11. Beta-Status
+12. Public-Launch-Status
+13. Blocker
+14. exakt nächste Aufgabe
+
+---
+
+# FINALE MASCHINENLESBARE AUSGABE
+
+```text
+GOAL_STATUS=STABLE_0_3_RELEASED|RC2_RELEASED|RC2_READY|STAGING_READY|PARTIAL|BLOCKED|FAILED
+START_MAIN_SHA=<sha>
+END_MAIN_SHA=<sha>
+WORKTREE_CLEAN=YES|NO
+OPEN_PRS=<number>
+OPEN_ISSUES=<number>
+ROADMAP_RECONCILED=YES|NO
+CURRENT_MAIN_GATES=PASS|FAIL
+RUFF=PASS|FAIL
+MYPY=PASS|FAIL
+PYTHON_TESTS=PASS|FAIL
+ENGINE_COVERAGE=<percent>
+TOTAL_COVERAGE=<percent>
+DETERMINISM=PASS|FAIL
+WEB_COVERAGE=PASS|FAIL
+WEB_E2E=PASS|FAIL
+DEPENDENCY_AUDIT=PASS|FAIL
+CONTAINER_SMOKE=PASS|FAIL
+PRIVATE_STAGING=PASS|NOT_EXECUTED|BLOCKED|FAIL
+REAL_PROVIDER_SMOKE=PASS|DISABLED|BLOCKED_LEGAL|NOT_EXECUTED|FAIL
+BACKUP_RESTORE=PASS|NOT_EXECUTED|FAIL
+ROLLBACK_REHEARSAL=PASS|NOT_EXECUTED|FAIL
+COMMITTEE_REVIEW=PASS|NOT_EXECUTED|FAIL
+RC1_TAG_UNCHANGED=YES|NO
+RC2_TAG=<tag|NONE>
+CLOSED_BETA=PASS|NOT_EXECUTED|FAIL
+STABLE_TAG=<tag|NONE>
+PUBLIC_DEPLOYMENT=GO|NO_GO
+V2_PROGRAM_AUTHORIZED=YES|NO
+NEXT_TASK=<genau eine konkrete nächste Aufgabe>
+```
+
+## Unmittelbar nächste Aufgabe
+
+```text
+ROADMAP.md und die operativen Statusdokumente auf den aktuellen post-PR-35-main-Stand abgleichen und daraus ein GitHub-Epic „Numra v0.3.0-rc.2 → Stable v0.3.0“ mit den Staging-, Restore-, Rollback-, Committee- und Release-Issues erzeugen.
+```
+
+```
+
+```
