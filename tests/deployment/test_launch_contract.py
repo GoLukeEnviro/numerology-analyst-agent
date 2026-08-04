@@ -40,9 +40,16 @@ def test_release_and_rollback_use_immutable_commit_tags() -> None:
     assert "^[0-9a-f]{40}$" in release
     assert "git rev-parse --verify HEAD" in release
     assert "NUMRA_IMAGE_TAG" in release
-    assert "/opt/numra/releases/previous" in release
+    assert "NUMRA_RELEASE_DIR:-/opt/numra/releases" in release
+    assert "previous_file" in release
     assert "docker compose --env-file" in release
-    assert "up -d --wait --wait-timeout 60" in release
+    assert "up -d --no-build --wait --wait-timeout 60" in release
+    # OPS-002: release.sh deployt ein bereits gebautes Image, baut nicht
+    # selbst auf dem Zielhost. Ein Docker-Tag allein ist veraenderlich,
+    # deshalb muss ein tatsaechlich vorhandenes lokales Image verlangt und
+    # dessen Content-Digest fuer den Acceptance-Report protokolliert werden.
+    assert "docker image inspect" in release
+    assert ".Id" in release
     assert "docker image inspect" in rollback
     assert "up -d --no-build --wait --wait-timeout 90" in rollback
     assert "Health check failed after rollback" in rollback

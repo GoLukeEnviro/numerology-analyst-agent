@@ -17,7 +17,7 @@
 > | Offene PRs / Issues (Baseline 2026-08-02) | 0 / 0 |
 > | Frische lokale Gates auf `5976ae2` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
 > | Privates Staging / Backup-Restore / Rollback | **NOT_EXECUTED** (kein bestätigter Numra-Staging-Host) |
-> | Committee Review | **NOT_STARTED** (für RC2 erforderlich) |
+> | Committee Review | **COMPLETE** (`docs/committee/rc2-*.md`); Entscheidung **NO_GO**; Betriebsabnahme **BLOCKED_BY_STAGING** |
 > | Nächster Code-Release | **v0.3.0-rc.2**, danach Closed Beta, dann **stable v0.3.0** |
 > | Öffentlicher Launch | **NO_GO** bis Launch-Checkliste vollständig |
 > | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 + Sequenz-ADR |
@@ -112,8 +112,8 @@ Diese Begriffe sind **nicht synonym**:
 | 10 | Agent | **COMPLETE** (optional / fail-closed, LLM default off) |
 | 11 | Evaluation | **COMPLETE** nach frischem Gate auf `5976ae2` |
 | 12 | Dokumentation | **PARTIAL** (Betriebs-/Release-Nachweise und Staging-Bericht offen) |
-| 13 | Committee Review | **NOT_STARTED** |
-| 14 | Release | RC1 **COMPLETE**; RC2/Stable **NOT_STARTED** |
+| 13 | Committee Review | **COMPLETE** (`docs/committee/rc2-*.md`, Stand 2026-08-02) — Entscheidung `RELEASE_DECISION=NO_GO`, Betriebsabnahme `BLOCKED_BY_STAGING` |
+| 14 | Release | RC1 **COMPLETE**; RC2 **BLOCKED_BY_STAGING**, Stable **NOT_STARTED** |
 
 → RC1 Notes: `docs/releases/v0.3.0-rc.1.md`. Foundation: `docs/releases/v0.1.3.md`.
 
