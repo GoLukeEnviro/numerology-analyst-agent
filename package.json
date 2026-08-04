@@ -21,8 +21,7 @@
     "auditConfig": {
       "ignoreGhsas": [
         "GHSA-qwww-vcr4-c8h2"
-      ],
-      "ignoreCves": []
+      ]
     }
   }
 }
