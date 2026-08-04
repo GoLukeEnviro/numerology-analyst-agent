@@ -1,7 +1,7 @@
 # Numra — unreleased / post-RC1 Arbeitspfad
 
-> **Stand:** 2026-08-02  
-> **Aktueller `main`:** `5976ae2299059451461f634cb89f525151fda8b2`  
+> **Stand:** 2026-08-04  
+> **Aktueller `main`:** `a3f168ef99823fa2fd1c3f3b6536ea7523def451`  
 > **Paketversion auf main:** `0.3.0rc1`  
 > **Letzter immutable Tag:** `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a`
 
@@ -15,6 +15,8 @@
 - PR **#34** — Ship-Hygiene: Issue #32 Determinismus-Fix, API-/Domain-Modularisierung,
   Frontend-Coverage-CI-Gate, README/Release-Truth.
 - PR **#35** — Konsolidierung von Audit-, Governance- und OpenAPI-Artefakten.
+- PR **#55** — Restore-Skript (OPS-001), Deploy-by-Digest (OPS-002), Rollback-Rehearsal lokal,
+  Committee-Status-Korrektur, CQ-001.
 
 Diese Commits gehören zur **RC2-Vorbereitung**, nicht zu einer stillen
 RC1-Tag-Verschiebung.
@@ -30,8 +32,9 @@ RC1-Tag-Verschiebung.
 | Thema | Status |
 |-------|--------|
 | Privates Staging (bestätigter Host) | NOT_EXECUTED |
-| Backup create + structural validate + restore + re-smoke | NOT_EXECUTED |
-| Rollback-Rehearsal | NOT_EXECUTED |
+| Backup create + structural validate + restore + re-smoke | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
+| Rollback-Rehearsal | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
+| Host-Staging Restore + Rollback | **NOT_EXECUTED** |
 | Committee Review | COMPLETE (`docs/committee/rc2-*.md`); Entscheidung NO_GO; Betriebsabnahme BLOCKED_BY_STAGING |
 | Closed Beta | NOT_STARTED |
 | Öffentlicher Launch | NO_GO |
