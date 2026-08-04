@@ -81,6 +81,17 @@ jobs:
       - name: Build wheel and sdist
         run: uv build
 
+      # Muss in diesem Job laufen: der Quality-Gates-Job baut kein Wheel, dort
+      # wuerde sich die Pruefung still ueberspringen und als Erfolg zaehlen.
+      # NUMRA_REQUIRE_WHEEL macht ein fehlendes Wheel hier zum harten Fehler.
+      - name: Verify packaged resources are present in the wheel
+        env:
+          NUMRA_REQUIRE_WHEEL: "1"
+        run: >
+          uv run --locked pytest
+          tests/integration/test_production_graph.py::test_wheel_contains_prompt_templates
+          -q
+
       - name: Install wheel in fresh venv and smoke-test
         run: |
           # --seed ships pip/setuptools into the uv-created venv so that

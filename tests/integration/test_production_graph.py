@@ -8,6 +8,7 @@ im Produktionsgraphen erreichbar und funktionsfähig sind.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 import zipfile
@@ -213,13 +214,59 @@ async def test_circuit_breaker_opens_after_threshold() -> None:
 # ---------------------------------------------------------------------------
 
 
+def _require_wheel(dist_dir: Path) -> Path:
+    """Pfad zum gebauten Wheel.
+
+    Ohne vorherigen Build ist ein Skip richtig — lokal wie im reinen
+    Coverage-Job. Setzt ein Job dagegen ``NUMRA_REQUIRE_WHEEL``, hat er zuvor
+    ``uv build`` ausgeführt; ein fehlendes Wheel ist dort ein Pipelinefehler,
+    denn ein Skip zählt als Erfolg und setzte die Prüfung unbemerkt aus.
+
+    Die Anforderung hängt bewusst nicht an ``CI``: GitHub Actions setzt diese
+    Variable in jedem Job, auch in denen, die kein Wheel bauen können.
+    """
+    wheels = sorted(dist_dir.glob("*.whl"))
+    if wheels:
+        return wheels[0]
+    if os.environ.get("NUMRA_REQUIRE_WHEEL"):
+        pytest.fail("Kein Wheel in dist/ — dieser Job muss vor pytest `uv build` ausführen")
+    pytest.skip("Kein Wheel in dist/ gefunden — führe `uv build` aus")
+
+
+def test_missing_wheel_fails_where_a_wheel_was_demanded(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Wo ein Wheel verlangt wird, ist sein Fehlen ein Fehler, kein Grund zum Überspringen.
+
+    Ein stiller Skip zählt in der Ergebniszeile als Erfolg — die Prüfung der
+    Paketressourcen setzte damit unbemerkt aus.
+    """
+    monkeypatch.setenv("NUMRA_REQUIRE_WHEEL", "1")
+
+    with pytest.raises(pytest.fail.Exception, match="uv build"):
+        _require_wheel(tmp_path)
+
+
+def test_missing_wheel_still_skips_where_no_wheel_was_demanded(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Ohne Anforderung bleibt der Skip richtig — lokal wie im reinen Coverage-Job.
+
+    Die Anforderung haengt bewusst nicht an ``CI``: GitHub Actions setzt diese
+    Variable in jedem Job, auch in denen, die kein Wheel bauen.
+    """
+    monkeypatch.delenv("NUMRA_REQUIRE_WHEEL", raising=False)
+    monkeypatch.setenv("CI", "true")
+
+    with pytest.raises(pytest.skip.Exception):
+        _require_wheel(tmp_path)
+
+
 def test_wheel_contains_prompt_templates() -> None:
     """Wheel enthält die Prompt-Template-Dateien als Package Data."""
-    dist_dir = Path(__file__).resolve().parent.parent.parent / "dist"
-    wheels = list(dist_dir.glob("*.whl"))
-    if not wheels:
-        pytest.skip("Kein Wheel in dist/ gefunden — führe `uv build` aus")
-    whl = wheels[0]
+    whl = _require_wheel(Path(__file__).resolve().parent.parent.parent / "dist")
     with zipfile.ZipFile(whl) as zf:
         names = zf.namelist()
     expected = [
