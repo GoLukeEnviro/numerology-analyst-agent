@@ -1,83 +1,17 @@
 """Private model submodules — fachliche Cluster der Domain-Modelle.
 
 Dieses Paket ist bewusst privat (``_models``): Der stabile öffentliche
-Einstiegspunkt ist ``numerology_domain.models`` (Compatibility Facade).
-Direkte Imports aus ``numerology_domain._models`` sind für interne
-Zwecke erlaubt, aber nicht Teil des öffentlichen Vertrags.
+Einstiegspunkt ist ``numerology_domain.models`` (Compatibility Facade), die
+direkt aus den einzelnen Cluster-Submodulen importiert
+(``_models.calculation``, ``_models.cycles``, ``_models.input``,
+``_models.profile``) statt aus diesem Aggregator.
+
+Dieses ``__init__.py`` re-exportiert absichtlich nichts: Ein früherer
+Aggregator-Export hier duplizierte 72 Zeilen aus ``models.py``, ohne von
+irgendeinem Konsumenten importiert zu werden (kein Treffer für
+``numerology_domain._models`` außerhalb der Submodul-Importe selbst). Jede
+Vertragserweiterung musste dadurch an zwei Stellen nachgezogen werden, ohne
+dass die zweite Stelle je wirksam war. Direkte Imports aus den einzelnen
+Submodulen (``numerology_domain._models.calculation`` etc.) bleiben für
+interne Zwecke erlaubt, sind aber nicht Teil des öffentlichen Vertrags.
 """
-
-from numerology_domain._models.calculation import (
-    CALCULATION_RESULT_SCHEMA_VERSION,
-    PROFILE_CALCULATION_RESULT_SCHEMA_VERSION,
-    PROFILE_CALCULATION_RESULT_V4_SCHEMA_VERSION,
-    AuditTrace,
-    CalculationHashEnvelope,
-    CalculationResult,
-    CalculationStep,
-    ConsistencyStatus,
-    KarmicDebtInfo,
-    KarmicOccurrence,
-    LifePathResult,
-    NameNumberSet,
-    NameNumberSetV2,
-    NameNumberVariant,
-    NameSegmentResult,
-    NormalizationStep,
-    NumberModel,
-    NumberResult,
-    ReductionOutcome,
-)
-from numerology_domain._models.cycles import (
-    CycleCalculationResult,
-    CycleCalculationResultV2,
-    CyclePhase,
-)
-from numerology_domain._models.input import (
-    KARMIC_DEBTS,
-    MASTER_NUMBERS,
-    PYTHAGOREAN_V1_VERSION,
-    PYTHAGOREAN_V2_VERSION,
-    VALID_PYTHAGOREAN_VERSIONS,
-    MethodPolicy,
-    PersonInput,
-)
-from numerology_domain._models.profile import (
-    ProfileCalculationResult,
-    ProfileCalculationResultV4,
-)
-
-__all__ = [  # noqa: RUF022
-    # Constants
-    "CALCULATION_RESULT_SCHEMA_VERSION",
-    "PROFILE_CALCULATION_RESULT_SCHEMA_VERSION",
-    "PROFILE_CALCULATION_RESULT_V4_SCHEMA_VERSION",
-    "KARMIC_DEBTS",
-    "MASTER_NUMBERS",
-    "PYTHAGOREAN_V1_VERSION",
-    "PYTHAGOREAN_V2_VERSION",
-    "VALID_PYTHAGOREAN_VERSIONS",
-    # Models
-    "AuditTrace",
-    "CalculationHashEnvelope",
-    "CalculationResult",
-    "CalculationStep",
-    "ConsistencyStatus",
-    "CycleCalculationResult",
-    "CycleCalculationResultV2",
-    "CyclePhase",
-    "KarmicDebtInfo",
-    "KarmicOccurrence",
-    "LifePathResult",
-    "MethodPolicy",
-    "NameNumberSet",
-    "NameNumberSetV2",
-    "NameNumberVariant",
-    "NameSegmentResult",
-    "NormalizationStep",
-    "NumberModel",
-    "NumberResult",
-    "PersonInput",
-    "ProfileCalculationResult",
-    "ProfileCalculationResultV4",
-    "ReductionOutcome",
-]
