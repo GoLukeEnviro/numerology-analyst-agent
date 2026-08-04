@@ -28,8 +28,8 @@ Klare Trennung der Entwicklungsstränge, keine Blockade von RC2 durch V2-Arbeite
 
 ## Verweise
 
-- ADR 0016 — V2 User-Owned Masterplan Boundary (SUPERSEDED im Geltungsbereich der
-  Sequenzentscheidung durch ADR 0017)
+- ADR 0016 — V2 User-Owned Masterplan Boundary (ACCEPTED; ADR 0017 ersetzt
+  ausschließlich die Sequenzentscheidung, die Produktgrenze bleibt verbindlich)
 - `docs/plans/numra-full-analysis-v2-v3.md` — Full-Analysis-Plan V2/V3 (kanonisiert am
   2026-08-04)
 - `.claude/plans/dapper-fluttering-kazoo.md` — Strang-B-Planung

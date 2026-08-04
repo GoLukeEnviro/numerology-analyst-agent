@@ -9,7 +9,7 @@
 >
 > | Kennzeichen | Wert |
 > |---|---|
-> | `origin/main` | `a3f168ef99823fa2fd1c3f3b6536ea7523def451` |
+> | Geprüfte Ausgangsbasis vor State Reconciliation | `a3f168ef99823fa2fd1c3f3b6536ea7523def451` |
 > | Paketversion | `0.3.0rc1` |
 > | Unveränderlicher Tag | `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a` |
 > | Ship-Hygiene | PR **#34** gemergt (Issue **#32** Determinismus-Fix, API-/Domain-Modularisierung, Frontend-Coverage-CI-Gate, README/Release-Truth) |
@@ -18,7 +18,7 @@
 > | Offene PRs / Issues (Baseline 2026-08-04) | PR #55 **gemergt**; offene Issues **#37** (Epic), **#39–#49** |
 > | OPS-001 (Restore-Skript) | **behoben** (PR #55) |
 > | OPS-002 (Deploy-by-Digest) | **behoben** (PR #55) |
-> | OPS-003 (GHSA-Zuordnung) | **behoben** (dieser PR) |
+> | OPS-003 (GHSA-Zuordnung) | **behoben** (State Reconciliation, pnpm auditConfig korrigiert) |
 > | Frische lokale Gates auf `a3f168e` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
 > | Lokaler Restore-Test | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
 > | Lokaler Rollback-Rehearsal | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |

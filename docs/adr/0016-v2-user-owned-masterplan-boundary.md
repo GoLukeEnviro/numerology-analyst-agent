@@ -1,6 +1,7 @@
 # ADR 0016 — V2 User-Owned Masterplan Boundary
 
-> **Status:** SUPERSEDED im Geltungsbereich der Sequenzentscheidung durch ADR 0017 (2026-08-04); die V2-Guided-Masterplan-Sperre bleibt unverändert gültig.
+> **Status:** ACCEPTED
+> **Beziehung zu ADR 0017:** ADR 0017 ersetzt ausschließlich die in diesem ADR enthaltene Sequenzentscheidung. Die Produktgrenze des V2 Guided Masterplan, die Nutzerautonomie-Regeln und die Sperre seiner Implementierung bis nach Stable v0.3.0 bleiben unverändert verbindlich.
 > **Kontext:** Numra V1 (Pythagoreischer Standard, Determinismus vor LLM) ist mit `0.3.0rc1` funktional abgeschlossen. Ein darüber hinausgehender "V2 Masterplan" liegt als Vision vor, darf aber nicht in den V1-Scope übergreifen. Die ursprüngliche V2-Spezifikation war von der eigentlichen Guided-Masterplan-Vision abgedriftet und enthielt Plattform-Erweiterungsideen, die separat gehören — siehe Realignment unten.
 > **Betrifft:** Produkt-Scope, V1/V2-Grenze, Roadmap, Spezifikation
 
