@@ -1,15 +1,14 @@
 [project]
 name = "numerology-analyst-agent"
 version = "0.3.0rc1"
-description = "Numra — deterministic pythagorean profile and cycle calculation core."
+description = "Numra — deterministic pythagorean profile and cycle calculation core with versioned knowledge, rule-based interpretation, optional fail-closed LLM analysis, API, CLI and local-first PWA."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
 authors = [{ name = "Numerology Analyst Agent Project" }]
 keywords = ["numerology", "pythagorean", "deterministic", "audit-trace"]
 
-# Runtime dependencies for the Walking Skeleton (Life Path A/B only).
-# No network/HTTP/LLM deps — determinism before LLM (Master Contract §2.4).
+# Runtime dependencies for the full product stack (API, CLI, knowledge, agent).
 dependencies = [
     "click>=8.3.3,<9.0",
     "fastapi>=0.116,<1.0",

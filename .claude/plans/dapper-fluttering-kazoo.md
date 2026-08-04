@@ -18,9 +18,9 @@
 | A4 · Staging-Nachweis | ⬚ blockiert durch A0 |
 | A5 · Committee-Re-Review | ⬚ blockiert durch A4 |
 | A6 · RC2-Schnitt | ⬚ blockiert durch A5 |
-| Strang B · V2-Anbindung | ○ Plan liegt vor (PR #53, `.claude/plans/`, nicht `docs/plans/`), B0-Sequenz-ADR noch nicht geschrieben |
+| Strang B · V2-Anbindung | ○ Plan liegt vor (PR #53, `.claude/plans/`, nicht `docs/plans/`), B0-Sequenz-ADR wird mit dem State-Reconciliation-PR geschrieben (ADR 0017) |
 
-PR #54 (main) und PR #55 (offen, CI läuft) fassen den gesamten host-unabhängigen Teil von
+PR #54 (main) und PR #55 (gemergt) fassen den gesamten host-unabhängigen Teil von
 Strang A zusammen. Nach A0 sind nur noch A4–A6 offen.
 
 ## Kontext

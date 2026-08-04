@@ -1,7 +1,7 @@
-# Numra — aktueller Quellstand (post-RC1, 2026-08-02)
+# Numra — aktueller Quellstand (post-RC1, 2026-08-04)
 
-> **Stand:** 2026-08-02  
-> **Code-Baseline-SHA (Gates):** `5976ae2299059451461f634cb89f525151fda8b2`  
+> **Stand:** 2026-08-04  
+> **Code-Baseline-SHA (Gates):** `a3f168ef99823fa2fd1c3f3b6536ea7523def451`  
 > **Docs-Merge post-Reconciliation:** `7f9795c807f06c721a8c67c32823e8897de7f359` (`origin/main` nach PR #36)  
 > **Paketversion:** `0.3.0rc1`  
 > **Unveränderlicher Tag:** `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a`  
@@ -31,8 +31,8 @@
 |-------|--------|
 | Privates Staging auf bestätigtem Numra-Host | **NOT_EXECUTED** |
 | Echter Provider-/LLM-Smoke (Legal/Transfer/Secret) | **BLOCKED** / optional |
-| Verschlüsseltes Konfig-Backup + Restore | **NOT_EXECUTED** (Skripte vorhanden ≠ ausgeführt) |
-| Rollback-Rehearsal | **NOT_EXECUTED** |
+| Verschlüsseltes Konfig-Backup + Restore | **PASS (lokal)** (`docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
+| Rollback-Rehearsal | **PASS (lokal)** (`docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
 | Committee Release Review | **COMPLETE** (`docs/committee/rc2-*.md`), Entscheidung **NO_GO**, Betriebsabnahme **BLOCKED_BY_STAGING** |
 | Closed Beta | **NOT_STARTED** |
 | Stable `v0.3.0` | **NOT_STARTED** |
@@ -53,6 +53,11 @@ v0.3.0-rc.1 (immutable) → post-RC1 main (0.3.0rc1)
 
 **V2 Guided Masterplan** (`docs/product/numra-v2-guided-masterplan.md`, ADR 0016)
 ist eine Produktspezifikation, **keine** laufende Implementierung.
+
+**Paralleler V2-Strang** (`pythagorean-v2` + Full Analysis V2/V3) gemäß ADR 0017
+darf parallel entwickelt werden, jedoch ausschließlich unter `/api/v2`, hinter
+Feature Flag, V1 unverändert, kein Default-Wechsel, und nicht zwingend Bestandteil
+des RC2-Tags. Kein V2-Merge nach `main` solange Strang A offen ist.
 
 ## 4. Dependency-Hinweis
 

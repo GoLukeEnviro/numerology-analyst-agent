@@ -2,25 +2,31 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-08-02 (V1.6 — post-RC1 → RC2 / Stable 0.3.0)
+> **Stand:** 2026-08-04 (V1.7 — post-RC1 → RC2 / Stable 0.3.0)
 > **Sprache:** Deutsch
 >
 > **Aktueller Steuerungsstand (post-RC1):**
 >
 > | Kennzeichen | Wert |
 > |---|---|
-> | `origin/main` | `5976ae2299059451461f634cb89f525151fda8b2` |
+> | `origin/main` | `a3f168ef99823fa2fd1c3f3b6536ea7523def451` |
 > | Paketversion | `0.3.0rc1` |
 > | Unveränderlicher Tag | `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a` |
 > | Ship-Hygiene | PR **#34** gemergt (Issue **#32** Determinismus-Fix, API-/Domain-Modularisierung, Frontend-Coverage-CI-Gate, README/Release-Truth) |
 > | Audit-Konsolidierung | PR **#35** gemergt (Audit-/Governance-/OpenAPI-Artefakte) |
-> | Offene PRs / Issues (Baseline 2026-08-02) | 0 / 0 |
-> | Frische lokale Gates auf `5976ae2` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
-> | Privates Staging / Backup-Restore / Rollback | **NOT_EXECUTED** (kein bestätigter Numra-Staging-Host) |
+> | RC2-Vorbereitung | PR **#55** gemergt (Restore-Skript OPS-001, Deploy-by-Digest OPS-002, Rollback-Rehearsal lokal, Committee-Status-Korrektur, CQ-001) |
+> | Offene PRs / Issues (Baseline 2026-08-04) | PR #55 **gemergt**; offene Issues **#37** (Epic), **#39–#49** |
+> | OPS-001 (Restore-Skript) | **behoben** (PR #55) |
+> | OPS-002 (Deploy-by-Digest) | **behoben** (PR #55) |
+> | OPS-003 (GHSA-Zuordnung) | **behoben** (dieser PR) |
+> | Frische lokale Gates auf `a3f168e` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
+> | Lokaler Restore-Test | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
+> | Lokaler Rollback-Rehearsal | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
+> | Privates Host-Staging | **NOT_EXECUTED** (kein bestätigter Numra-Staging-Host) — **einziger verbleibender Blocker** |
 > | Committee Review | **COMPLETE** (`docs/committee/rc2-*.md`); Entscheidung **NO_GO**; Betriebsabnahme **BLOCKED_BY_STAGING** |
 > | Nächster Code-Release | **v0.3.0-rc.2**, danach Closed Beta, dann **stable v0.3.0** |
 > | Öffentlicher Launch | **NO_GO** bis Launch-Checkliste vollständig |
-> | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 + Sequenz-ADR |
+> | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 + Sequenz-ADR (ADR 0017, 2026-08-04) |
 >
 > Historische RC1-Vorbereitungsangaben (Stand 2026-07-28: „jüngstes Tag v0.1.3“,
 > „große Teile von 0.3.0 unreleased“) sind **überholt**. Der North-Star-Text der

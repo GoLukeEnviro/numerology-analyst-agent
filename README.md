@@ -44,10 +44,10 @@ die rechtlichen Launch-Gates bestätigt wurden. Die deterministische Anwendung
 bleibt vollständig nutzbar, während DeepSeek standardmäßig deaktiviert ist
 (`NUMRA_LLM_ENABLED=false`).
 
-Das LLM-Staging ist technisch vorbereitet (`compose.llm-staging.yaml` als
-additives Override); ein echtes Betreiber-/Legal-/VPS-Staging, Backup-Restore
-und Rollback-Rehearsal sind **noch nicht real ausgeführt** (Skripte allein
-gelten nicht als Nachweis).
+- Lokaler Restore-Test: **PASS** (`docs/operations/rollback-rehearsal-local-2026-08-04.md`)
+- Lokaler Rollback-Rehearsal: **PASS**
+- Privates Host-Staging-Restore: **NOT_EXECUTED**
+- Privates Host-Staging-Rollback: **NOT_EXECUTED**
 
 > **Tag-Status:** `v0.3.0-rc.1` existiert und zeigt auf
 > `21ba56ed0d918cea7c60090bcc50937adc16269a`. Der Tag wird nicht bewegt; alle
@@ -327,7 +327,7 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 | Forschungs-/Plattformerweiterungen | 📄 Zukunftsmodule (`docs/roadmaps/numra-platform-expansion-roadmap.md`) |
 | Öffentlicher Launch | 🔒 bis VPS, Domain, TLS, Betreiberangaben und Rechtsfreigaben bestätigt sind |
 
-**Versionshinweis:** `pyproject.toml` steht formal auf `0.1.5`; der kumulierte
+**Versionshinweis:** `pyproject.toml` steht formal auf `0.3.0rc1`; der kumulierte
 Funktionsumfang ist über ADR 0015 als Release-Kandidat `v0.3.0-rc.1`
 normalisiert und getaggt. Die Dateien `docs/releases/v0.1.4.md` und
 `v0.1.5.md` beschreiben Entwicklungsmeilensteine, keine veröffentlichten Tags.
