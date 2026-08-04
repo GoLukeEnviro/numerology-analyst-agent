@@ -194,6 +194,39 @@ def test_restore_config_verifies_before_installing_and_matches_backup_paths() ->
     assert "mv " in restore
 
 
+def test_release_deploys_a_prebuilt_image_instead_of_building_on_the_host() -> None:
+    """release.sh darf nicht auf dem Zielhost neu bauen (OPS-002).
+
+    Ein Docker-Tag ist veraenderlich; zwei separate Builds desselben
+    Git-SHA sind nicht garantiert dasselbe Artefakt (Attestation-
+    Zeitstempel, BuildKit-Cache-Zustand). release.sh muss das bereits
+    gebaute, bereits getestete Image anhand seiner ID/Digest deployen -
+    "build once, test once, promote by digest" - statt es auf dem
+    Zielhost ein zweites, ungeprueftes Mal zu bauen.
+    """
+    release = (ROOT / "deploy" / "scripts" / "release.sh").read_text(encoding="utf-8")
+    build_once = ROOT / "deploy" / "scripts" / "build-release-image.sh"
+    assert build_once.is_file(), "deploy/scripts/build-release-image.sh fehlt (OPS-002)"
+
+    assert 'docker compose --env-file "$env_file" build' not in release
+    assert "--pull" not in release
+    assert "docker image inspect" in release
+    assert "--no-build" in release
+
+    build_once_text = build_once.read_text(encoding="utf-8")
+    assert "docker compose" in build_once_text
+    assert "build" in build_once_text
+    assert ".Id" in build_once_text or "RepoDigests" in build_once_text
+
+    # release.sh, rollback.sh und rollback-rehearsal.sh muessen denselben
+    # Release-Verzeichnis-Vertrag teilen (ueberschreibbar statt hartcodiert),
+    # sonst laesst sich keines der drei Skripte gegen dasselbe Testverzeichnis
+    # pruefen und ihre current/previous-Marker laufen auseinander.
+    rollback = (ROOT / "deploy" / "scripts" / "rollback.sh").read_text(encoding="utf-8")
+    assert "NUMRA_RELEASE_DIR:-/opt/numra/releases" in release
+    assert "NUMRA_RELEASE_DIR:-/opt/numra/releases" in rollback
+
+
 def test_local_deepseek_activation_keeps_secrets_out_of_git() -> None:
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     configure_path = ROOT / "deploy" / "scripts" / "configure-local-llm.ps1"
