@@ -32,7 +32,7 @@ RC1-Tag-Verschiebung.
 | Privates Staging (bestätigter Host) | NOT_EXECUTED |
 | Backup create + structural validate + restore + re-smoke | NOT_EXECUTED |
 | Rollback-Rehearsal | NOT_EXECUTED |
-| Committee Review | NOT_STARTED |
+| Committee Review | COMPLETE (`docs/committee/rc2-*.md`); Entscheidung NO_GO; Betriebsabnahme BLOCKED_BY_STAGING |
 | Closed Beta | NOT_STARTED |
 | Öffentlicher Launch | NO_GO |
 | Research Preview (historisch „0.4.0“) | NOT_STARTED |

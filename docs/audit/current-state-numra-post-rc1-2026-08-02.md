@@ -33,7 +33,7 @@
 | Echter Provider-/LLM-Smoke (Legal/Transfer/Secret) | **BLOCKED** / optional |
 | Verschlüsseltes Konfig-Backup + Restore | **NOT_EXECUTED** (Skripte vorhanden ≠ ausgeführt) |
 | Rollback-Rehearsal | **NOT_EXECUTED** |
-| Committee Release Review | **NOT_STARTED** |
+| Committee Release Review | **COMPLETE** (`docs/committee/rc2-*.md`), Entscheidung **NO_GO**, Betriebsabnahme **BLOCKED_BY_STAGING** |
 | Closed Beta | **NOT_STARTED** |
 | Stable `v0.3.0` | **NOT_STARTED** |
 | Öffentlicher Launch | **NO_GO** (`docs/operations/launch-checklist.md`) |
