@@ -15,6 +15,49 @@ def _compose() -> dict[str, object]:
     return payload
 
 
+def test_wheel_resource_check_runs_in_the_job_that_builds_the_wheel() -> None:
+    """Der Wheel-Ressourcen-Test muss dort laufen, wo ``dist/`` entsteht.
+
+    Ohne diese Bindung baut der pytest-Job kein Wheel und der Test überspringt
+    sich in jedem Lauf — lokal wie in der Pipeline.
+    """
+    workflow = yaml.safe_load(
+        (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    )
+    assert isinstance(workflow, dict)
+    jobs = workflow["jobs"]
+    assert isinstance(jobs, dict)
+
+    building_jobs = [
+        name
+        for name, job in jobs.items()
+        if any("uv build" in str(step.get("run", "")) for step in job["steps"])
+    ]
+    assert building_jobs, "Kein CI-Job baut ein Wheel"
+
+    for name in building_jobs:
+        steps = jobs[name]["steps"]
+        checking = [
+            step
+            for step in steps
+            if "test_wheel_contains_prompt_templates" in str(step.get("run", ""))
+        ]
+        assert checking, f"Job {name!r} baut ein Wheel, prüft aber die Paketressourcen nicht"
+        assert all(str(step.get("env", {}).get("NUMRA_REQUIRE_WHEEL", "")) for step in checking), (
+            f"Job {name!r} prüft das Wheel, ohne es per NUMRA_REQUIRE_WHEEL zu verlangen — "
+            "ein fehlendes Wheel würde sich still überspringen"
+        )
+
+    # Die Anforderung darf nicht global gelten: Jobs ohne uv build fuehren
+    # pytest aus, ohne ein Wheel bauen zu koennen.
+    for name, job in jobs.items():
+        if name in building_jobs:
+            continue
+        assert "NUMRA_REQUIRE_WHEEL" not in str(job), (
+            f"Job {name!r} verlangt ein Wheel, baut aber keines"
+        )
+
+
 def test_only_gateway_is_published_on_loopback() -> None:
     services = _compose()["services"]
     assert isinstance(services, dict)

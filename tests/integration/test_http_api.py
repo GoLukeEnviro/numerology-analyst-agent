@@ -124,6 +124,41 @@ async def test_unknown_fields_are_rejected(client: AsyncClient) -> None:
 
 @pytest.mark.integration
 @pytest.mark.anyio
+async def test_v1_endpoint_rejects_a_foreign_method_version(client: AsyncClient) -> None:
+    """Der V1-Endpunkt darf v2 nicht still als v1 rechnen, sondern muss ablehnen.
+
+    Ohne Guard antwortet die Route mit 200 und einem v1-Ergebnis, das die
+    v2-Policy im Envelope traegt — eine fuer Clients unsichtbare Fehletikettierung.
+    """
+    request = _request()
+    policy = request["policy"]
+    assert isinstance(policy, dict)
+    policy["version"] = "v2"
+
+    response = await client.post(
+        "/api/v1/profiles/calculate",
+        json=request,
+        headers={"X-Correlation-ID": "method-version-case"},
+    )
+
+    assert response.status_code == 422
+    assert response.headers["content-type"].startswith("application/problem+json")
+    assert response.json()["code"] == "METHOD_VERSION_MISMATCH"
+    assert response.json()["correlation_id"] == "method-version-case"
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_v1_endpoint_still_accepts_its_own_method_version(client: AsyncClient) -> None:
+    """Der Guard darf den bestehenden v1-Vertrag nicht veraendern."""
+    response = await client.post("/api/v1/profiles/calculate", json=_request())
+
+    assert response.status_code == 200
+    assert response.json()["policy"]["version"] == "v1"
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
 async def test_cors_allows_only_configured_origin(client: AsyncClient) -> None:
     allowed = await client.options(
         "/api/v1/profiles/calculate",
