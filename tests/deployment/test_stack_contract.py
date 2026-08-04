@@ -164,6 +164,36 @@ def test_rollback_rehearsal_uses_sha_tags_compatible_with_rollback_script() -> N
     assert "NUMRA_RELEASE_DIR" in rehearsal
 
 
+def test_restore_config_verifies_before_installing_and_matches_backup_paths() -> None:
+    """restore.sh muss dieselben Pfade wie backup-config.sh wiederherstellen.
+
+    OPS-001: backup-config.sh entschluesselt bisher nur zur Verifikation,
+    das belegt Lesbarkeit, nicht Wiederherstellbarkeit. restore-config.sh
+    muss root verlangen, strukturell pruefen (nicht nur `tar -tzf`) und
+    atomar installieren statt direkt in die Zielpfade zu schreiben.
+    """
+    backup = (ROOT / "deploy" / "scripts" / "backup-config.sh").read_text(encoding="utf-8")
+    restore_path = ROOT / "deploy" / "scripts" / "restore-config.sh"
+    assert restore_path.is_file(), "deploy/scripts/restore-config.sh fehlt (OPS-001)"
+    restore = restore_path.read_text(encoding="utf-8")
+
+    assert "etc/numra/numra.env" in backup
+    assert "etc/nginx/sites-available/numra" in backup
+
+    assert "id -u" in restore
+    assert "AGE_IDENTITY" in restore
+    assert "age --decrypt" in restore
+    # Strukturelle Pruefung statt reinem tar -tzf: erwartete Mitgliederliste
+    # wird gegen die tatsaechliche abgeglichen, nicht nur "laesst sich lesen".
+    assert "etc/numra/numra.env" in restore
+    assert "etc/nginx/sites-available/numra" in restore
+    assert "0600" in restore
+    # Atomar installieren: erst in ein Staging-Verzeichnis extrahieren,
+    # dann mv in die Zielpfade - kein Schreiben ins Ziel vor Verifikation.
+    assert "mktemp -d" in restore
+    assert "mv " in restore
+
+
 def test_local_deepseek_activation_keeps_secrets_out_of_git() -> None:
     gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     configure_path = ROOT / "deploy" / "scripts" / "configure-local-llm.ps1"
