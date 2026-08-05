@@ -1,0 +1,602 @@
+{
+  "bundle_id": "numra-knowledge-de-v3",
+  "locale": "de",
+  "version": "v3",
+  "scientific_position": "Numerologie ist empirisch nicht validiert. Alle Aussagen in diesem Paket sind Reflexionsangebote ohne wissenschaftliche, medizinische oder psychologische Beweiskraft.",
+  "sources": [
+    {
+      "id": "numra-method-v2",
+      "title": "Numra Methodenspezifikation v2",
+      "source_type": "internal",
+      "locator": "docs/methods/"
+    },
+    {
+      "id": "numra-boundary-v1",
+      "title": "Numra Wissenschaftliche Grenze",
+      "source_type": "internal",
+      "locator": "docs/field/"
+    },
+    {
+      "id": "numra-tradition-v1",
+      "title": "Traditionelle Numerologie-Überlieferung",
+      "source_type": "tradition",
+      "locator": "unverifiziert"
+    }
+  ],
+  "entries": [
+    {
+      "stable_id": "de.pythagorean.v3.single.1",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 1,
+      "compound": null,
+      "title": "Eigenständigkeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann Initiative und selbstbestimmtes Handeln anregen, wo eigene Schritte tragfähig sind.",
+      "shadow_expression": "Betontes Selbstständigkeitsstreben kann in Isolation oder Überlastung kippen, wenn Mitwirkung abgewehrt wird.",
+      "development_theme": "Eigenverantwortung",
+      "traditional_claims": [
+        "Die 1 wird traditionell mit Initiative, Eigenständigkeit und Beginn verbunden."
+      ],
+      "reflection_prompts": [
+        "Die Symbolik kann zu der Frage einladen, wo selbstbestimmtes Handeln hilfreich ist."
+      ],
+      "practical_suggestions": [
+        "Formuliere einen kleinen nächsten Schritt, den du eigenverantwortlich prüfen kannst."
+      ],
+      "counter_hypotheses": [
+        "Erlebte Eigenständigkeit kann ebenso durch Situation, Rolle und Lernerfahrung erklärt werden."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.2",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 2,
+      "compound": null,
+      "title": "Verbindung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu feinfühliger Wahrnehmung und kooperativem Miteinander einladen.",
+      "shadow_expression": "Überbetonte Harmonie kann zu Selbstzurücknahme und Konfliktvermeidung führen.",
+      "development_theme": "Kooperation und Abgrenzung",
+      "traditional_claims": [
+        "Die 2 wird traditionell mit Kooperation, Sensitivität und Partnerschaft verbunden."
+      ],
+      "reflection_prompts": [
+        "In welchen Beziehungen erlebst du ein ausgewogenes Geben und Nehmen?"
+      ],
+      "practical_suggestions": [
+        "Achte darauf, eigene Bedürfnisse ebenso ernst zu nehmen wie die anderer."
+      ],
+      "counter_hypotheses": [
+        "Kooperationsbereitschaft kann durch Erziehung und Umfeld ebenso geprägt sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.3",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 3,
+      "compound": null,
+      "title": "Ausdruck",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu kreativem Selbstausdruck und kommunikativer Lebendigkeit anregen.",
+      "shadow_expression": "Überbetonung des Ausdrucks kann zu Zerstreuung und oberflächlicher Breite führen.",
+      "development_theme": "Kreativer Selbstausdruck",
+      "traditional_claims": [
+        "Die 3 wird traditionell mit Kommunikation, Kreativität und Ausdrucksfreude verbunden."
+      ],
+      "reflection_prompts": [
+        "Welche Form des Ausdrucks erfüllt dich, ohne dich zu verausgaben?"
+      ],
+      "practical_suggestions": [
+        "Wähle ein kreatives Vorhaben und gib ihm regelmäßig einen festen Rahmen."
+      ],
+      "counter_hypotheses": [
+        "Kommunikationsstärke kann ebenso durch Übung und Umfeld geformt sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.4",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 4,
+      "compound": null,
+      "title": "Struktur",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Beständigkeit, Systematik und Tragfähigkeit im Alltag einladen.",
+      "shadow_expression": "Überbetonte Ordnung kann in Starrheit und übermäßige Selbstdisziplinierung kippen.",
+      "development_theme": "Innere und äußere Ordnung",
+      "traditional_claims": [
+        "Die 4 wird traditionell mit Struktur, Verlässlichkeit und Beständigkeit verbunden."
+      ],
+      "reflection_prompts": [
+        "Welche Strukturen unterstützen dich, ohne dich einzuengen?"
+      ],
+      "practical_suggestions": [
+        "Erprobe ein praktisches System, das dir im Alltag Halt gibt."
+      ],
+      "counter_hypotheses": [
+        "Ordnungsvermögen kann durch Gewohnheit und Arbeitsumfeld ebenso geprägt sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.5",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 5,
+      "compound": null,
+      "title": "Freiheit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Flexibilität, Wandel und sinnlicher Weltzugewandtheit ermutigen.",
+      "shadow_expression": "Überbetonte Freiheit kann in Rastlosigkeit und Bindungsangst umschlagen.",
+      "development_theme": "Wandel und Flexibilität",
+      "traditional_claims": [
+        "Die 5 wird traditionell mit Freiheit, Abwechslung und Anpassungsfähigkeit verbunden."
+      ],
+      "reflection_prompts": [
+        "Wo brauchst du Freiheit, und wo gibt dir Verbindlichkeit Halt?"
+      ],
+      "practical_suggestions": [
+        "Plane regelmäßige neue Erfahrungen in einem stabilen Rahmen ein."
+      ],
+      "counter_hypotheses": [
+        "Veränderungsbereitschaft kann durch Lebensumstände und Berufsfeld ebenso erlernt sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.6",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 6,
+      "compound": null,
+      "title": "Fürsorge",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Verantwortung, Fürsorge und gestaltendem Gemeinsinn anregen.",
+      "shadow_expression": "Überbetonte Fürsorge kann in Überverantwortlichkeit und Selbstvernachlässigung kippen.",
+      "development_theme": "Fürsorge und Selbstfürsorge",
+      "traditional_claims": [
+        "Die 6 wird traditionell mit Verantwortung, Fürsorge und Harmonie verbunden."
+      ],
+      "reflection_prompts": [
+        "Wo findest du die Balance zwischen Für- andere-da-sein und Für-dich-selbst-sorgen?"
+      ],
+      "practical_suggestions": [
+        "Setze bewusst eine Grenze bei übernommener Verantwortung und beobachte die Wirkung."
+      ],
+      "counter_hypotheses": [
+        "Fürsorgebereitschaft kann durch Rollenerwartungen und Erziehung ebenso geformt sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.7",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 7,
+      "compound": null,
+      "title": "Erkenntnis",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Reflexion, innerer Tiefe und eigenständigem Denken einladen.",
+      "shadow_expression": "Überbetonte Innenschau kann in Rückzug, Skepsis und Abgrenzung kippen.",
+      "development_theme": "Reflexion und Wissensdrang",
+      "traditional_claims": [
+        "Die 7 wird traditionell mit Weisheit, Analyse und spiritueller Suche verbunden."
+      ],
+      "reflection_prompts": [
+        "Wann hast du zuletzt eine stille Einsicht als wertvoll erlebt?"
+      ],
+      "practical_suggestions": [
+        "Reserviere regelmäßige Zeit für ungestörte Reflexion."
+      ],
+      "counter_hypotheses": [
+        "Analytisches Denken kann durch Ausbildung und kognitive Gewohnheiten ebenso geschult sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.8",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 8,
+      "compound": null,
+      "title": "Kraft",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Zielstrebigkeit, Durchsetzungskraft und gestaltender Wirksamkeit ermutigen.",
+      "shadow_expression": "Überbetonte Macht kann in Dominanz und reine Ergebnisorientierung kippen.",
+      "development_theme": "Wirksamkeit und Balance",
+      "traditional_claims": [
+        "Die 8 wird traditionell mit Kraft, Erfolg und materieller Manifestation verbunden."
+      ],
+      "reflection_prompts": [
+        "Wofür setzt du deine Energie ein — und wofür möchtest du sie einsetzen?"
+      ],
+      "practical_suggestions": [
+        "Prüfe ein aktuelles Ziel: Dient es deinem Wachstum oder nur äußerer Anerkennung?"
+      ],
+      "counter_hypotheses": [
+        "Erfolgsstreben kann durch gesellschaftliche Prägungen und wirtschaftliche Notwendigkeiten ebenso motiviert sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.single.9",
+      "method_system": "pythagorean-v2",
+      "classification": "single",
+      "number": 9,
+      "compound": null,
+      "title": "Humanität",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik kann zu Mitgefühl, Weitblick und einem engagierten Beitrag für ein grösseres Ganzes einladen.",
+      "shadow_expression": "Überhöhter Idealismus kann in Enttäuschung und Selbstopferung kippen.",
+      "development_theme": "Mitgefühl und Weitblick",
+      "traditional_claims": [
+        "Die 9 wird traditionell mit Humanität, Vollendung und universeller Liebe verbunden."
+      ],
+      "reflection_prompts": [
+        "Welcher Beitrag ist dir wirklich wichtig — und wo lässt du los?"
+      ],
+      "practical_suggestions": [
+        "Engagiere dich für ein konkretes Anliegen, ohne dich darin zu verlieren."
+      ],
+      "counter_hypotheses": [
+        "Humanitäres Engagement kann durch biografische Erfahrungen und Wertvermittlung ebenso motiviert sein."
+      ],
+      "uncertainty": null,
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.master.11",
+      "method_system": "pythagorean-v2",
+      "classification": "master",
+      "number": 11,
+      "compound": null,
+      "title": "Meisterzahl 11 — Inspiration",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 11 kann zu gesteigerter Intuition, schöpferischer Vision und einem feinen Gespür für Zusammenhänge einladen.",
+      "shadow_expression": "Die hohe Empfänglichkeit kann in Nervosität, innerer Überforderung und Flucht vor dem eigenen Potenzial kippen.",
+      "development_theme": "Vision und Bodenhaftung",
+      "traditional_claims": [
+        "Die Meisterzahl 11 gilt traditionell als Symbol für Inspiration, Intuition und Erleuchtung.",
+        "Sie wird mit geistiger Führerschaft und kreativer Vision in Verbindung gebracht."
+      ],
+      "reflection_prompts": [
+        "Wann hast du einen intuitiven Impuls wahrgenommen und ihm vertraut?"
+      ],
+      "practical_suggestions": [
+        "Halte intuitive Eingebungen schriftlich fest und prüfe sie später nüchtern."
+      ],
+      "counter_hypotheses": [
+        "Intuition kann durch Erfahrungswissen und unbewusste Mustererkennung ebenso erklärt werden."
+      ],
+      "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.master.22",
+      "method_system": "pythagorean-v2",
+      "classification": "master",
+      "number": 22,
+      "compound": null,
+      "title": "Meisterzahl 22 — Manifestation",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 22 kann zu grosser praktischer Gestaltungskraft und der Fähigkeit einladen, Visionen in tragfähige Strukturen zu überführen.",
+      "shadow_expression": "Das hohe Potenzial kann in Überforderung, Perfektionismus und der Angst zu scheitern kippen.",
+      "development_theme": "Vision in Struktur überführen",
+      "traditional_claims": [
+        "Die Meisterzahl 22 gilt traditionell als kraftvollste Zahl — sie verbindet intuitive Vision (11) mit praktischer Umsetzung (4).",
+        "Sie wird mit der Fähigkeit in Verbindung gebracht, grosse, dauerhafte Werke zu schaffen."
+      ],
+      "reflection_prompts": [
+        "Welche Vision möchtest du in eine konkrete, tragfähige Form bringen?"
+      ],
+      "practical_suggestions": [
+        "Zerlege ein grosses Vorhaben in einen nächsten, überschaubaren Schritt."
+      ],
+      "counter_hypotheses": [
+        "Praktische Gestaltungskraft kann durch handwerkliche Übung, Projektmethodik und Disziplin ebenso erworben werden."
+      ],
+      "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.master.33",
+      "method_system": "pythagorean-v2",
+      "classification": "master",
+      "number": 33,
+      "compound": null,
+      "title": "Meisterzahl 33 — Hingabe",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 33 kann zu selbstloser Hingabe, heilender Präsenz und tiefem Mitgefühl einladen.",
+      "shadow_expression": "Überbetonte Hingabe kann in Selbstaufgabe und ungesundem Märtyrertum münden.",
+      "development_theme": "Hingabe mit Selbstfürsorge",
+      "traditional_claims": [
+        "Die Meisterzahl 33 gilt traditionell als Symbol für bedingungslose Liebe und geistige Meisterschaft."
+      ],
+      "reflection_prompts": [
+        "Wo hast du das Gefühl, wirklich etwas bewirken zu können — ohne dich zu verlieren?"
+      ],
+      "practical_suggestions": [
+        "Übe bewusst, 'Nein' zu sagen, wo deine eigenen Grenzen überschritten werden."
+      ],
+      "counter_hypotheses": [
+        "Altruistisches Verhalten kann durch soziale Normen und persönliche Werte ebenso motiviert sein."
+      ],
+      "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity",
+        "personal_year", "personal_month", "personal_day"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.karmic.13",
+      "method_system": "pythagorean-v2",
+      "classification": "karmic_debt",
+      "number": 4,
+      "compound": {"raw_value": 13, "reduced_value": 4, "compound_notation": "13/4"},
+      "title": "Karmische Schuld 13/4 — Transformation durch Arbeit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 13/4 kann zu tiefgreifender Transformation durch fokussierte, disziplinierte Arbeit einladen.",
+      "shadow_expression": "Das Muster kann in Arbeitsvermeidung, mangelnder Konzentration und dem Gefühl festzustecken erlebt werden.",
+      "development_theme": "Disziplin als Weg zur Transformation",
+      "traditional_claims": [
+        "Die 13/4 gilt traditionell als karmische Schuld, die durch konzentrierte, bodenständige Arbeit ausgeglichen werden kann."
+      ],
+      "reflection_prompts": [
+        "Wo erlebst du deine Arbeit als transformierend — und wo als reine Pflicht?"
+      ],
+      "practical_suggestions": [
+        "Finde eine praktische Tätigkeit, die dir Freude macht, und übe sie regelmässig aus."
+      ],
+      "counter_hypotheses": [
+        "Das Erleben von Arbeitsvermeidung oder Disziplinlosigkeit kann durch viele biografische Faktoren erklärt werden."
+      ],
+      "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.karmic.14",
+      "method_system": "pythagorean-v2",
+      "classification": "karmic_debt",
+      "number": 5,
+      "compound": {"raw_value": 14, "reduced_value": 5, "compound_notation": "14/5"},
+      "title": "Karmische Schuld 14/5 — Mass und Freiheit",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 14/5 kann zu einer reifen, bewusst gewählten Freiheit einladen, die innere Disziplin mit äusserer Flexibilität verbindet.",
+      "shadow_expression": "Das Muster kann in Suchtverhalten, übermässigem Freiheitsdrang und mangelnder Selbstbindung erlebt werden.",
+      "development_theme": "Freiheit durch Mass",
+      "traditional_claims": [
+        "Die 14/5 gilt traditionell als karmische Schuld, die durch massvolle Freiheit und bewusste Selbstbindung ausgeglichen werden kann."
+      ],
+      "reflection_prompts": [
+        "Wo fühlst du dich frei — und wo sind deine Freiheiten gewohnheitsmässig geworden?"
+      ],
+      "practical_suggestions": [
+        "Setze dir für eine Woche eine freiwillige, bewusste Einschränkung und beobachte die Wirkung."
+      ],
+      "counter_hypotheses": [
+        "Freiheitsdrang und Bindungsmuster können durch familiäre Prägung und Lebensereignisse ebenso erklärt werden."
+      ],
+      "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.karmic.16",
+      "method_system": "pythagorean-v2",
+      "classification": "karmic_debt",
+      "number": 7,
+      "compound": {"raw_value": 16, "reduced_value": 7, "compound_notation": "16/7"},
+      "title": "Karmische Schuld 16/7 — Erneuerung durch Einsicht",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 16/7 kann zu tiefgreifender Selbsterkenntnis durch das Loslassen überholter Strukturen und die Annahme innerer Wahrheit einladen.",
+      "shadow_expression": "Das Muster kann in wiederholten Zusammenbrüchen von Lebenskonstrukten, Stolz und Verleugnung erlebt werden.",
+      "development_theme": "Einsicht und Neubeginn",
+      "traditional_claims": [
+        "Die 16/7 gilt traditionell als karmische Schuld, die durch wiederholte Krisen zur inneren Erneuerung und Weisheit führen kann."
+      ],
+      "reflection_prompts": [
+        "Welche wiederkehrenden Muster in deinem Leben könnten eine Einladung zur tieferen Einsicht sein?"
+      ],
+      "practical_suggestions": [
+        "Notiere ein Muster, das sich wiederholt zeigt, und frage dich ehrlich, was es dich lehren könnte."
+      ],
+      "counter_hypotheses": [
+        "Wiederkehrende Lebenskrisen können durch strukturelle, psychologische und soziale Faktoren erklärt werden."
+      ],
+      "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    },
+    {
+      "stable_id": "de.pythagorean.v3.karmic.19",
+      "method_system": "pythagorean-v2",
+      "classification": "karmic_debt",
+      "number": 1,
+      "compound": {"raw_value": 19, "reduced_value": 1, "compound_notation": "19/1"},
+      "title": "Karmische Schuld 19/1 — Eigenständigkeit durch Verbindung",
+      "claim_class": "traditional_claim",
+      "constructive_expression": "Die Symbolik der 19/1 kann zu einer gereiften Eigenständigkeit einladen, die nicht auf Abgrenzung, sondern auf echter innerer Unabhängigkeit beruht.",
+      "shadow_expression": "Das Muster kann in übermässigem Selbstbezug, Abhängigkeit von Anerkennung und Schwierigkeiten mit Kooperation erlebt werden.",
+      "development_theme": "Reife Eigenständigkeit",
+      "traditional_claims": [
+        "Die 19/1 gilt traditionell als karmische Schuld, die durch das Erlernen echter Unabhängigkeit bei gleichzeitiger Verbundenheit ausgeglichen werden kann."
+      ],
+      "reflection_prompts": [
+        "Wo handelst du wirklich selbstbestimmt — und wo suchst du vor allem Bestätigung?"
+      ],
+      "practical_suggestions": [
+        "Triff eine kleine Entscheidung ganz für dich allein und beobachte, wie sie sich anfühlt."
+      ],
+      "counter_hypotheses": [
+        "Selbstbezug und Anerkennungsbedürfnis können durch frühkindliche Prägung und soziale Verstärkung ebenso entstehen."
+      ],
+      "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
+      "result_contexts": [
+        "life_path_primary", "life_path_secondary", "birthday", "attitude",
+        "expression", "soul_urge", "personality", "maturity"
+      ],
+      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "authoring_provenance": {
+        "authored_at": "2026-08-05",
+        "author": "Numra Knowledge Team",
+        "review_status": "draft"
+      }
+    }
+  ]
+}
