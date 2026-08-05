@@ -271,9 +271,13 @@ def test_wheel_contains_prompt_templates() -> None:
         names = zf.namelist()
     expected = [
         "numerology_agent/prompt_templates/system/de-report-system.md",
+        "numerology_agent/prompt_templates/system/de-report-system-v3.md",
         "numerology_agent/prompt_templates/tasks/de-report-task.md",
+        "numerology_agent/prompt_templates/tasks/de-report-task-v3.md",
         "numerology_agent/prompt_templates/tasks/de-follow-up-task.md",
+        "numerology_agent/prompt_templates/tasks/de-follow-up-task-v3.md",
         "numerology_agent/prompt_templates/eval/de-report-eval.md",
+        "numerology_knowledge/data/de-v3.json",
     ]
     missing = [e for e in expected if e not in names]
     assert not missing, f"Fehlende Prompt-Dateien im Wheel: {missing}"
