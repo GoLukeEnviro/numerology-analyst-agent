@@ -127,3 +127,30 @@ class MetaResponse(_HttpModel):
     profile_schema_version: str
     knowledge_bundle: str
     llm: LlmMeta = Field(default_factory=LlmMeta)
+
+
+# ---------------------------------------------------------------------------
+# V2 / V3 HTTP models (parallel stack, never shares unions with V1 models)
+# ---------------------------------------------------------------------------
+
+
+class MetaResponseV2(_HttpModel):
+    """Capability contract for the /api/v2 endpoint family."""
+
+    api_version: Literal["v2"] = "v2"
+    endpoint_method_version: Literal["v2"] = "v2"
+    supported_method_versions: tuple[Literal["v2"], ...] = ("v2",)
+    product_default_method_version: Literal["v1", "v2"] = "v1"
+    rollout_stage: Literal["disabled", "opt_in", "canary", "default"] = "disabled"
+    package_version: str = ""
+    supported_profile_schema_versions: tuple[str, ...] = ()
+    supported_report_schema_versions: tuple[str, ...] = ()
+    supported_knowledge_bundles: tuple[str, ...] = ()
+    llm: LlmMeta = Field(default_factory=LlmMeta)
+
+
+class ProfileCalculationRequestV2(_HttpModel):
+    """Explicit person and method policy for the pythagorean-v2 endpoint."""
+
+    person: PersonInput
+    policy: MethodPolicy

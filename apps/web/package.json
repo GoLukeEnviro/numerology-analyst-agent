@@ -8,7 +8,7 @@
     "check:build": "node scripts/check-build.mjs",
     "dev": "vite",
     "e2e": "playwright test",
-    "generate:api": "openapi-typescript ../../openapi/numra-v1.json -o src/api/schema.d.ts",
+    "generate:api": "openapi-typescript ../../openapi/numra-api.json -o src/api/schema.d.ts",
     "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
     "coverage": "vitest run --coverage",

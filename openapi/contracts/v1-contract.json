@@ -1,0 +1,674 @@
+{
+  "components": {
+    "schemas": {
+      "AnalysisFollowUp": {
+        "additionalProperties": false,
+        "description": "Canonical v2 follow-up — the only structure newly produced by the agent.",
+        "properties": {
+          "answer": {
+            "title": "Answer",
+            "type": "string"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisClaim"
+            },
+            "title": "Claims",
+            "type": "array"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-follow-up-v2",
+            "default": "analysis-follow-up-v2",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer",
+          "claims",
+          "limitations",
+          "provenance"
+        ],
+        "title": "AnalysisFollowUp",
+        "type": "object"
+      },
+      "AnalysisFollowUpRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileCalculationResult"
+              },
+              {
+                "$ref": "#/components/schemas/LegacyV2ProfileCalculationResult"
+              }
+            ],
+            "title": "Profile"
+          },
+          "question": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Question",
+            "type": "string"
+          },
+          "report": {
+            "$ref": "#/components/schemas/AnalysisReport"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile",
+          "report",
+          "question"
+        ],
+        "title": "AnalysisFollowUpRequest",
+        "type": "object"
+      },
+      "AnalysisReport": {
+        "additionalProperties": false,
+        "description": "Canonical v2 report — the only structure newly produced by the agent.",
+        "properties": {
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/AnalysisProvenance"
+          },
+          "schema_version": {
+            "const": "analysis-report-v2",
+            "default": "analysis-report-v2",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/AnalysisSection"
+            },
+            "title": "Sections",
+            "type": "array"
+          },
+          "suggestions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggestions",
+            "type": "array"
+          },
+          "summary": {
+            "title": "Summary",
+            "type": "string"
+          }
+        },
+        "required": [
+          "summary",
+          "sections",
+          "limitations",
+          "suggestions",
+          "provenance"
+        ],
+        "title": "AnalysisReport",
+        "type": "object"
+      },
+      "AnalysisReportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "const": true,
+            "title": "Consent",
+            "type": "boolean"
+          },
+          "device_id": {
+            "maxLength": 128,
+            "minLength": 16,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "title": "Device Id",
+            "type": "string"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileCalculationResult"
+              },
+              {
+                "$ref": "#/components/schemas/LegacyV2ProfileCalculationResult"
+              }
+            ],
+            "title": "Profile"
+          }
+        },
+        "required": [
+          "consent",
+          "device_id",
+          "profile"
+        ],
+        "title": "AnalysisReportRequest",
+        "type": "object"
+      },
+      "LiveStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "const": "ok",
+            "default": "ok",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "LiveStatus",
+        "type": "object"
+      },
+      "MetaResponse": {
+        "additionalProperties": false,
+        "properties": {
+          "api_version": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Api Version",
+            "type": "string"
+          },
+          "knowledge_bundle": {
+            "title": "Knowledge Bundle",
+            "type": "string"
+          },
+          "llm": {
+            "$ref": "#/components/schemas/LlmMeta"
+          },
+          "method_system": {
+            "const": "pythagorean",
+            "default": "pythagorean",
+            "title": "Method System",
+            "type": "string"
+          },
+          "method_version": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Method Version",
+            "type": "string"
+          },
+          "package_version": {
+            "title": "Package Version",
+            "type": "string"
+          },
+          "profile_schema_version": {
+            "title": "Profile Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "package_version",
+          "profile_schema_version",
+          "knowledge_bundle"
+        ],
+        "title": "MetaResponse",
+        "type": "object"
+      },
+      "ProblemDetails": {
+        "additionalProperties": false,
+        "description": "RFC-9457-style API error with a stable machine-readable code.",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "correlation_id": {
+            "title": "Correlation Id",
+            "type": "string"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "field_errors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FieldError"
+            },
+            "title": "Field Errors",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "detail",
+          "correlation_id"
+        ],
+        "title": "ProblemDetails",
+        "type": "object"
+      },
+      "ProfileCalculationRequest": {
+        "additionalProperties": false,
+        "description": "Explicit person and method policy submitted to the deterministic core.",
+        "properties": {
+          "person": {
+            "$ref": "#/components/schemas/PersonInput"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/MethodPolicy"
+          }
+        },
+        "required": [
+          "person",
+          "policy"
+        ],
+        "title": "ProfileCalculationRequest",
+        "type": "object"
+      },
+      "ProfileCalculationResult": {
+        "additionalProperties": false,
+        "description": "Complete deterministic profile contract introduced for release 0.1.4.",
+        "properties": {
+          "active_name": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attitude": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "birthday": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "claim_type": {
+            "$ref": "#/components/schemas/ClaimType",
+            "default": "calculation_fact"
+          },
+          "consistency": {
+            "$ref": "#/components/schemas/ConsistencyStatus"
+          },
+          "core_name": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NameNumberSet"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cycles": {
+            "$ref": "#/components/schemas/CycleCalculationResult"
+          },
+          "deterministic_hash": {
+            "default": "",
+            "title": "Deterministic Hash",
+            "type": "string"
+          },
+          "input_ref": {
+            "$ref": "#/components/schemas/PersonInput"
+          },
+          "life_path_a": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "life_path_b": {
+            "$ref": "#/components/schemas/LifePathResult"
+          },
+          "maturity": {
+            "$ref": "#/components/schemas/NumberResult"
+          },
+          "name": {
+            "default": "complete_profile",
+            "title": "Name",
+            "type": "string"
+          },
+          "policy": {
+            "$ref": "#/components/schemas/MethodPolicy"
+          },
+          "schema_version": {
+            "default": "profile-calculation-result-v3",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trace": {
+            "$ref": "#/components/schemas/AuditTrace"
+          }
+        },
+        "required": [
+          "input_ref",
+          "policy",
+          "life_path_a",
+          "life_path_b",
+          "consistency",
+          "birthday",
+          "attitude",
+          "maturity",
+          "cycles",
+          "trace"
+        ],
+        "title": "ProfileCalculationResult",
+        "type": "object"
+      },
+      "ReadyStatus": {
+        "additionalProperties": false,
+        "properties": {
+          "engine": {
+            "const": "ready",
+            "default": "ready",
+            "title": "Engine",
+            "type": "string"
+          },
+          "provider": {
+            "default": "disabled",
+            "enum": [
+              "disabled",
+              "configured"
+            ],
+            "title": "Provider",
+            "type": "string"
+          },
+          "redis": {
+            "default": "not_configured",
+            "enum": [
+              "not_configured",
+              "ready",
+              "unavailable"
+            ],
+            "title": "Redis",
+            "type": "string"
+          },
+          "status": {
+            "default": "ready",
+            "enum": [
+              "ready",
+              "unavailable"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "title": "ReadyStatus",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Numra API V1 Contract Snapshot",
+    "version": "1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/analyses/follow-up": {
+      "post": {
+        "operationId": "analysis_follow_up_api_v1_analyses_follow_up_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisFollowUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisFollowUp"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Follow Up",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
+    "/api/v1/analyses/report": {
+      "post": {
+        "operationId": "analysis_report_api_v1_analyses_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Unprocessable Entity"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Too Many Requests"
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Service Unavailable"
+          }
+        },
+        "summary": "Analysis Report",
+        "tags": [
+          "analyses"
+        ]
+      }
+    },
+    "/api/v1/health/live": {
+      "get": {
+        "operationId": "live_api_v1_health_live_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Live",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/health/ready": {
+      "get": {
+        "operationId": "ready_api_v1_health_ready_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadyStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ready",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/v1/meta": {
+      "get": {
+        "operationId": "meta_api_v1_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/api/v1/profiles/calculate": {
+      "post": {
+        "operationId": "calculate_api_v1_profiles_calculate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileCalculationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileCalculationResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Calculation rejected"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            },
+            "description": "Request validation failed"
+          }
+        },
+        "summary": "Calculate",
+        "tags": [
+          "profiles"
+        ]
+      }
+    }
+  }
+}

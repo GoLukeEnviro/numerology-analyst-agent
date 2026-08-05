@@ -22,8 +22,16 @@ import typer
 
 from numerology_api.contracts import dump_profile_as_json
 from numerology_domain.exceptions import NumerologyError
-from numerology_domain.models import MethodPolicy, PersonInput
+from numerology_domain.models import (
+    MethodPolicy,
+    PYTHAGOREAN_V1_VERSION,
+    PYTHAGOREAN_V2_VERSION,
+    PersonInput,
+    ProfileCalculationResult,
+    ProfileCalculationResultV4,
+)
 from numerology_engine.profile import calculate_profile
+from numerology_engine.profile_v2 import calculate_profile_v2
 
 
 def _package_version() -> str:
@@ -82,8 +90,20 @@ def profile(
         "--as-of-date",
         help="Required evaluation date as YYYY-MM-DD. birth must be <= as_of.",
     ),
+    method_version: str = typer.Option(
+        PYTHAGOREAN_V1_VERSION,
+        "--method-version",
+        help=f"Method version: {PYTHAGOREAN_V1_VERSION!r} (default) or {PYTHAGOREAN_V2_VERSION!r}.",
+    ),
 ) -> None:
     """Compute the complete deterministic profile and emit canonical JSON."""
+    if method_version not in (PYTHAGOREAN_V1_VERSION, PYTHAGOREAN_V2_VERSION):
+        typer.echo(
+            f"error: --method-version must be {PYTHAGOREAN_V1_VERSION!r} or "
+            f"{PYTHAGOREAN_V2_VERSION!r} (got {method_version!r})",
+            err=True,
+        )
+        raise typer.Exit(code=1)
     # as_of_date is mandatory (v0.1.3 contract integrity): the CLI must be
     # fully reproducible; date.today() would break determinism.
     try:
@@ -94,8 +114,13 @@ def profile(
             active_name=active_name,
             as_of_date=as_of_date,
         )
-        policy = MethodPolicy()  # canonical pythagorean-v1 defaults
-        result = calculate_profile(person, policy)
+        policy = MethodPolicy(version=method_version)
+        if method_version == PYTHAGOREAN_V2_VERSION:
+            result: ProfileCalculationResult | ProfileCalculationResultV4 = (
+                calculate_profile_v2(person, policy)
+            )
+        else:
+            result = calculate_profile(person, policy)
     except NumerologyError as exc:
         typer.echo(f"error: {exc}", err=True)
         raise typer.Exit(code=1) from exc

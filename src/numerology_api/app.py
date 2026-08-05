@@ -16,6 +16,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from numerology_agent.provider import LlmProvider
+from numerology_agent.provider_v3 import LlmProviderV3
 from numerology_agent.rate_limit import RateLimiter
 from numerology_agent.resilience import CircuitBreaker
 from numerology_api.dependencies import (
@@ -27,6 +28,7 @@ from numerology_api.dependencies import (
     settings_from_environment,
 )
 from numerology_api.http_models import FieldError, ProblemDetails
+from numerology_api.idempotency import IdempotencyStoreV3
 from numerology_api.middleware import (
     AccessLogMiddleware,
     CorrelationIdMiddleware,
@@ -36,6 +38,7 @@ from numerology_api.middleware import (
 )
 from numerology_api.problem_details import PROBLEM_BASE, correlation_id, problem_response
 from numerology_api.routes import analyses, cycles, health, meta, profiles
+from numerology_api.routes import analyses_v2, meta_v2, profiles_v2
 from numerology_domain.exceptions import NumerologyError
 
 _ERROR_LOGGER = logging.getLogger("numerology_api.error")
@@ -45,7 +48,9 @@ def create_app(
     settings: ApiSettings | None = None,
     *,
     provider: LlmProvider | None = None,
+    provider_v3: LlmProviderV3 | None = None,
     rate_limiter: RateLimiter | None = None,
+    idempotency_store: IdempotencyStoreV3 | None = None,
 ) -> FastAPI:
     """Build an independently testable FastAPI application instance."""
     resolved = settings or settings_from_environment()
@@ -59,8 +64,10 @@ def create_app(
     )
     api.state.settings = resolved
     api.state.provider = provider
+    api.state.provider_v3 = provider_v3
     api.state.rate_limiter = rate_limiter
     api.state.circuit_breaker = circuit_breaker
+    api.state.idempotency_store = idempotency_store
     api.add_middleware(
         OriginValidationMiddleware,
         allowed_origins=resolved.allowed_origins,
@@ -159,6 +166,9 @@ def create_app(
     api.include_router(profiles.router)
     api.include_router(analyses.router)
     api.include_router(cycles.router)
+    api.include_router(meta_v2.router)
+    api.include_router(profiles_v2.router)
+    api.include_router(analyses_v2.router)
 
     return api
 
