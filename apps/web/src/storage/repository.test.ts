@@ -328,12 +328,12 @@ describe("LocalProfileRepository", () => {
         } as AnalysisFollowUp;
 
         await state.repository.saveReport(saved.id, report, true);
-        await expect(
-            state.repository.saveReport(saved.id, report, true),
-        ).rejects.toThrow(/einen Bericht/);
+        // Multiple reports per profile are now supported (v4 schema).
+        const report2 = { ...report, report_id: "report-2" } as AnalysisReport & { report_id: string };
+        await state.repository.saveReport(saved.id, report2, true);
+        expect(await state.repository.listReports(saved.id)).toHaveLength(2);
         await state.repository.saveFollowUp(saved.id, followUp, true);
         await state.repository.saveFollowUp(saved.id, followUp, true);
-        expect(await state.repository.getReport(saved.id)).toEqual(report);
         expect(await state.repository.listFollowUps(saved.id)).toHaveLength(2);
         await expect(
             state.repository.saveFollowUp(saved.id, followUp, true),

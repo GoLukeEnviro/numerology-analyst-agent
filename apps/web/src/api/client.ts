@@ -1,79 +1,155 @@
 import type {
-  AnalysisFollowUp,
-  AnalysisFollowUpRequest,
-  AnalysisReport,
-  AnalysisReportRequest,
-  ProblemDetails,
-  ProfileCalculationRequest,
-  ProfileCalculationResult,
+    AnalysisFollowUp,
+    AnalysisFollowUpRequest,
+    AnalysisReport,
+    AnalysisReportRequest,
+    ProblemDetails,
+    ProfileCalculationRequest,
+    ProfileCalculationResult,
 } from "./types";
 
 export class ApiProblem extends Error {
-  readonly code: string;
-  readonly correlationId: string;
+    readonly code: string;
+    readonly correlationId: string;
 
-  constructor(problem: Pick<ProblemDetails, "title" | "detail" | "code" | "correlation_id">) {
-    super(problem.detail || problem.title);
-    this.name = "ApiProblem";
-    this.code = problem.code;
-    this.correlationId = problem.correlation_id;
-  }
+    constructor(
+        problem: Pick<
+            ProblemDetails,
+            "title" | "detail" | "code" | "correlation_id"
+        >,
+    ) {
+        super(problem.detail || problem.title);
+        this.name = "ApiProblem";
+        this.code = problem.code;
+        this.correlationId = problem.correlation_id;
+    }
 }
 
 export async function calculateProfile(
-  request: ProfileCalculationRequest,
-  fetcher: typeof fetch = fetch,
-  signal?: AbortSignal,
+    request: ProfileCalculationRequest,
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
 ): Promise<ProfileCalculationResult> {
-  const response = await fetcher("/api/v1/profiles/calculate", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Correlation-ID": crypto.randomUUID(),
-    },
-    body: JSON.stringify(request),
-    signal,
-  });
-  const payload: unknown = await response.json();
-  if (!response.ok) {
-    const problem = payload as ProblemDetails;
-    throw new ApiProblem(problem);
-  }
-  return payload as ProfileCalculationResult;
+    const response = await fetcher("/api/v1/profiles/calculate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Correlation-ID": crypto.randomUUID(),
+        },
+        body: JSON.stringify(request),
+        signal,
+    });
+    const payload: unknown = await response.json();
+    if (!response.ok) {
+        const problem = payload as ProblemDetails;
+        throw new ApiProblem(problem);
+    }
+    return payload as ProfileCalculationResult;
 }
 
 async function postJson<TResult>(
-  path: string,
-  request: unknown,
-  fetcher: typeof fetch,
-  signal?: AbortSignal,
+    path: string,
+    request: unknown,
+    fetcher: typeof fetch,
+    signal?: AbortSignal,
 ): Promise<TResult> {
-  const response = await fetcher(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Correlation-ID": crypto.randomUUID(),
-    },
-    body: JSON.stringify(request),
-    signal,
-  });
-  const payload: unknown = await response.json();
-  if (!response.ok) throw new ApiProblem(payload as ProblemDetails);
-  return payload as TResult;
+    const response = await fetcher(path, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Correlation-ID": crypto.randomUUID(),
+        },
+        body: JSON.stringify(request),
+        signal,
+    });
+    const payload: unknown = await response.json();
+    if (!response.ok) throw new ApiProblem(payload as ProblemDetails);
+    return payload as TResult;
 }
 
 export async function generateReport(
-  request: AnalysisReportRequest,
-  fetcher: typeof fetch = fetch,
-  signal?: AbortSignal,
+    request: AnalysisReportRequest,
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
 ): Promise<AnalysisReport> {
-  return postJson<AnalysisReport>("/api/v1/analyses/report", request, fetcher, signal);
+    return postJson<AnalysisReport>(
+        "/api/v1/analyses/report",
+        request,
+        fetcher,
+        signal,
+    );
 }
 
 export async function generateFollowUp(
-  request: AnalysisFollowUpRequest,
-  fetcher: typeof fetch = fetch,
-  signal?: AbortSignal,
+    request: AnalysisFollowUpRequest,
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
 ): Promise<AnalysisFollowUp> {
-  return postJson<AnalysisFollowUp>("/api/v1/analyses/follow-up", request, fetcher, signal);
+    return postJson<AnalysisFollowUp>(
+        "/api/v1/analyses/follow-up",
+        request,
+        fetcher,
+        signal,
+    );
+}
+
+// ---------------------------------------------------------------------------
+// V2 API client (parallel to V1 — separate endpoints, same client pattern)
+// ---------------------------------------------------------------------------
+
+export async function calculateProfileV2(
+    request: ProfileCalculationRequest,
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
+): Promise<ProfileCalculationResult> {
+    const response = await fetcher("/api/v2/profiles/calculate", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Correlation-ID": crypto.randomUUID(),
+        },
+        body: JSON.stringify(request),
+        signal,
+    });
+    const payload: unknown = await response.json();
+    if (!response.ok) throw new ApiProblem(payload as ProblemDetails);
+    return payload as ProfileCalculationResult;
+}
+
+export async function generateReportV2(
+    request: {
+        request_id: string;
+        consent: true;
+        device_id: string;
+        profile: unknown;
+    },
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
+): Promise<AnalysisReport> {
+    return postJson<AnalysisReport>(
+        "/api/v2/analyses/report",
+        request,
+        fetcher,
+        signal,
+    );
+}
+
+export async function generateFollowUpV2(
+    request: {
+        request_id: string;
+        consent: true;
+        device_id: string;
+        profile: unknown;
+        report: unknown;
+        question: string;
+    },
+    fetcher: typeof fetch = fetch,
+    signal?: AbortSignal,
+): Promise<AnalysisFollowUp> {
+    return postJson<AnalysisFollowUp>(
+        "/api/v2/analyses/follow-up",
+        request,
+        fetcher,
+        signal,
+    );
 }
