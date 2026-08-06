@@ -14,25 +14,25 @@ As-of-Date:        2026-07-26 (Testdatum)
 
 ## Erwartete Berechnungsergebnisse
 
-| Kernzahl | display_notation | root_value | held_master_value | is_master |
-|---|---|---|---|---|
-| Life Path Primary | `40/4` | 4 | — | false |
-| Life Path Secondary | `22/4` | 4 | 22 | true |
-| Geburtstag | `18/9` | 9 | — | false |
-| Einstellung | `25/7` | 7 | — | false |
-| Ausdruck | `62/8` | 8 | — | false |
-| Seelenstreben | `18/9` | 9 | — | false |
-| Persönlichkeit | `44/8` | 8 | — | false |
-| Reife | `12/3` | 3 | — | false |
-| Persönliches Jahr 2026 | `17/8` | 8 | — | false |
-| Pinnacle 1 | `16/7` | 7 | — | false |
-| Pinnacle 2 | `15/6` | 6 | — | false |
-| Pinnacle 3 | `13/4` | 4 | — | false |
-| Pinnacle 4 | `13/4` | 4 | — | false |
-| Challenge 1 | 2 | — | — | — |
-| Challenge 2 | 3 | — | — | — |
-| Challenge 3 | 1 | — | — | — |
-| Challenge 4 | 1 | — | — | — |
+| Kernzahl               | display_notation | root_value | held_master_value | is_master |
+| ---------------------- | ---------------- | ---------- | ----------------- | --------- |
+| Life Path Primary      | `40/4`           | 4          | —                 | false     |
+| Life Path Secondary    | `22/4`           | 4          | 22                | true      |
+| Geburtstag             | `18/9`           | 9          | —                 | false     |
+| Einstellung            | `25/7`           | 7          | —                 | false     |
+| Ausdruck               | `62/8`           | 8          | —                 | false     |
+| Seelenstreben          | `18/9`           | 9          | —                 | false     |
+| Persönlichkeit         | `44/8`           | 8          | —                 | false     |
+| Reife                  | `12/3`           | 3          | —                 | false     |
+| Persönliches Jahr 2026 | `17/8`           | 8          | —                 | false     |
+| Pinnacle 1             | `16/7`           | 7          | —                 | false     |
+| Pinnacle 2             | `15/6`           | 6          | —                 | false     |
+| Pinnacle 3             | `13/4`           | 4          | —                 | false     |
+| Pinnacle 4             | `13/4`           | 4          | —                 | false     |
+| Challenge 1            | 2                | —          | —                 | —         |
+| Challenge 2            | 3                | —          | —                 | —         |
+| Challenge 3            | 1                | —          | —                 | —         |
+| Challenge 4            | 1                | —          | —                 | —         |
 
 ## E2E-Test-Szenario
 

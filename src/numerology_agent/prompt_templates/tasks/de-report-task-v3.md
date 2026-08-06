@@ -5,26 +5,26 @@ Jede Section hat eine feste `section_id` aus der folgenden Liste.
 
 ## Section-Plan (verbindliche Reihenfolge)
 
-| section_id | UI-Label | Immer anwendbar? |
-|---|---|---|
-| `executive_overview` | Überblick | Ja |
-| `life_path_and_purpose` | Lebensweg | Ja |
-| `birthday_and_attitude` | Geburtstag & Einstellung | Ja |
-| `inner_motivation` | Innere Motivation | Ja |
-| `expression_and_external_persona` | Ausdruck & Wirkung | Ja |
-| `maturity_and_development` | Reife & Entwicklung | Ja |
-| `number_harmonies` | Zahlenharmonien | Bedingt |
-| `number_tensions` | Zahlenspannungen | Bedingt |
-| `repetitions_and_missing_values` | Wiederholungen & Fehlendes | Bedingt |
-| `life_phases` | Lebensphasen | Bedingt |
-| `personal_cycles` | Persönliche Zyklen | Ja |
-| `pinnacles` | Pinnacles | Ja |
-| `challenges` | Challenges | Ja |
-| `shadow_patterns` | Schattenmuster | Bedingt |
-| `development_opportunities` | Entwicklungsmöglichkeiten | Ja |
-| `practical_integration` | Praktische Integration | Ja |
-| `final_synthesis` | Abschliessende Synthese | Ja |
-| `method_and_calculation_notes` | Rechenweg | Ja |
+| section_id                        | UI-Label                   | Immer anwendbar? |
+| --------------------------------- | -------------------------- | ---------------- |
+| `executive_overview`              | Überblick                  | Ja               |
+| `life_path_and_purpose`           | Lebensweg                  | Ja               |
+| `birthday_and_attitude`           | Geburtstag & Einstellung   | Ja               |
+| `inner_motivation`                | Innere Motivation          | Ja               |
+| `expression_and_external_persona` | Ausdruck & Wirkung         | Ja               |
+| `maturity_and_development`        | Reife & Entwicklung        | Ja               |
+| `number_harmonies`                | Zahlenharmonien            | Bedingt          |
+| `number_tensions`                 | Zahlenspannungen           | Bedingt          |
+| `repetitions_and_missing_values`  | Wiederholungen & Fehlendes | Bedingt          |
+| `life_phases`                     | Lebensphasen               | Bedingt          |
+| `personal_cycles`                 | Persönliche Zyklen         | Ja               |
+| `pinnacles`                       | Pinnacles                  | Ja               |
+| `challenges`                      | Challenges                 | Ja               |
+| `shadow_patterns`                 | Schattenmuster             | Bedingt          |
+| `development_opportunities`       | Entwicklungsmöglichkeiten  | Ja               |
+| `practical_integration`           | Praktische Integration     | Ja               |
+| `final_synthesis`                 | Abschliessende Synthese    | Ja               |
+| `method_and_calculation_notes`    | Rechenweg                  | Ja               |
 
 ## JSON-Schema (verbindlich)
 

@@ -32,8 +32,8 @@
 ```css
 .tab-scroll-container {
   overflow-x: auto;
-  scrollbar-width: none;           /* Firefox */
-  -ms-overflow-style: none;        /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
   -webkit-overflow-scrolling: touch;
   /* Scroll-Indikator via mask-image oder pseudo-elements */
   mask-image: linear-gradient(
@@ -44,7 +44,9 @@
     transparent 100%
   );
 }
-.tab-scroll-container::-webkit-scrollbar { display: none; }
+.tab-scroll-container::-webkit-scrollbar {
+  display: none;
+}
 ```
 
 ### Tastatur

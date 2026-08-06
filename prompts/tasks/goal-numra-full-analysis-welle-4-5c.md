@@ -1,10 +1,10 @@
 # GOAL: Numra Full Analysis Experience — Wellen 4–5C fortsetzen
 
-> **Goal-Typ:** Fortsetzung nach Wellen 0–3  
-> **Repository:** `GoLukeEnviro/numerology-analyst-agent`  
-> **Branch:** `feat/v2-full-analysis-welle-0` (HEAD: `039ca9c`)  
-> **Basis-Branch:** `main` (`9cc7e44`)  
-> **Erstellt:** 2026-08-05  
+> **Goal-Typ:** Fortsetzung nach Wellen 0–3
+> **Repository:** `GoLukeEnviro/numerology-analyst-agent`
+> **Branch:** `feat/v2-full-analysis-welle-0` (HEAD: `039ca9c`)
+> **Basis-Branch:** `main` (`9cc7e44`)
+> **Erstellt:** 2026-08-05
 > **Sprache:** Deutsch
 
 ---
@@ -25,12 +25,12 @@ main  : 9cc7e44 docs: clarify ADR supersession and reconciliation scope
 
 ### Bereits abgeschlossen (Wellen 0–3)
 
-| Welle | Status | Inhalt |
-|---|---|---|
-| **0** | ✅ | 10 ADRs (0018–0027), Capability-Matrix, Section-Budgets, Golden-E2E, Mobile-Strategie, Execution Plan |
-| **1** | ✅ | `/api/v2/profiles/calculate`, `/api/v2/meta` (MetaResponseV2), V2-Analyse-Runtime, Dependency-Wiring-Interfaces, OpenAPI (`numra-api.json` + `v1-contract.json`), CLI `--method-version` |
-| **2** | ✅ | `AnalysisFactEntryV3`/`AnalysisFactPackageV3`/`ProviderFactPackageV3`, Fact-Builder (`facts_v3.py`), `KnowledgeEntryV3`/`KnowledgeBundleV3`, `de-v3.json` (16 Einträge), `loader_v3.py`, `compose_interpretation_for_profile_v4()` |
-| **3** | ✅ | `ClaimV3`, `AnalysisSectionV3` (18 feste IDs + Validator), `AnalysisReportV3`, `AnalysisReportContentV3`, V3-Prompts (`de-report-system-v3.md`, `de-report-task-v3.md`, `de-follow-up-task-v3.md`), `DeepSeekProviderV3` (finish_reason-Matrix), `AgentServiceV3` (Hash-Kanonisierung, Draft-Validierung), `/api/v2/analyses/*`-Routen (Gerüst), Wheel-Smoke erweitert |
+| Welle | Status | Inhalt                                                                                                                                                                                                                                                                                                                                                                 |
+| ----- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **0** | ✅     | 10 ADRs (0018–0027), Capability-Matrix, Section-Budgets, Golden-E2E, Mobile-Strategie, Execution Plan                                                                                                                                                                                                                                                                  |
+| **1** | ✅     | `/api/v2/profiles/calculate`, `/api/v2/meta` (MetaResponseV2), V2-Analyse-Runtime, Dependency-Wiring-Interfaces, OpenAPI (`numra-api.json` + `v1-contract.json`), CLI `--method-version`                                                                                                                                                                               |
+| **2** | ✅     | `AnalysisFactEntryV3`/`AnalysisFactPackageV3`/`ProviderFactPackageV3`, Fact-Builder (`facts_v3.py`), `KnowledgeEntryV3`/`KnowledgeBundleV3`, `de-v3.json` (16 Einträge), `loader_v3.py`, `compose_interpretation_for_profile_v4()`                                                                                                                                     |
+| **3** | ✅     | `ClaimV3`, `AnalysisSectionV3` (18 feste IDs + Validator), `AnalysisReportV3`, `AnalysisReportContentV3`, V3-Prompts (`de-report-system-v3.md`, `de-report-task-v3.md`, `de-follow-up-task-v3.md`), `DeepSeekProviderV3` (finish_reason-Matrix), `AgentServiceV3` (Hash-Kanonisierung, Draft-Validierung), `/api/v2/analyses/*`-Routen (Gerüst), Wheel-Smoke erweitert |
 
 ### V2/V3-Stack — 31 neue Dateien
 
@@ -120,38 +120,40 @@ challenges         = 2, 3, 1, 1
 
 **9 Schritte:**
 
-| # | Schritt | Datei | Typ |
-|---|---|---|---|
-| 1 | Präsentationsmodell-Adapter | `apps/web/src/features/profile/presentation.ts` | NEU |
-| 2 | API-Client V2-Endpunkte | `apps/web/src/api/client.ts`, `apps/web/src/api/schema.d.ts` | ÄNDERN |
-| 3 | Section-Mapping (18→9) | `apps/web/src/features/report/sectionMapping.ts` | NEU |
-| 4 | ResultsTabs (WAI-ARIA) | `apps/web/src/features/report/ResultsTabs.tsx` | NEU |
-| 5 | ReportExperience umbauen | `apps/web/src/features/report/ReportExperience.tsx` | ÄNDERN |
-| 6 | Druckansicht + PDF | `apps/web/src/features/report/PrintView.tsx` (NEU), `apps/web/src/features/export/profilePdf.ts` (ÄNDERN) | NEU/ÄNDERN |
-| 7 | Storage Schema v4 | `apps/web/src/storage/database.ts`, `apps/web/src/storage/repository.ts` | ÄNDERN |
-| 8 | Offline-Status | `apps/web/src/pwa/offlineState.ts` | NEU |
-| 9 | AnalysisWizard v1/v2 | `apps/web/src/features/analysis/AnalysisWizard.tsx` | ÄNDERN |
+| #   | Schritt                     | Datei                                                                                                     | Typ        |
+| --- | --------------------------- | --------------------------------------------------------------------------------------------------------- | ---------- |
+| 1   | Präsentationsmodell-Adapter | `apps/web/src/features/profile/presentation.ts`                                                           | NEU        |
+| 2   | API-Client V2-Endpunkte     | `apps/web/src/api/client.ts`, `apps/web/src/api/schema.d.ts`                                              | ÄNDERN     |
+| 3   | Section-Mapping (18→9)      | `apps/web/src/features/report/sectionMapping.ts`                                                          | NEU        |
+| 4   | ResultsTabs (WAI-ARIA)      | `apps/web/src/features/report/ResultsTabs.tsx`                                                            | NEU        |
+| 5   | ReportExperience umbauen    | `apps/web/src/features/report/ReportExperience.tsx`                                                       | ÄNDERN     |
+| 6   | Druckansicht + PDF          | `apps/web/src/features/report/PrintView.tsx` (NEU), `apps/web/src/features/export/profilePdf.ts` (ÄNDERN) | NEU/ÄNDERN |
+| 7   | Storage Schema v4           | `apps/web/src/storage/database.ts`, `apps/web/src/storage/repository.ts`                                  | ÄNDERN     |
+| 8   | Offline-Status              | `apps/web/src/pwa/offlineState.ts`                                                                        | NEU        |
+| 9   | AnalysisWizard v1/v2        | `apps/web/src/features/analysis/AnalysisWizard.tsx`                                                       | ÄNDERN     |
 
 **UI-Reiter (18→9-Mapping):**
 
-| Reiter | Sections |
-|---|---|
-| Überblick | `executive_overview` |
-| Lebensweg | `life_path_and_purpose`, `birthday_and_attitude` |
-| Inneres Profil | `inner_motivation`, `maturity_and_development` |
-| Ausdruck und Wirkung | `expression_and_external_persona` |
-| Muster und Spannungen | `number_harmonies`, `number_tensions`, `repetitions_and_missing_values` |
-| Lebensphasen | `life_phases`, `personal_cycles`, `pinnacles`, `challenges` |
-| Schatten und Entwicklung | `shadow_patterns`, `development_opportunities` |
-| Integration | `practical_integration`, `final_synthesis` |
-| Rechenweg | `method_and_calculation_notes` |
+| Reiter                   | Sections                                                                |
+| ------------------------ | ----------------------------------------------------------------------- |
+| Überblick                | `executive_overview`                                                    |
+| Lebensweg                | `life_path_and_purpose`, `birthday_and_attitude`                        |
+| Inneres Profil           | `inner_motivation`, `maturity_and_development`                          |
+| Ausdruck und Wirkung     | `expression_and_external_persona`                                       |
+| Muster und Spannungen    | `number_harmonies`, `number_tensions`, `repetitions_and_missing_values` |
+| Lebensphasen             | `life_phases`, `personal_cycles`, `pinnacles`, `challenges`             |
+| Schatten und Entwicklung | `shadow_patterns`, `development_opportunities`                          |
+| Integration              | `practical_integration`, `final_synthesis`                              |
+| Rechenweg                | `method_and_calculation_notes`                                          |
 
 **Storage Schema v4 (Dexie):**
+
 - `reports`-Tabelle: `reportId` (UUID-PK), `profileId`, `reportContentHash`, `generationContextHash`, `methodVersion`, `reportSchemaVersion`, `calculationHash`, `createdAt`, `payload`
 - Mehrere Berichte pro Profil (keine Exception mehr)
 - `threads`/`notes` erhalten zusätzlich `reportId`
 
 **Offline-Zustände:**
+
 ```
 PROFILE_CALCULATION_REQUIRES_NETWORK
 REPORT_GENERATION_REQUIRES_NETWORK
@@ -160,6 +162,7 @@ SAVED_REPORT_AVAILABLE_OFFLINE
 ```
 
 **Verifikation Welle 4:**
+
 ```bash
 pnpm web:typecheck
 pnpm web:test
@@ -186,6 +189,7 @@ pnpm web:e2e    # Playwright + @axe-core/playwright
 ### Welle 5C — Default-Wechsel
 
 Nur bei ALLEN grünen Gates:
+
 ```
 reference_integrity = 100%
 Lukas 40/4 = PASS, Lukas 22/4 held_master_value=22 = PASS
@@ -222,18 +226,18 @@ uv build
 
 ## Schlüsseldokumente
 
-| Dokument | Pfad | Rolle |
-|---|---|---|
-| **Execution Plan** | `docs/plans/numra-full-analysis-execution-plan.md` | Operative Quelle der Wahrheit |
-| Architekturquelle | `docs/plans/numra-full-analysis-v2-v3.md` | Kanonische Architekturdefinition |
-| Sequenz-Governance | `docs/adr/0017-v2-parallel-anbindung-sequenz.md` | RC2-Sequenz, Merge-Regeln |
-| Stack-Isolation | `docs/adr/0018-v2-stack-isolation.md` | Geteilte-Modelle-Regel |
-| Idempotenz+Krypto | `docs/adr/0023-api-idempotency-crypto.md` | Vollständiger Kryptovertrag |
-| Hash-Kanonisierung | `docs/adr/0027-hash-canonization.md` | `generation_context_hash`, `report_content_hash` |
-| Golden-E2E | `docs/methods/golden-e2e-lukas-springer-v3.md` | Abnahmekriterium |
-| Mobile-Strategie | `docs/methods/mobile-strategy-9-tabs.md` | Scrollbare Tab-Leiste |
-| Capability-Matrix | `docs/methods/capability-matrix-v3.md` | 18 Sections mit Datenabhängigkeiten |
-| Section-Budgets | `docs/methods/section-budgets-v3.md` | Zeichen- und Anzahl-Limits |
+| Dokument           | Pfad                                               | Rolle                                            |
+| ------------------ | -------------------------------------------------- | ------------------------------------------------ |
+| **Execution Plan** | `docs/plans/numra-full-analysis-execution-plan.md` | Operative Quelle der Wahrheit                    |
+| Architekturquelle  | `docs/plans/numra-full-analysis-v2-v3.md`          | Kanonische Architekturdefinition                 |
+| Sequenz-Governance | `docs/adr/0017-v2-parallel-anbindung-sequenz.md`   | RC2-Sequenz, Merge-Regeln                        |
+| Stack-Isolation    | `docs/adr/0018-v2-stack-isolation.md`              | Geteilte-Modelle-Regel                           |
+| Idempotenz+Krypto  | `docs/adr/0023-api-idempotency-crypto.md`          | Vollständiger Kryptovertrag                      |
+| Hash-Kanonisierung | `docs/adr/0027-hash-canonization.md`               | `generation_context_hash`, `report_content_hash` |
+| Golden-E2E         | `docs/methods/golden-e2e-lukas-springer-v3.md`     | Abnahmekriterium                                 |
+| Mobile-Strategie   | `docs/methods/mobile-strategy-9-tabs.md`           | Scrollbare Tab-Leiste                            |
+| Capability-Matrix  | `docs/methods/capability-matrix-v3.md`             | 18 Sections mit Datenabhängigkeiten              |
+| Section-Budgets    | `docs/methods/section-budgets-v3.md`               | Zeichen- und Anzahl-Limits                       |
 
 ---
 

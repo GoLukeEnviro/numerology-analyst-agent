@@ -49,11 +49,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -85,11 +99,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -121,11 +149,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -157,11 +199,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -193,11 +249,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -229,11 +299,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -265,11 +349,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -301,11 +399,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -337,11 +449,25 @@
       ],
       "uncertainty": null,
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day", "pinnacle", "challenge"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day",
+        "pinnacle",
+        "challenge"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -374,11 +500,23 @@
       ],
       "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -411,11 +549,23 @@
       ],
       "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -447,11 +597,23 @@
       ],
       "uncertainty": "Meisterzahlen sind ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity",
-        "personal_year", "personal_month", "personal_day"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity",
+        "personal_year",
+        "personal_month",
+        "personal_day"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -463,7 +625,11 @@
       "method_system": "pythagorean-v2",
       "classification": "karmic_debt",
       "number": 4,
-      "compound": {"raw_value": 13, "reduced_value": 4, "compound_notation": "13/4"},
+      "compound": {
+        "raw_value": 13,
+        "reduced_value": 4,
+        "compound_notation": "13/4"
+      },
       "title": "Karmische Schuld 13/4 — Transformation durch Arbeit",
       "claim_class": "traditional_claim",
       "constructive_expression": "Die Symbolik der 13/4 kann zu tiefgreifender Transformation durch fokussierte, disziplinierte Arbeit einladen.",
@@ -483,10 +649,20 @@
       ],
       "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -498,7 +674,11 @@
       "method_system": "pythagorean-v2",
       "classification": "karmic_debt",
       "number": 5,
-      "compound": {"raw_value": 14, "reduced_value": 5, "compound_notation": "14/5"},
+      "compound": {
+        "raw_value": 14,
+        "reduced_value": 5,
+        "compound_notation": "14/5"
+      },
       "title": "Karmische Schuld 14/5 — Mass und Freiheit",
       "claim_class": "traditional_claim",
       "constructive_expression": "Die Symbolik der 14/5 kann zu einer reifen, bewusst gewählten Freiheit einladen, die innere Disziplin mit äusserer Flexibilität verbindet.",
@@ -518,10 +698,20 @@
       ],
       "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -533,7 +723,11 @@
       "method_system": "pythagorean-v2",
       "classification": "karmic_debt",
       "number": 7,
-      "compound": {"raw_value": 16, "reduced_value": 7, "compound_notation": "16/7"},
+      "compound": {
+        "raw_value": 16,
+        "reduced_value": 7,
+        "compound_notation": "16/7"
+      },
       "title": "Karmische Schuld 16/7 — Erneuerung durch Einsicht",
       "claim_class": "traditional_claim",
       "constructive_expression": "Die Symbolik der 16/7 kann zu tiefgreifender Selbsterkenntnis durch das Loslassen überholter Strukturen und die Annahme innerer Wahrheit einladen.",
@@ -553,10 +747,20 @@
       ],
       "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",
@@ -568,7 +772,11 @@
       "method_system": "pythagorean-v2",
       "classification": "karmic_debt",
       "number": 1,
-      "compound": {"raw_value": 19, "reduced_value": 1, "compound_notation": "19/1"},
+      "compound": {
+        "raw_value": 19,
+        "reduced_value": 1,
+        "compound_notation": "19/1"
+      },
       "title": "Karmische Schuld 19/1 — Eigenständigkeit durch Verbindung",
       "claim_class": "traditional_claim",
       "constructive_expression": "Die Symbolik der 19/1 kann zu einer gereiften Eigenständigkeit einladen, die nicht auf Abgrenzung, sondern auf echter innerer Unabhängigkeit beruht.",
@@ -588,10 +796,20 @@
       ],
       "uncertainty": "Karmische Schuld ist ein traditionelles Konzept ohne empirische Validierung.",
       "result_contexts": [
-        "life_path_primary", "life_path_secondary", "birthday", "attitude",
-        "expression", "soul_urge", "personality", "maturity"
+        "life_path_primary",
+        "life_path_secondary",
+        "birthday",
+        "attitude",
+        "expression",
+        "soul_urge",
+        "personality",
+        "maturity"
       ],
-      "source_refs": ["numra-method-v2", "numra-boundary-v1", "numra-tradition-v1"],
+      "source_refs": [
+        "numra-method-v2",
+        "numra-boundary-v1",
+        "numra-tradition-v1"
+      ],
       "authoring_provenance": {
         "authored_at": "2026-08-05",
         "author": "Numra Knowledge Team",

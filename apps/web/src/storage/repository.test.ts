@@ -329,7 +329,10 @@ describe("LocalProfileRepository", () => {
 
         await state.repository.saveReport(saved.id, report, true);
         // Multiple reports per profile are now supported (v4 schema).
-        const report2 = { ...report, report_id: "report-2" } as AnalysisReport & { report_id: string };
+        const report2 = {
+            ...report,
+            report_id: "report-2",
+        } as AnalysisReport & { report_id: string };
         await state.repository.saveReport(saved.id, report2, true);
         expect(await state.repository.listReports(saved.id)).toHaveLength(2);
         await state.repository.saveFollowUp(saved.id, followUp, true);
