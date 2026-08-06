@@ -23,9 +23,9 @@ import typer
 from numerology_api.contracts import dump_profile_as_json
 from numerology_domain.exceptions import NumerologyError
 from numerology_domain.models import (
-    MethodPolicy,
     PYTHAGOREAN_V1_VERSION,
     PYTHAGOREAN_V2_VERSION,
+    MethodPolicy,
     PersonInput,
     ProfileCalculationResult,
     ProfileCalculationResultV4,
@@ -116,8 +116,8 @@ def profile(
         )
         policy = MethodPolicy(version=method_version)
         if method_version == PYTHAGOREAN_V2_VERSION:
-            result: ProfileCalculationResult | ProfileCalculationResultV4 = (
-                calculate_profile_v2(person, policy)
+            result: ProfileCalculationResult | ProfileCalculationResultV4 = calculate_profile_v2(
+                person, policy
             )
         else:
             result = calculate_profile(person, policy)

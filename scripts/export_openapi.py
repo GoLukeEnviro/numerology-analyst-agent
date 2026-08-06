@@ -38,7 +38,6 @@ def main() -> int:
 
 def _write_v1_contract(full_schema: str) -> None:
     """Extract V1-only paths + recursive schema closure into v1-contract.json."""
-    import copy
 
     doc = json.loads(full_schema)
     v1_paths: dict[str, object] = {}
