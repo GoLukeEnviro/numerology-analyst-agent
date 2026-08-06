@@ -21,7 +21,7 @@ class IdempotencyStatus(str, Enum):
 class AcquireResultV3:
     """Result of an ``IdempotencyStoreV3.acquire()`` call."""
 
-    __slots__ = ("status", "owner_token", "existing_response", "conflict_detail")
+    __slots__ = ("conflict_detail", "existing_response", "owner_token", "status")
 
     def __init__(
         self,
@@ -39,7 +39,7 @@ class AcquireResultV3:
 class IdempotencyStoreV3(Protocol):
     """Protocol for the V3 idempotency store — implemented in Welle 3.
 
-    TTL: 1–6 hours (no extension on reads).
+    TTL: 1-6 hours (no extension on reads).
     Storage: encrypted (AES-GCM-256), never plaintext in Redis.
     """
 

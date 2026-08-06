@@ -19,6 +19,7 @@ from numerology_domain.models import (
     LifePathResult,
     NumberResult,
     ProfileCalculationResult,
+    ProfileCalculationResultV4,
 )
 
 
@@ -148,8 +149,24 @@ def profile_result_to_payload(result: ProfileCalculationResult) -> dict[str, Any
     return payload
 
 
-def dump_profile_as_json(result: ProfileCalculationResult, *, indent: int = 2) -> str:
-    """Serialize a complete profile as canonical, key-sorted UTF-8 JSON."""
+def dump_profile_as_json(
+    result: ProfileCalculationResult | ProfileCalculationResultV4,
+    *,
+    indent: int = 2,
+) -> str:
+    """Serialize a complete profile as canonical, key-sorted UTF-8 JSON.
+
+    Accepts both the V1/V3 ``ProfileCalculationResult`` and the V2
+    ``ProfileCalculationResultV4``; V4 profiles are dumped via their own
+    canonical JSON shape.
+    """
+    if isinstance(result, ProfileCalculationResultV4):
+        return json.dumps(
+            result.model_dump(mode="json"),
+            sort_keys=True,
+            ensure_ascii=False,
+            indent=indent,
+        )
     return json.dumps(
         profile_result_to_payload(result),
         sort_keys=True,
