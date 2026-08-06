@@ -1,8 +1,8 @@
 # Numra RC2 Private Staging Acceptance — VORLAGE
 
-> **Status:** BLOCKED — kein genehmigter Staging-Host  
-> **Issue:** #39  
-> **Epic:** #37  
+> **Status:** BLOCKED — kein genehmigter Staging-Host
+> **Issue:** #39
+> **Epic:** #37
 > **Vorlage erstellt:** 2026-08-06
 
 ---
@@ -26,7 +26,7 @@ Freier Speicher /opt:
 
 ## Deployment
 
-- [ ] Ziel-SHA: ___________
+- [ ] Ziel-SHA: ****\_\_\_****
 - [ ] Image gebaut mit `deploy/scripts/build-release-image.sh`
 - [ ] Image transferiert zum Host (`docker save` → `scp` → `docker load`)
 - [ ] `deploy/scripts/release.sh <SHA>` ausgeführt
