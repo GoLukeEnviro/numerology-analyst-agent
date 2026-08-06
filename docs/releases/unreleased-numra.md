@@ -1,8 +1,8 @@
-# Numra — unreleased / post-RC1 Arbeitspfad
+# Numra — unreleased / post-PR-56 Arbeitspfad
 
-> **Stand:** 2026-08-04  
-> **Aktueller `main`:** `a3f168ef99823fa2fd1c3f3b6536ea7523def451`  
-> **Paketversion auf main:** `0.3.0rc1`  
+> **Stand:** 2026-08-06
+> **Aktueller `main`:** `ba4c9121866a8c05b1ccfea076e0c26db9c25758`
+> **Paketversion auf main:** `0.3.0rc1`
 > **Letzter immutable Tag:** `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a`
 
 ## Was bereits getaggt ist
@@ -17,9 +17,24 @@
 - PR **#35** — Konsolidierung von Audit-, Governance- und OpenAPI-Artefakten.
 - PR **#55** — Restore-Skript (OPS-001), Deploy-by-Digest (OPS-002), Rollback-Rehearsal lokal,
   Committee-Status-Korrektur, CQ-001.
+- PR **#56** — V2/V3-Stack (Backend-Wellen 1–3, Web-Welle 4) auf `main`
+  (`ba4c9121…`), kontrolliert gemäß ADR 0028 (`product_default_method_version=v1`,
+  `rollout_stage=disabled`).
 
 Diese Commits gehören zur **RC2-Vorbereitung**, nicht zu einer stillen
 RC1-Tag-Verschiebung.
+
+## Lokale Recovery-Verifikation (2026-08-06)
+
+- OpenAPI-Drift behoben (alle 4 V2-Pfade; V1-Contract unverändert).
+- Web-Type-Drift behoben (`apps/web/src/api/schema.d.ts` regeneriert).
+- Knowledge V3-Validierung aktiv (`de-v1/v2/v3`).
+- V2-Analyse-Routen funktional (fail-closed 503/422/429).
+- Backend-Audit-Fixes B-6/B-7/B-8; CRLF-Env-Fix B-16.
+- Python-Gates grün (Engine 98,52 %, gesamt 89,57 %); Web-Gates grün (73 Tests);
+  lokale Docker-Abnahme grün; Rollback-/Restore-Rehearsal grün.
+- Details: `docs/audit/numra-post-pr56-recovery-baseline-2026-08-06.md`,
+  `docs/audit/current-state-numra-post-pr56-2026-08-06.md`.
 
 ## Nächste geplante Code-Releases
 
@@ -31,15 +46,16 @@ RC1-Tag-Verschiebung.
 
 | Thema | Status |
 |-------|--------|
-| Privates Staging (bestätigter Host) | NOT_EXECUTED |
+| Privates Staging (bestätigter Host) | **BLOCKED_BY_APPROVED_HOST_MISSING** |
 | Backup create + structural validate + restore + re-smoke | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
 | Rollback-Rehearsal | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
 | Host-Staging Restore + Rollback | **NOT_EXECUTED** |
-| Committee Review | COMPLETE (`docs/committee/rc2-*.md`); Entscheidung NO_GO; Betriebsabnahme BLOCKED_BY_STAGING |
+| Provider-Evaluation Welle 5A | **BLOCKED** (Legal/Transfer-Approval + Runtime-Marker fehlen) |
+| Committee Review (post-Fixes) | **PENDING** (erneute Durchführung nach Merge) |
 | Closed Beta | NOT_STARTED |
 | Öffentlicher Launch | NO_GO |
 | Research Preview (historisch „0.4.0“) | NOT_STARTED |
-| V2 Guided Masterplan Implementierung | DEFERRED (ADR 0016) |
+| V2 Guided Masterplan Implementierung | DEFERRED (ADR 0016, ADR 0028) |
 
 ## Hinweis zur alten „unreleased“-Erzählung
 
