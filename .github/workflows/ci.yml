@@ -5,6 +5,9 @@ on:
     branches: [main, "feat/**", "release/**"]
   pull_request:
     branches: [main]
+  # Manuelles Triggern für Wartung und Recovery-Szenarien, wenn der
+  # pull_request-Trigger nicht zustellt (z. B. Infrastrukturverzögerung).
+  workflow_dispatch:
 
 permissions:
   contents: read
