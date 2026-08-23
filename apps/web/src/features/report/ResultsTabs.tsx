@@ -19,7 +19,10 @@ interface ResultsTabsProps {
 
 export function ResultsTabs({ sections, renderSection }: ResultsTabsProps) {
     const [searchParams, setSearchParams] = useSearchParams();
-    const activeTab = searchParams.get("tab") || TAB_GROUPS[0].tabId;
+    const requestedTab = searchParams.get("tab");
+    const activeTab = TAB_GROUPS.some((t) => t.tabId === requestedTab)
+        ? (requestedTab as string)
+        : TAB_GROUPS[0].tabId;
     const tabListRef = useRef<HTMLDivElement>(null);
     const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
@@ -42,7 +45,7 @@ export function ResultsTabs({ sections, renderSection }: ResultsTabsProps) {
             const currentIndex = TAB_GROUPS.findIndex(
                 (t) => t.tabId === activeTab,
             );
-            let nextIndex = currentIndex;
+            let nextIndex: number;
             switch (e.key) {
                 case "ArrowRight":
                     nextIndex = (currentIndex + 1) % TAB_GROUPS.length;

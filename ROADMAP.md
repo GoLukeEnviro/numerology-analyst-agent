@@ -2,37 +2,40 @@
 
 > **Dokumenttyp:** Phasen-Roadmap (verbindlich)
 > **Quelle der Wahrheit:** Master-Vertrag `docs/governance/master-implementation-contract.md` (externer Master-Prompt, intern importiert), Section 7 (Phasen 0–14), Section 4 (Tech-Stack)
-> **Stand:** 2026-08-04 (V1.7 — post-RC1 → RC2 / Stable 0.3.0)
+> **Stand:** 2026-08-06 (V1.8 — post-PR-56 → RC2 / Stable 0.3.0)
 > **Sprache:** Deutsch
 >
-> **Aktueller Steuerungsstand (post-RC1):**
+> **Aktueller Steuerungsstand (post-PR-56):**
 >
 > | Kennzeichen | Wert |
 > |---|---|
-> | Geprüfte Ausgangsbasis vor State Reconciliation | `a3f168ef99823fa2fd1c3f3b6536ea7523def451` |
+> | Main-HEAD | `ba4c9121866a8c05b1ccfea076e0c26db9c25758` |
 > | Paketversion | `0.3.0rc1` |
 > | Unveränderlicher Tag | `v0.3.0-rc.1` → `21ba56ed0d918cea7c60090bcc50937adc16269a` |
-> | Ship-Hygiene | PR **#34** gemergt (Issue **#32** Determinismus-Fix, API-/Domain-Modularisierung, Frontend-Coverage-CI-Gate, README/Release-Truth) |
-> | Audit-Konsolidierung | PR **#35** gemergt (Audit-/Governance-/OpenAPI-Artefakte) |
-> | RC2-Vorbereitung | PR **#55** gemergt (Restore-Skript OPS-001, Deploy-by-Digest OPS-002, Rollback-Rehearsal lokal, Committee-Status-Korrektur, CQ-001) |
-> | Offene PRs / Issues (Baseline 2026-08-04) | PR #55 **gemergt**; offene Issues **#37** (Epic), **#39–#49** |
-> | OPS-001 (Restore-Skript) | **behoben** (PR #55) |
-> | OPS-002 (Deploy-by-Digest) | **behoben** (PR #55) |
-> | OPS-003 (GHSA-Zuordnung) | **behoben** (State Reconciliation, pnpm auditConfig korrigiert) |
-> | Frische lokale Gates auf `a3f168e` | Python, Determinismus-Matrix, Web (inkl. E2E), Container, Remote-CI/CodeQL **PASS** |
+> | V2/V3-Stack auf `main` | PR **#56** gemergt (Backend-Wellen 1–3, Web-Welle 4) — kontrolliert, ADR 0028 |
+> | Governance-Reconciliation | ADR **0028** (post-PR-56 Sequenz- und Rollout-Reconciliation) |
+> | OpenAPI-Drift | **behoben** (alle 4 V2-Pfade; V1-Contract unverändert) |
+> | Web-Type-Drift | **behoben** (`apps/web/src/api/schema.d.ts` regeneriert) |
+> | Knowledge V3-Validierung | **behoben** (`scripts/validate_knowledge.py` validiert de-v1/v2/v3) |
+> | Backend-Audit-Fixes | B-6/B-7/B-8 (Fact-Package, Interpretation-V3, context_signature) |
+> | Python-Gates | Ruff, Mypy, pip-audit, Coverage (Engine 98,52 %, gesamt 89,57 %) **PASS** |
+> | Web-Gates | Lint, Typecheck, Coverage (73 Tests), Build, Check-Build, E2E **PASS** |
+> | Lokale Docker-Abnahme | Stack healthy; V1/V2 Golden-Werte; Fail-closed; Restart/Redis-Resilienz; Log-Hygiene **PASS** |
+> | LLM-Staging fail-closed | Ohne Runtime-Marker startet der API-Container nicht (RuntimeError) |
 > | Lokaler Restore-Test | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
 > | Lokaler Rollback-Rehearsal | **PASS** (lokal, `docs/operations/rollback-rehearsal-local-2026-08-04.md`) |
-> | Privates Host-Staging | **NOT_EXECUTED** (kein bestätigter Numra-Staging-Host) — **einziger verbleibender Blocker** |
-> | Committee Review | **COMPLETE** (`docs/committee/rc2-*.md`); Entscheidung **NO_GO**; Betriebsabnahme **BLOCKED_BY_STAGING** |
+> | Privates Host-Staging | **BLOCKED_BY_APPROVED_HOST_MISSING** (kein bestätigter Numra-Staging-Host) |
+> | Committee Review (post-Fixes) | **PENDING** (erneute Durchführung nach Merge) |
 > | Nächster Code-Release | **v0.3.0-rc.2**, danach Closed Beta, dann **stable v0.3.0** |
 > | Öffentlicher Launch | **NO_GO** bis Launch-Checkliste vollständig |
-> | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 + Sequenz-ADR (ADR 0017, 2026-08-04) |
+> | V2 Guided Masterplan | **nicht aktuelle Implementierung** (ADR 0016); erst nach stable 0.3.0 (ADR 0028) |
 >
 > Historische RC1-Vorbereitungsangaben (Stand 2026-07-28: „jüngstes Tag v0.1.3“,
 > „große Teile von 0.3.0 unreleased“) sind **überholt**. Der North-Star-Text der
 > Phasen 0–14 bleibt als Architektur- und Gate-Beschreibung gültig; der
 > **operative** Release-Status steht in der Statusmatrix und Release-Roadmap
-> unten. Details: `docs/audit/current-state-numra-post-rc1-2026-08-02.md`,
+> unten. Details: `docs/audit/current-state-numra-post-pr56-2026-08-06.md`,
+> `docs/audit/numra-post-pr56-recovery-baseline-2026-08-06.md`,
 > `docs/releases/unreleased-numra.md`.
 
 Diese Roadmap übersetzt die **15 Phasen (0–14)** des Master-Vertrags in eine
@@ -93,32 +96,33 @@ Diese Begriffe sind **nicht synonym**:
 | **0.2.x-Umfang** | Knowledge + Interpretation | 5–6 | ✅ auf `main` (in RC1 kumulativ) |
 | **0.3.0-rc.1** | Integration Closure | 8–11 (+ PWA/Docker) | ✅ getaggt `v0.3.0-rc.1` @ `21ba56ed…` (unveränderlich) |
 | **post-RC1 main** | Ship-Hygiene #34 + Audit #35 | — | ✅ `5976ae2`, Version bleibt `0.3.0rc1` |
+| **post-PR-56 main** | V2/V3-Stack (Backend-Wellen 1–3, Web-Welle 4) | — | ✅ `ba4c9121…`, Version bleibt `0.3.0rc1`; kontrolliert (ADR 0028) |
 | **0.3.0-rc.2** | Staging-bewiesener RC | 12–14 (teilw.) | ❌ **nächster** Code-Release — nach Staging Restore/Rollback + Committee |
 | **0.3.0** (stable) | Stable nach Closed Beta | 14 | ❌ nach RC2 + Beta; P0/P1 = 0 |
-| **Research / V2** | Research Preview + Guided Masterplan | 7 + Produkt-V2 | ❌ **DEFERRED** — keine Implementierung vor stable 0.3.0 + ADR |
+| **Research / V2** | Research Preview + Guided Masterplan | 7 + Produkt-V2 | ❌ **DEFERRED** — keine Implementierung vor stable 0.3.0 (ADR 0028) |
 
 **PWA + Docker** sind außerhalb der ursprünglichen 15-Phasen-Zählung bereits auf
 `main` (ADRs `0007`–`0014`). Der öffentliche Launch bleibt gesperrt
 (`docs/operations/launch-checklist.md`).
 
-**Phasen-Statusmatrix (post-RC1, 2026-08-02):**
+**Phasen-Statusmatrix (post-PR-56, 2026-08-06):**
 
 | Phase | Titel | Zustand |
 |-------|-------|---------|
 | 0 | Reality Check | **COMPLETE** |
-| 1 | Governance | **COMPLETE** (Committee-Prozess als Artefakt-Flow noch **NOT_STARTED**) |
+| 1 | Governance | **COMPLETE** (ADR 0028 Reconciliation; Committee-Prozess als Artefakt-Flow noch **NOT_STARTED**) |
 | 2 | Tooling | **COMPLETE** (MkDocs Material optional/separat **PARTIAL**) |
 | 3 | Methodenspezifikation | **COMPLETE** |
 | 4 | Rechenkern | **COMPLETE** |
-| 5 | Wissensmodell | **COMPLETE** |
-| 6 | Interpretation | **COMPLETE** |
+| 5 | Wissensmodell | **COMPLETE** (inkl. V3-Validierung de-v1/v2/v3) |
+| 6 | Interpretation | **COMPLETE** (inkl. V3-Interpretation, B-7-Fix) |
 | 7 | Forschung | **NOT_STARTED** |
 | 8 | Safety/Privacy | Code **COMPLETE**; externe Rechtsfreigabe **EXTERNALLY_BLOCKED** |
-| 9 | CLI/API/Berichte | **COMPLETE** |
-| 10 | Agent | **COMPLETE** (optional / fail-closed, LLM default off) |
-| 11 | Evaluation | **COMPLETE** nach frischem Gate auf `5976ae2` |
+| 9 | CLI/API/Berichte | **COMPLETE** (inkl. V2-Endpunkte, OpenAPI driftfrei) |
+| 10 | Agent | **COMPLETE** (optional / fail-closed, LLM default off; V3-Stack kontrolliert) |
+| 11 | Evaluation | **COMPLETE** nach frischem Gate auf `ba4c9121` (Engine 98,52 %, gesamt 89,57 %) |
 | 12 | Dokumentation | **PARTIAL** (Betriebs-/Release-Nachweise und Staging-Bericht offen) |
-| 13 | Committee Review | **COMPLETE** (`docs/committee/rc2-*.md`, Stand 2026-08-02) — Entscheidung `RELEASE_DECISION=NO_GO`, Betriebsabnahme `BLOCKED_BY_STAGING` |
+| 13 | Committee Review | **PENDING** (erneute Durchführung nach Merge; vorherige Entscheidung `NO_GO` historisch) |
 | 14 | Release | RC1 **COMPLETE**; RC2 **BLOCKED_BY_STAGING**, Stable **NOT_STARTED** |
 
 → RC1 Notes: `docs/releases/v0.3.0-rc.1.md`. Foundation: `docs/releases/v0.1.3.md`.

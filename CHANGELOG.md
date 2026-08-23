@@ -5,6 +5,19 @@
 > **Single Source of Truth** für Release-Beschreibungen. Dieser Changelog
 > erzeugt keine zweite, widersprüchliche Beschreibung.
 
+## Unreleased — post-PR-56 main (0.3.0rc1, Richtung v0.3.0-rc.2)
+
+Seit PR #56 liegt der V2/V3-Stack (Backend-Wellen 1–3, Web-Welle 4) auf `main`
+(`ba4c9121866a8c05b1ccfea076e0c26db9c25758`), kontrolliert gemäß ADR 0028
+(`product_default_method_version=v1`, `rollout_stage=disabled`). Die lokale
+Recovery-Verifikation hat OpenAPI-/Web-Type-Drift behoben, Knowledge V3
+validiert, V2-Analyse-Routen funktional gemacht (fail-closed) und die
+Backend-Audit-Fixes B-6/B-7/B-8 sowie den CRLF-Env-Fix (B-16) eingebracht.
+
+- **Details:** `docs/audit/numra-post-pr56-recovery-baseline-2026-08-06.md`,
+  `docs/audit/current-state-numra-post-pr56-2026-08-06.md`
+- **Governance:** ADR 0028 (post-PR-56 Sequenz- und Rollout-Reconciliation)
+
 ## v0.3.0-rc.1 — Release Candidate 1 (2026-07-28, Closure 2026-07-29)
 
 Erster Release Candidate der kumulativen Normalisierungsrunde (ADR 0015).

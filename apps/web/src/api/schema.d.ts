@@ -106,6 +106,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/analyses/follow-up": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Analysis Follow Up V2 */
+        post: operations["analysis_follow_up_v2_api_v2_analyses_follow_up_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/analyses/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Analysis Report V2 */
+        post: operations["analysis_report_v2_api_v2_analyses_report_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/meta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Meta V2 */
+        get: operations["meta_v2_api_v2_meta_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/profiles/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Calculate V2 */
+        post: operations["calculate_v2_api_v2_profiles_calculate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -163,6 +231,51 @@ export interface components {
             report: components["schemas"]["AnalysisReport"];
         };
         /**
+         * AnalysisFollowUpRequestV2
+         * @description V2 follow-up request — re-validates the V4 profile and the signed report.
+         */
+        AnalysisFollowUpRequestV2: {
+            /**
+             * Consent
+             * @constant
+             */
+            consent: true;
+            /** Device Id */
+            device_id: string;
+            profile: components["schemas"]["ProfileCalculationResultV4"];
+            /** Question */
+            question: string;
+            report: components["schemas"]["AnalysisReportV3"];
+        };
+        /** AnalysisFollowUpV3 */
+        AnalysisFollowUpV3: {
+            /** Answer */
+            answer: string;
+            /** Claims */
+            claims: components["schemas"]["ClaimV3"][];
+            /** Context Signature */
+            context_signature: string;
+            /**
+             * Follow Up Id
+             * Format: uuid
+             */
+            follow_up_id: string;
+            /** Limitations */
+            limitations: string[];
+            provenance: components["schemas"]["AnalysisProvenanceV3"];
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /**
+             * Schema Version
+             * @default analysis-follow-up-v3
+             * @constant
+             */
+            schema_version: "analysis-follow-up-v3";
+        };
+        /**
          * AnalysisProvenance
          * @description Provenance shared by v1 (read) and v2 (write) reports.
          *
@@ -208,6 +321,44 @@ export interface components {
             /** Top P */
             top_p?: number | null;
         };
+        /** AnalysisProvenanceV3 */
+        AnalysisProvenanceV3: {
+            /** Calculation Hash */
+            calculation_hash: string;
+            /** Completion Tokens */
+            completion_tokens: number;
+            /** Context Signature */
+            context_signature: string;
+            /**
+             * Effective Sampling
+             * @default provider_managed
+             * @constant
+             */
+            effective_sampling: "provider_managed";
+            /** Knowledge Bundle */
+            knowledge_bundle: string;
+            /** Model */
+            model: string;
+            /** Prompt Tokens */
+            prompt_tokens: number;
+            /** Prompt Version */
+            prompt_version: string;
+            /** Provider */
+            provider: string;
+            /** Provider Fingerprint */
+            provider_fingerprint?: string | null;
+            /**
+             * Reasoning Effort
+             * @default high
+             * @constant
+             */
+            reasoning_effort: "high";
+            /**
+             * Thinking
+             * @default enabled
+             */
+            thinking: string;
+        };
         /**
          * AnalysisReport
          * @description Canonical v2 report — the only structure newly produced by the agent.
@@ -229,6 +380,18 @@ export interface components {
             /** Summary */
             summary: string;
         };
+        /** AnalysisReportContentV3 */
+        AnalysisReportContentV3: {
+            /**
+             * Global Limitations
+             * @default []
+             */
+            global_limitations: string[];
+            /** Sections */
+            sections: components["schemas"]["AnalysisSectionV3"][];
+            /** Summary */
+            summary: string;
+        };
         /** AnalysisReportRequest */
         AnalysisReportRequest: {
             /**
@@ -241,12 +404,97 @@ export interface components {
             /** Profile */
             profile: components["schemas"]["ProfileCalculationResult"] | components["schemas"]["LegacyV2ProfileCalculationResult"];
         };
+        /**
+         * AnalysisReportRequestV2
+         * @description V2 report request — carries the canonical V4 profile for re-validation.
+         */
+        AnalysisReportRequestV2: {
+            /**
+             * Consent
+             * @constant
+             */
+            consent: true;
+            /** Device Id */
+            device_id: string;
+            profile: components["schemas"]["ProfileCalculationResultV4"];
+        };
+        /** AnalysisReportV3 */
+        AnalysisReportV3: {
+            content: components["schemas"]["AnalysisReportContentV3"];
+            /** Context Signature */
+            context_signature: string;
+            /** Generation Context Hash */
+            generation_context_hash: string;
+            provenance: components["schemas"]["AnalysisProvenanceV3"];
+            /** Report Content Hash */
+            report_content_hash: string;
+            /**
+             * Report Id
+             * Format: uuid
+             */
+            report_id: string;
+            /**
+             * Schema Version
+             * @default analysis-report-v3
+             * @constant
+             */
+            schema_version: "analysis-report-v3";
+        };
         /** AnalysisSection */
         AnalysisSection: {
             /** Claims */
             claims: components["schemas"]["AnalysisClaim"][];
             /** Title */
             title: string;
+        };
+        /** AnalysisSectionV3 */
+        AnalysisSectionV3: {
+            /**
+             * Applicable
+             * @default true
+             */
+            applicable: boolean;
+            /**
+             * Claims
+             * @default []
+             */
+            claims: components["schemas"]["ClaimV3"][];
+            /**
+             * Counter Hypotheses
+             * @default []
+             */
+            counter_hypotheses: string[];
+            /**
+             * Limitations
+             * @default []
+             */
+            limitations: string[];
+            /** Model Heading */
+            model_heading?: string | null;
+            /**
+             * Practical Options
+             * @default []
+             */
+            practical_options: string[];
+            /**
+             * Reflection Questions
+             * @default []
+             */
+            reflection_questions: string[];
+            /** Section Id */
+            section_id: string;
+            /** Summary */
+            summary: string;
+            /**
+             * Supporting Calculation Refs
+             * @default []
+             */
+            supporting_calculation_refs: string[];
+            /**
+             * Supporting Knowledge Refs
+             * @default []
+             */
+            supporting_knowledge_refs: string[];
         };
         /**
          * AuditTrace
@@ -311,6 +559,29 @@ export interface components {
          * @enum {string}
          */
         ClaimType: "input_fact" | "calculation_fact" | "traditional_claim" | "interpretive_hypothesis" | "empirical_evidence" | "practical_suggestion";
+        /** ClaimV3 */
+        ClaimV3: {
+            /**
+             * Calculation Refs
+             * @default []
+             */
+            calculation_refs: string[];
+            /** Claim Id */
+            claim_id: string;
+            /** @default interpretive_hypothesis */
+            claim_type: components["schemas"]["ClaimType"];
+            /** Composer Rule Id */
+            composer_rule_id?: string | null;
+            /**
+             * Knowledge Refs
+             * @default []
+             */
+            knowledge_refs: string[];
+            /** Text */
+            text: string;
+            /** Uncertainty */
+            uncertainty?: string | null;
+        };
         /**
          * ConsistencyStatus
          * @description A-vs-B consistency report (Master Contract §3.2).
@@ -346,6 +617,24 @@ export interface components {
             personal_year: components["schemas"]["NumberResult"];
             /** Pinnacles */
             pinnacles: components["schemas"]["CyclePhase"][];
+        };
+        /**
+         * CycleCalculationResultV2
+         * @description Personal date cycles using V2 NumberModel and corrected formulas (PR #19).
+         */
+        CycleCalculationResultV2: {
+            /**
+             * As Of Date
+             * Format: date
+             */
+            as_of_date: string;
+            /** Challenges */
+            challenges: components["schemas"]["NumberModel"][];
+            personal_day: components["schemas"]["NumberModel"];
+            personal_month: components["schemas"]["NumberModel"];
+            personal_year: components["schemas"]["NumberModel"];
+            /** Pinnacles */
+            pinnacles: components["schemas"]["NumberModel"][];
         };
         /**
          * CyclePhase
@@ -399,6 +688,30 @@ export interface components {
              * @description Methodical component that produced the value (e.g. 'total_sum').
              */
             origin: string;
+        };
+        /**
+         * KarmicOccurrence
+         * @description A karmic debt value found during reduction with its precise origin type.
+         *
+         *     origin_type distinguishes three cases (PR #19):
+         *     * ``direct_raw`` — the methodically defined raw total itself is karmic
+         *       (e.g. birthday=16).
+         *     * ``reduction_intermediate`` — a karmic number appears as an intermediate
+         *       step in the chain (e.g. expression 59→14→5).
+         *     * ``component_total`` — the sum of reduced components is karmic
+         *       (e.g. Life Path B component sum = 13).
+         */
+        KarmicOccurrence: {
+            /**
+             * Origin Type
+             * @description direct_raw | reduction_intermediate | component_total
+             */
+            origin_type: string;
+            /**
+             * Value
+             * @description Karmic debt number (13, 14, 16 or 19).
+             */
+            value: number;
         };
         /**
          * LegacyV2NameNumberSet
@@ -561,6 +874,64 @@ export interface components {
             profile_schema_version: string;
         };
         /**
+         * MetaResponseV2
+         * @description Capability contract for the /api/v2 endpoint family.
+         */
+        MetaResponseV2: {
+            /**
+             * Api Version
+             * @default v2
+             * @constant
+             */
+            api_version: "v2";
+            /**
+             * Endpoint Method Version
+             * @default v2
+             * @constant
+             */
+            endpoint_method_version: "v2";
+            llm?: components["schemas"]["LlmMeta"];
+            /**
+             * Package Version
+             * @default
+             */
+            package_version: string;
+            /**
+             * Product Default Method Version
+             * @default v1
+             * @enum {string}
+             */
+            product_default_method_version: "v1" | "v2";
+            /**
+             * Rollout Stage
+             * @default disabled
+             * @enum {string}
+             */
+            rollout_stage: "disabled" | "opt_in" | "canary" | "default";
+            /**
+             * Supported Knowledge Bundles
+             * @default []
+             */
+            supported_knowledge_bundles: string[];
+            /**
+             * Supported Method Versions
+             * @default [
+             *       "v2"
+             *     ]
+             */
+            supported_method_versions: "v2"[];
+            /**
+             * Supported Profile Schema Versions
+             * @default []
+             */
+            supported_profile_schema_versions: string[];
+            /**
+             * Supported Report Schema Versions
+             * @default []
+             */
+            supported_report_schema_versions: string[];
+        };
+        /**
          * MethodPolicy
          * @description Explicit method configuration (Master Contract §6.2).
          *
@@ -656,6 +1027,24 @@ export interface components {
             y_classifications?: string[];
         };
         /**
+         * NameNumberSetV2
+         * @description Name-derived numbers using the V2 NumberModel (pythagorean-v2).
+         */
+        NameNumberSetV2: {
+            /** Basis */
+            basis: string;
+            expression: components["schemas"]["NumberModel"];
+            maturity: components["schemas"]["NumberModel"];
+            /** Normalized Name */
+            normalized_name: string;
+            /** Original Name */
+            original_name: string;
+            personality: components["schemas"]["NumberModel"];
+            soul_urge: components["schemas"]["NumberModel"];
+            /** Y Classifications */
+            y_classifications?: string[];
+        };
+        /**
          * NameNumberVariant
          * @description A complete vowel/consonant result for one explicit Y interpretation.
          */
@@ -706,6 +1095,72 @@ export interface components {
              * @description Stable step identifier (e.g. 'unicode_nfc').
              */
             step: string;
+        };
+        /**
+         * NumberModel
+         * @description Rich V2 numeric model (PR #19) with full reduction chain, karmic origin
+         *     differentiation, and master-number / compound classification.
+         *
+         *     Replaces ``NumberResult`` for pythagorean-v2 code paths.  The two models
+         *     coexist; pythagorean-v1 still uses ``NumberResult``.
+         *
+         *     Key invariants:
+         *     * ``root_value`` is ALWAYS in 1..9 (the final single-digit result).
+         *     * ``held_master_value`` is ``None`` unless the chain passes through 11/22/33.
+         *     * ``is_master`` is ``True`` iff ``held_master_value is not None``.
+         *     * 44 is NOT a master number (``is_master=False`` for raw_total=44).
+         *     * ``reduction_chain`` always ends at ``root_value`` (including past masters).
+         *     * ``display_notation`` renders the chain as slash-notation.
+         */
+        NumberModel: {
+            /**
+             * Components
+             * @description Original summation components before the raw_total.
+             */
+            components?: number[];
+            /**
+             * Compound Classification
+             * @description master_number | karmic_debt | compound | None.
+             */
+            compound_classification?: string | null;
+            /**
+             * Display Notation
+             * @description Slash notation, e.g. '29/11/2', '40/4', '22/4'.
+             */
+            display_notation: string;
+            /**
+             * Held Master Value
+             * @description Master number in chain (11/22/33) or None.
+             */
+            held_master_value?: number | null;
+            /**
+             * Is Master
+             * @description True only when held_master_value is not None (11/22/33; NOT 44).
+             * @default false
+             */
+            is_master: boolean;
+            /**
+             * Karmic Occurrences
+             * @description Karmic debt hits in this reduction, with origin context.
+             */
+            karmic_occurrences?: components["schemas"]["KarmicOccurrence"][];
+            /** Raw Total */
+            raw_total: number;
+            /**
+             * Reduction Chain
+             * @description Full chain from raw_total to root_value, e.g. (29,11,2).
+             */
+            reduction_chain: number[];
+            /**
+             * Root Value
+             * @description Final 0-9 result (0 only for challenge=0).
+             */
+            root_value: number;
+            /**
+             * Steps
+             * @description Human-readable calculation steps for the audit trail.
+             */
+            steps?: string[];
         };
         /**
          * NumberResult
@@ -822,6 +1277,14 @@ export interface components {
             policy: components["schemas"]["MethodPolicy"];
         };
         /**
+         * ProfileCalculationRequestV2
+         * @description Explicit person and method policy for the pythagorean-v2 endpoint.
+         */
+        ProfileCalculationRequestV2: {
+            person: components["schemas"]["PersonInput"];
+            policy: components["schemas"]["MethodPolicy"];
+        };
+        /**
          * ProfileCalculationResult
          * @description Complete deterministic profile contract introduced for release 0.1.4.
          */
@@ -852,6 +1315,44 @@ export interface components {
             /**
              * Schema Version
              * @default profile-calculation-result-v3
+             */
+            schema_version: string;
+            trace: components["schemas"]["AuditTrace"];
+        };
+        /**
+         * ProfileCalculationResultV4
+         * @description Complete deterministic V2 profile contract (profile-calculation-result-v4, PR #19).
+         *
+         *     Uses ``NumberModel`` throughout, has explicit primary/secondary life path
+         *     roles and full MethodPolicy versioning.  Additive — does not alter V1/V3.
+         */
+        ProfileCalculationResultV4: {
+            active_name?: components["schemas"]["NameNumberSetV2"] | null;
+            attitude: components["schemas"]["NumberModel"];
+            birthday: components["schemas"]["NumberModel"];
+            /** @default calculation_fact */
+            claim_type: components["schemas"]["ClaimType"];
+            core_name?: components["schemas"]["NameNumberSetV2"] | null;
+            cycles: components["schemas"]["CycleCalculationResultV2"];
+            /**
+             * Deterministic Hash
+             * @default
+             */
+            deterministic_hash: string;
+            input_ref: components["schemas"]["PersonInput"];
+            /** @description sum_all_birth_date_digits (role=primary). */
+            life_path_primary: components["schemas"]["NumberModel"];
+            /** @description component_then_sum (role=secondary). */
+            life_path_secondary: components["schemas"]["NumberModel"];
+            /**
+             * Name
+             * @default complete_profile_v4
+             */
+            name: string;
+            policy: components["schemas"]["MethodPolicy"];
+            /**
+             * Schema Version
+             * @default profile-calculation-result-v4
              */
             schema_version: string;
             trace: components["schemas"]["AuditTrace"];
@@ -1122,6 +1623,188 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProfileCalculationResult"];
+                };
+            };
+            /** @description Calculation rejected */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Request validation failed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    analysis_follow_up_v2_api_v2_analyses_follow_up_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalysisFollowUpRequestV2"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisFollowUpV3"];
+                };
+            };
+            /** @description Request validation failed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Analysis generation failed */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description LLM analysis disabled */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    analysis_report_v2_api_v2_analyses_report_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AnalysisReportRequestV2"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnalysisReportV3"];
+                };
+            };
+            /** @description Request validation failed */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Rate limit exceeded */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Analysis generation failed */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description LLM analysis disabled */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    meta_v2_api_v2_meta_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MetaResponseV2"];
+                };
+            };
+        };
+    };
+    calculate_v2_api_v2_profiles_calculate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileCalculationRequestV2"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProfileCalculationResultV4"];
                 };
             };
             /** @description Calculation rejected */

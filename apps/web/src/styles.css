@@ -191,14 +191,14 @@ h1 {
 }
 
 .button-primary {
-  border-color: var(--teal);
-  background: var(--teal);
-  color: #06191a;
+  border-color: #1d6a67;
+  background: #1d6a67;
+  color: #ffffff;
 }
 
 .button-primary:hover,
 .button-primary:focus-visible {
-  background: #70cbc3;
+  background: #1a5f5c;
 }
 
 .button-quiet:hover,

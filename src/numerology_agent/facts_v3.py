@@ -34,7 +34,7 @@ def build_analysis_fact_package_v3(
             AnalysisFactEntryV3(
                 calculation_ref=f"life_path_{role}",
                 result_context=f"life_path_{role}",
-                role=role,  # type: ignore[arg-type]
+                role=role,
                 raw_total=lp.raw_total,
                 reduction_chain=tuple(lp.reduction_chain),
                 root_value=lp.root_value,
@@ -50,7 +50,6 @@ def build_analysis_fact_package_v3(
     # --- Single-value numbers ---
     _add_number_entry(entries, profile.birthday, "birthday")
     _add_number_entry(entries, profile.attitude, "attitude")
-    _add_number_entry(entries, profile.maturity, "maturity")
 
     # --- Name-based numbers (core_name always present) ---
     if profile.core_name is not None:
@@ -58,6 +57,7 @@ def build_analysis_fact_package_v3(
         _add_number_entry(entries, cn.expression, "expression")
         _add_number_entry(entries, cn.soul_urge, "soul_urge")
         _add_number_entry(entries, cn.personality, "personality")
+        _add_number_entry(entries, cn.maturity, "maturity")
 
     # --- Cycles ---
     for key, ctx in (
@@ -69,42 +69,13 @@ def build_analysis_fact_package_v3(
         if nm is not None:
             _add_number_entry(entries, nm, ctx)
 
-    # --- Pinnacles ---
-    for i, pn in enumerate(profile.pinnacles, start=1):
+    # --- Pinnacles (V2 NumberModel, root-based) ---
+    for i, pn in enumerate(profile.cycles.pinnacles, start=1):
         _add_number_entry(entries, pn, f"pinnacle_{i}")
 
-    # --- Challenges (root values only — no NumberModel) ---
-    from numerology_domain.models import NumberResult
-
-    for i, ch in enumerate(profile.challenges, start=1):
-        if isinstance(ch, NumberResult):
-            entries.append(
-                AnalysisFactEntryV3(
-                    calculation_ref=f"challenge_{i}",
-                    result_context="challenge",
-                    role="primary",
-                    raw_total=ch._raw_total if hasattr(ch, "_raw_total") else ch.reduced_value,
-                    reduction_chain=(),
-                    root_value=ch.reduced_value,
-                    display_notation=str(ch.reduced_value),
-                    calculation_method="pinnacles_challenges_root",
-                    method_version="v2",
-                )
-            )
-        else:
-            entries.append(
-                AnalysisFactEntryV3(
-                    calculation_ref=f"challenge_{i}",
-                    result_context="challenge",
-                    role="primary",
-                    raw_total=ch,
-                    reduction_chain=(),
-                    root_value=ch,
-                    display_notation=str(ch),
-                    calculation_method="pinnacles_challenges_root",
-                    method_version="v2",
-                )
-            )
+    # --- Challenges (V2 NumberModel, root values only) ---
+    for i, ch in enumerate(profile.cycles.challenges, start=1):
+        _add_number_entry(entries, ch, f"challenge_{i}")
 
     return AnalysisFactPackageV3(
         calculation_hash=profile.deterministic_hash,
@@ -137,7 +108,7 @@ def _add_number_entry(
         AnalysisFactEntryV3(
             calculation_ref=context,
             result_context=context,
-            role=role,  # type: ignore[arg-type]
+            role=role,
             raw_total=raw,
             reduction_chain=chain,
             root_value=root,

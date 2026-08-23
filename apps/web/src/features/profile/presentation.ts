@@ -38,11 +38,17 @@ function extractNumberModel(nm: Record<string, unknown> | undefined): {
     isMaster: boolean;
 } {
     if (!nm) return { display: "—", root: 0, held: null, isMaster: false };
+    const rootValue = nm.root_value as number | undefined;
+    const reducedValue = nm.reduced_value as number | undefined;
+    const fallback =
+        typeof rootValue === "number"
+            ? String(rootValue)
+            : typeof reducedValue === "number"
+              ? String(reducedValue)
+              : "—";
     return {
-        display:
-            (nm.display_notation as string) ||
-            String(nm.root_value ?? nm.reduced_value ?? "—"),
-        root: (nm.root_value as number) ?? (nm.reduced_value as number) ?? 0,
+        display: (nm.display_notation as string) || fallback,
+        root: rootValue ?? reducedValue ?? 0,
         held: (nm.held_master_value as number) ?? null,
         isMaster: (nm.is_master as boolean) ?? false,
     };
@@ -153,9 +159,18 @@ export function toProfilePresentationModel(
         },
     ];
 
-    const pinnacleList = (p.pinnacles as Array<Record<string, unknown>>) ?? [];
+    // V4 stores pinnacles/challenges under cycles; V1/V3 keep them on the top level.
+    const cyclesData = (p.cycles ?? {}) as Record<string, unknown>;
+    const pinnacleList =
+        (cyclesData.pinnacles as Array<Record<string, unknown>> | undefined) ??
+        (p.pinnacles as Array<Record<string, unknown>> | undefined) ??
+        [];
     const challengeList =
-        (p.challenges as Array<number | Record<string, unknown>>) ?? [];
+        (cyclesData.challenges as
+            | Array<number | Record<string, unknown>>
+            | undefined) ??
+        (p.challenges as Array<number | Record<string, unknown>> | undefined) ??
+        [];
     const pinnacles = pinnacleList.map((pn, i) => ({
         label: `Pinnacle ${i + 1}`,
         notation: extractNumberModel(pn).display,
@@ -166,7 +181,8 @@ export function toProfilePresentationModel(
         value:
             typeof ch === "number"
                 ? ch
-                : (((ch as Record<string, unknown>).reduced_value as number) ??
+                : ((ch.reduced_value as number) ??
+                  (ch.root_value as number) ??
                   0),
     }));
 

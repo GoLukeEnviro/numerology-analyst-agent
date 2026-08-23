@@ -6,7 +6,7 @@
 
 ---
 
-## Status: post-RC1 main (0.3.0rc1) – nächster Meilenstein v0.3.0-rc.2 – Launch extern gesperrt
+## Status: post-PR-56 main (0.3.0rc1) – nächster Meilenstein v0.3.0-rc.2 – Launch extern gesperrt
 
 Der Release-Kandidat **`v0.3.0-rc.1`** ist getaggt und zeigt unveränderlich auf
 Commit `21ba56ed0d918cea7c60090bcc50937adc16269a`. Er umfasst die vollständige
@@ -15,10 +15,13 @@ stabilen `0.1.3`-Life-Path-Vertrag auf, der um die getrennt versionierten
 Verträge `0.1.4` (vollständiges Kernprofil) und `0.1.5` (deterministische
 Zyklen) erweitert wurde.
 
-Der aktuelle `main` (u. a. PR **#34** Ship-Hygiene inkl. Issue-**#32**-Fix und
-Frontend-Coverage-CI-Gate, PR **#35** Audit-Konsolidierung) bleibt bei
-Paketversion **`0.3.0rc1`**. Alle weiteren Änderungen gehören zu
-**`v0.3.0-rc.2`**. Live-Status: `docs/audit/current-state-numra-post-rc1-2026-08-02.md`.
+Der aktuelle `main` (HEAD `ba4c9121866a8c05b1ccfea076e0c26db9c25758`) enthält
+seit PR **#56** zusätzlich den **V2/V3-Stack** (Backend-Wellen 1–3, Web-Welle 4)
+unter `/api/v2` — kontrolliert hinter `product_default_method_version=v1` und
+`rollout_stage=disabled` (ADR 0028). Die Paketversion bleibt **`0.3.0rc1`**;
+alle weiteren Änderungen gehören zu **`v0.3.0-rc.2`**. Live-Status:
+`docs/audit/current-state-numra-post-rc1-2026-08-02.md` und
+`docs/audit/numra-post-pr56-recovery-baseline-2026-08-06.md`.
 
 Der bestehende `calculation-result-v1`-Vertrag bleibt kompatibel. Das
 vollständige Profil verwendet `profile-calculation-result-v3`; sein Hash umfasst
@@ -307,9 +310,10 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 
 ## Aktueller Status
 
-> **Stand:** 2026-08-02. Der Release-Kandidat `v0.3.0-rc.1` ist getaggt
+> **Stand:** 2026-08-06. Der Release-Kandidat `v0.3.0-rc.1` ist getaggt
 > (`21ba56ed0d918cea7c60090bcc50937adc16269a`) und umfasst die vollständige
-> Integration Closure. Der öffentliche Launch bleibt extern gesperrt.
+> Integration Closure. Seit PR #56 enthält `main` zusätzlich den V2/V3-Stack
+> (kontrolliert, ADR 0028). Der öffentliche Launch bleibt extern gesperrt.
 
 | Komponente | Status |
 | --- | --- |
@@ -322,8 +326,11 @@ Paketgrenzen (Master-Vertrag §4.3, hier nur der 0.1.0-Scope):
 | Gehärteter Docker-/Nginx-Stack | ✅ in `v0.3.0-rc.1` enthalten |
 | Integration Closure (Backend, Frontend, API, Container) | ✅ abgeschlossen (PRs #26–#31) |
 | Release-Kandidat `v0.3.0-rc.1` | ✅ getaggt auf `21ba56e`; Details: `docs/releases/v0.3.0-rc.1.md` |
+| V2/V3-Stack (Backend-Wellen 1–3, Web-Welle 4) | ✅ auf `main` seit PR #56; `product_default_method_version=v1`, `rollout_stage=disabled` (ADR 0028) |
+| V2-OpenAPI-Contract (4 Endpunkte) | ✅ driftfrei regeneriert; V1-Contract semantisch unverändert |
+| Knowledge V3-Validierung | ✅ `scripts/validate_knowledge.py` validiert de-v1/v2/v3 |
 | LLM-Staging | 🟡 technisch vorbereitet (`compose.llm-staging.yaml`); echtes Betreiber-/Legal-/VPS-Staging separat und noch offen |
-| V2 Guided Masterplan | 📄 Produktspezifikation, nicht implementiert (`docs/product/numra-v2-guided-masterplan.md`, ADR 0016) |
+| V2 Guided Masterplan | 📄 Produktspezifikation, nicht implementiert (`docs/product/numra-v2-guided-masterplan.md`, ADR 0016); bis nach Stable gesperrt |
 | Forschungs-/Plattformerweiterungen | 📄 Zukunftsmodule (`docs/roadmaps/numra-platform-expansion-roadmap.md`) |
 | Öffentlicher Launch | 🔒 bis VPS, Domain, TLS, Betreiberangaben und Rechtsfreigaben bestätigt sind |
 

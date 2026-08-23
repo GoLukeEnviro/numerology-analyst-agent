@@ -14,7 +14,6 @@ from fastapi import APIRouter, Request
 
 from numerology_api.dependencies import package_version
 from numerology_api.http_models import LlmMeta, MetaResponseV2
-from numerology_knowledge.loader import load_knowledge_bundle
 
 router = APIRouter(tags=["meta-v2"])
 
@@ -29,7 +28,7 @@ async def meta_v2(request: Request) -> MetaResponseV2:
     product_default: Literal["v1", "v2"]
     if getattr(settings, "v3_analysis_enabled", False):
         rollout_stage = "disabled"  # updated in 5B/5C
-        product_default = "v1"       # updated in 5C
+        product_default = "v1"  # updated in 5C
     else:
         rollout_stage = "disabled"
         product_default = "v1"

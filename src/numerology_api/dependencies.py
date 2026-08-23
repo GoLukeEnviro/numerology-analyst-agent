@@ -10,7 +10,9 @@ from typing import cast
 from pydantic import BaseModel, ConfigDict, Field, SecretStr
 
 from numerology_agent.deepseek import DeepSeekProvider, DeepSeekSettings
+from numerology_agent.deepseek_v3 import DeepSeekProviderV3
 from numerology_agent.provider import LlmProvider
+from numerology_agent.provider_v3 import LlmProviderV3
 from numerology_agent.rate_limit import (
     RateLimiter,
     RedisEvalClient,
@@ -80,9 +82,9 @@ def settings_from_environment() -> ApiSettings:
     api_key = _env_with_deepseek_fallback("DEEPSEEK_API_KEY", "NUMRA_DEEPSEEK_API_KEY")
     rate_secret = os.getenv("NUMRA_RATE_LIMIT_HMAC_SECRET")
     return ApiSettings(
-        environment=os.getenv("NUMRA_ENVIRONMENT", "development"),
+        environment=os.getenv("NUMRA_ENVIRONMENT", "development").strip(),
         allowed_origins=origins,
-        llm_enabled=os.getenv("NUMRA_LLM_ENABLED", "false").lower() == "true",
+        llm_enabled=os.getenv("NUMRA_LLM_ENABLED", "false").strip().lower() == "true",
         deepseek_api_key=SecretStr(api_key) if api_key else None,
         deepseek_base_url=_env_with_deepseek_fallback(
             "DEEPSEEK_BASE_URL", "NUMRA_DEEPSEEK_BASE_URL"
@@ -166,3 +168,35 @@ def production_dependencies(
     if settings.rate_limit_hmac_secret is None:
         raise RuntimeError("NUMRA_RATE_LIMIT_HMAC_SECRET is required when LLM is enabled")
     return provider, rate_limiter
+
+
+def production_dependencies_v3(
+    settings: ApiSettings,
+    provider_v3: LlmProviderV3 | None,
+) -> LlmProviderV3 | None:
+    """Resolve the V3 DeepSeek provider when the LLM feature is enabled.
+
+    Mirrors :func:`production_dependencies` for the V3 stack.  When
+    ``llm_enabled`` is false the injected (or ``None``) provider is returned
+    unchanged — no provider client is ever constructed while disabled.
+    """
+    if not settings.llm_enabled:
+        return provider_v3
+    if provider_v3 is not None:
+        return provider_v3
+    if settings.deepseek_api_key is None:
+        # The V3 stack is optional: without a key no provider client is
+        # constructed and the V2 analysis routes fail closed (503).  This
+        # mirrors the V1 behaviour where an injected provider is used as-is.
+        return None
+    return DeepSeekProviderV3(
+        DeepSeekSettings(
+            api_key=settings.deepseek_api_key,
+            base_url=settings.deepseek_base_url,
+            model=settings.deepseek_model,
+            thinking_enabled=settings.deepseek_thinking_enabled,
+            reasoning_effort=settings.deepseek_reasoning_effort,
+            max_output_tokens=settings.deepseek_max_output_tokens,
+            max_retries=settings.deepseek_max_retries,
+        )
+    )

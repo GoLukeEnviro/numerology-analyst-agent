@@ -103,6 +103,10 @@ test("persists the light theme and explains installation", async ({ page }) => {
 
 test("has no automated WCAG 2.2 AA violations in the primary flow", async ({ page }) => {
   test.setTimeout(90_000);
+  // Die Startseite animiert .reveal-Elemente (700 ms). axe misst sonst den
+  // Button in einem teiltransparenten Zwischenzustand (falscher Kontrast).
+  // reducedMotion reduziert alle Animationen auf 0.01 ms (bestehende CSS-Regel).
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expectNoWcagViolations(page);
 

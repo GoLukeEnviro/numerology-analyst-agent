@@ -11,17 +11,22 @@
 
 ---
 
-## SEQUENCING_GATE (verbindlich, aus ADR 0017)
+## SEQUENCING_GATE (verbindlich, aus ADR 0017 + ADR 0028)
 
 ```
-Solange der RC2-Releasepfad gemäß ADR 0017 offen ist,
-dürfen V2/V3-Wellen auf einem isolierten Branch entwickelt werden,
-aber nicht nach main gemergt werden.
+ADR 0017 (2026-08-04) untersagte einen V2-Merge nach main, solange der
+RC2-Releasepfad offen ist, und verlangte Welle 4 erst nach dem RC2-Schnitt.
 
-Welle 4 (Web) beginnt erst nach dem RC2-Schnitt.
+PR #56 hat den V2/V3-Stack (Backend-Wellen 1–3, Web-Welle 4) dennoch nach
+main gebracht. Der Widerspruch wird nicht durch Umschreiben der Historie
+verborgen, sondern durch ADR 0028 (2026-08-06) kanonisiert:
 
-Eine abweichende Reihenfolge benötigt zuerst eine neue ADR,
-die ADR 0017 ausdrücklich ersetzt oder ergänzt.
+- V2/V3 verbleibt auf main (kein Revert, kein Force-Push).
+- product_default_method_version=v1 bleibt verbindlich.
+- rollout_stage=disabled bleibt verbindlich.
+- V2/V3 ist nicht Bestandteil des RC2-Default-Scopes.
+- Guided Masterplan bleibt bis nach Stable v0.3.0 gesperrt.
+- Neue Merge-/Release-Gates und ein klarer Rollbackpfad sind definiert.
 ```
 
 Der operative RC2-Blocker **Issue #39** (genehmigter privater Staging-Host + reale Deployment-Evidenz) ist weiterhin offen.
@@ -696,6 +701,14 @@ Produkttexte dürfen nicht behaupten, DeepSeek arbeite vollständig lokal.
 
 Bestehende ADR 0017 (`0017-v2-parallel-anbindung-sequenz.md`, ACCEPTED) wird **unverändert respektiert** und legt die Sequenz-Governance fest. Neue ADRs beginnen ab der nächsten tatsächlich freien Nummer: **0018**.
 
+**Post-PR-56-Ergänzung (2026-08-06):** PR #56 hat den V2/V3-Stack nach `main`
+gebracht, obwohl ADR 0017 einen V2-Merge vor dem RC2-Schnitt untersagte.
+**ADR 0028** (`docs/adr/0028-post-pr56-sequenz-und-rollout-reconciliation.md`)
+kanonisiert diesen Zustand: V2/V3 verbleibt auf `main`, `v1` bleibt Default,
+`rollout_stage=disabled`, V2/V3 außerhalb des RC2-Default-Scopes, Guided
+Masterplan bis nach Stable gesperrt, neue Merge-/Release-Gates und
+Rollbackpfad definiert.
+
 ### Welle 0 — Vertrags- und Releaseentscheidungen
 
 **Ziel:** Architekturentscheidungen dokumentieren, bevor Code geschrieben wird. Nach Welle 0 darf die Architektur nicht erneut grundsätzlich umgebaut werden.
@@ -754,13 +767,16 @@ Welle 0  →  ADRs + Plan-Grundlage (auf isoliertem V2-Branch)
 Welle 1  →  API-Grundlage (Profile V2, Meta V2, Interfaces, OpenAPI, CLI)
 Welle 2  →  Fact Package + Knowledge V3 + Interpretation V3
 Welle 3  →  Berichtserzeugung (Provider, Service, Prompts, Idempotenz, /api/v2/analyses/*)
-Welle 4  →  Web-Migration (Tab-UI, Storage, Offline, Print/Export) — ERST NACH RC2-SCHNITT
+Welle 4  →  Web-Migration (Tab-UI, Storage, Offline, Print/Export)
 Welle 5A →  Provider-Evaluation (kein Default-Wechsel)
 Welle 5B →  Opt-in-Beta (V1 bleibt Default)
 Welle 5C →  Default-Wechsel (nur bei vollständig bestandenen Gates)
 ```
 
-⚠️ **Gemäß ADR 0017:** Wellen 0–3 auf isoliertem V2-Branch entwickeln. Kein Merge nach `main` solange RC2 offen ist. Welle 4 beginnt erst nach dem RC2-Schnitt.
+**IST-Zustand (2026-08-06):** Wellen 0–4 sind durch PR #56 auf `main`
+(`ba4c9121…`) — kontrolliert gemäß ADR 0028 (`product_default_method_version=v1`,
+`rollout_stage=disabled`). Welle 5A ist **BLOCKED** (Legal/Transfer-Approval +
+Runtime-Marker fehlen). Welle 5B/5C bleiben gesperrt bis nach Stable `v0.3.0`.
 
 ---
 

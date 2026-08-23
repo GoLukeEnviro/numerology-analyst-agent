@@ -22,9 +22,7 @@ from numerology_agent.models_v3 import (
     AnalysisDraftV3,
     AnalysisFollowUpV3,
     AnalysisProvenanceV3,
-    AnalysisReportContentV3,
     AnalysisReportV3,
-    AnalysisSectionV3,
     FollowUpDraftV3,
     FollowUpProviderRequestV3,
     ProviderRequestV3,
@@ -71,9 +69,14 @@ class AgentServiceV3:
         provider_payload = ProviderRequestV3(
             calculation_hash=profile.deterministic_hash,
             facts=tuple(
-                {"ref": e.get("ref", ""), "context": e.get("context", ""),
-                 "notation": e.get("notation", ""), "root": e.get("root", 0),
-                 "master": e.get("master"), "is_master": e.get("is_master", False)}
+                {
+                    "ref": e.get("ref", ""),
+                    "context": e.get("context", ""),
+                    "notation": e.get("notation", ""),
+                    "root": e.get("root", 0),
+                    "master": e.get("master"),
+                    "is_master": e.get("is_master", False),
+                }
                 for e in provider_facts.entries
             ),
             knowledge=tuple(
@@ -113,6 +116,10 @@ class AgentServiceV3:
             model=self._model,
         )
 
+        # The context signature is computed over the full report (including
+        # provenance), so a valid 64-char placeholder is required first and
+        # replaced below.  An empty string would violate the model contract.
+        _PLACEHOLDER_SIG = "0" * 64
         provenance = AnalysisProvenanceV3(
             provider="deepseek",
             model=result.model,
@@ -122,7 +129,7 @@ class AgentServiceV3:
             provider_fingerprint=result.provider_fingerprint,
             prompt_tokens=result.prompt_tokens,
             completion_tokens=result.completion_tokens,
-            context_signature="",  # filled below
+            context_signature=_PLACEHOLDER_SIG,
         )
 
         report = AnalysisReportV3(
@@ -131,7 +138,7 @@ class AgentServiceV3:
             report_content_hash=report_content_hash,
             generation_context_hash=generation_context_hash,
             provenance=provenance,
-            context_signature="",  # placeholder
+            context_signature=_PLACEHOLDER_SIG,
         )
 
         ctx_sig = _context_signature(report, self._hmac_secret)
@@ -170,15 +177,24 @@ class AgentServiceV3:
         draft = FollowUpDraftV3.model_validate_json(result.content)
         follow_up_id = uuid4()
 
-        return AnalysisFollowUpV3(
+        # The follow-up context signature is derived from the report signature
+        # plus the follow-up content; a valid 64-char placeholder is required
+        # by the model contract and replaced below.
+        _PLACEHOLDER_SIG = "0" * 64
+        follow_up = AnalysisFollowUpV3(
             follow_up_id=follow_up_id,
             report_id=report.report_id,
             answer=draft.answer,
             claims=draft.claims,
             limitations=draft.limitations,
             provenance=report.provenance,
-            context_signature="",
+            context_signature=_PLACEHOLDER_SIG,
         )
+        ctx_sig = _context_signature(
+            follow_up.model_copy(update={"context_signature": _PLACEHOLDER_SIG}),
+            self._hmac_secret,
+        )
+        return follow_up.model_copy(update={"context_signature": ctx_sig})
 
     # ------------------------------------------------------------------
     # Validation
@@ -196,13 +212,9 @@ class AgentServiceV3:
             seen.add(sid)
             expected = SECTION_ORDER[i] if i < len(SECTION_ORDER) else None
             if expected is not None and sid != expected:
-                raise ValueError(
-                    f"section {i} expected {expected!r}, got {sid!r}"
-                )
+                raise ValueError(f"section {i} expected {expected!r}, got {sid!r}")
         if len(content.sections) != len(SECTION_ORDER):
-            raise ValueError(
-                f"expected {len(SECTION_ORDER)} sections, got {len(content.sections)}"
-            )
+            raise ValueError(f"expected {len(SECTION_ORDER)} sections, got {len(content.sections)}")
 
     @staticmethod
     def _handle_finish_reason(result: ProviderResultV3) -> None:
@@ -248,19 +260,46 @@ class AgentServiceV3:
                                                 "claim_id": {"type": "string"},
                                                 "claim_type": {"type": "string"},
                                                 "text": {"type": "string"},
-                                                "calculation_refs": {"type": "array", "items": {"type": "string"}},
-                                                "knowledge_refs": {"type": "array", "items": {"type": "string"}},
+                                                "calculation_refs": {
+                                                    "type": "array",
+                                                    "items": {"type": "string"},
+                                                },
+                                                "knowledge_refs": {
+                                                    "type": "array",
+                                                    "items": {"type": "string"},
+                                                },
                                                 "uncertainty": {"type": ["string", "null"]},
                                                 "composer_rule_id": {"type": "null"},
                                             },
-                                            "required": ["claim_id", "claim_type", "text", "calculation_refs", "knowledge_refs"],
+                                            "required": [
+                                                "claim_id",
+                                                "claim_type",
+                                                "text",
+                                                "calculation_refs",
+                                                "knowledge_refs",
+                                            ],
                                         },
                                     },
-                                    "supporting_calculation_refs": {"type": "array", "items": {"type": "string"}},
-                                    "supporting_knowledge_refs": {"type": "array", "items": {"type": "string"}},
-                                    "counter_hypotheses": {"type": "array", "items": {"type": "string"}},
-                                    "reflection_questions": {"type": "array", "items": {"type": "string"}},
-                                    "practical_options": {"type": "array", "items": {"type": "string"}},
+                                    "supporting_calculation_refs": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
+                                    "supporting_knowledge_refs": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
+                                    "counter_hypotheses": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
+                                    "reflection_questions": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
+                                    "practical_options": {
+                                        "type": "array",
+                                        "items": {"type": "string"},
+                                    },
                                     "limitations": {"type": "array", "items": {"type": "string"}},
                                 },
                                 "required": ["section_id", "applicable", "summary"],
@@ -293,7 +332,13 @@ class AgentServiceV3:
                             "uncertainty": {"type": ["string", "null"]},
                             "composer_rule_id": {"type": "null"},
                         },
-                        "required": ["claim_id", "claim_type", "text", "calculation_refs", "knowledge_refs"],
+                        "required": [
+                            "claim_id",
+                            "claim_type",
+                            "text",
+                            "calculation_refs",
+                            "knowledge_refs",
+                        ],
                     },
                 },
                 "limitations": {"type": "array", "items": {"type": "string"}},
@@ -306,8 +351,11 @@ class AgentServiceV3:
 # Hash helpers
 # ------------------------------------------------------------------
 
+
 def _canonical_hash(data: object) -> str:
-    raw = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    raw = json.dumps(data, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -334,10 +382,12 @@ def _generation_context_hash(
     return _canonical_hash(components)
 
 
-def _context_signature(report: AnalysisReportV3, secret: bytes) -> str:
+def _context_signature(report: AnalysisReportV3 | AnalysisFollowUpV3, secret: bytes) -> str:
     payload = report.model_dump(mode="json")
     payload.pop("context_signature", None)
     if "provenance" in payload and isinstance(payload["provenance"], dict):
         payload["provenance"].pop("context_signature", None)
-    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     return hmac.new(secret, raw, hashlib.sha256).hexdigest()

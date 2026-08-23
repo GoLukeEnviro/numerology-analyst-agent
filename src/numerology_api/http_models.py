@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from numerology_agent.models import AnalysisReport
+from numerology_agent.models_v3 import AnalysisReportV3
 from numerology_domain.enums import ClaimType
 from numerology_domain.models import (
     AuditTrace,
@@ -19,6 +20,7 @@ from numerology_domain.models import (
     NumberResult,
     PersonInput,
     ProfileCalculationResult,
+    ProfileCalculationResultV4,
 )
 
 
@@ -154,3 +156,21 @@ class ProfileCalculationRequestV2(_HttpModel):
 
     person: PersonInput
     policy: MethodPolicy
+
+
+class AnalysisReportRequestV2(_HttpModel):
+    """V2 report request — carries the canonical V4 profile for re-validation."""
+
+    consent: Literal[True]
+    device_id: str = Field(min_length=16, max_length=128, pattern=r"^[A-Za-z0-9._:-]+$")
+    profile: ProfileCalculationResultV4
+
+
+class AnalysisFollowUpRequestV2(_HttpModel):
+    """V2 follow-up request — re-validates the V4 profile and the signed report."""
+
+    consent: Literal[True]
+    device_id: str = Field(min_length=16, max_length=128, pattern=r"^[A-Za-z0-9._:-]+$")
+    profile: ProfileCalculationResultV4
+    report: AnalysisReportV3
+    question: str = Field(min_length=1, max_length=500)

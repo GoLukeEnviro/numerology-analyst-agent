@@ -33,7 +33,7 @@ export function useOfflineState(
 
     useEffect(() => {
         const update = () => {
-            setState((prev) => {
+            setState(() => {
                 const online = navigator.onLine;
                 const capabilities = new Set<OfflineCapability>();
 

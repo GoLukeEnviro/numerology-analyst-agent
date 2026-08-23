@@ -12,19 +12,17 @@ Requires DEEPSEEK_API_KEY in environment or .env file.
 from __future__ import annotations
 
 import asyncio
-import json
+from dataclasses import dataclass, field
+from datetime import date
 import os
 import statistics
 import time
-from dataclasses import dataclass, field
-from datetime import date
-from pathlib import Path
 from typing import Any
 
 from pydantic import SecretStr
 
-from numerology_agent.deepseek_v3 import DeepSeekProviderV3
 from numerology_agent.deepseek import DeepSeekSettings
+from numerology_agent.deepseek_v3 import DeepSeekProviderV3
 from numerology_agent.service_v3 import AgentServiceV3
 from numerology_domain.models import (
     PYTHAGOREAN_V2_VERSION,
@@ -120,7 +118,9 @@ GOLDEN_CHECKS: dict[str, dict[str, Any]] = {
 }
 
 
-def check_golden_values(profile: ProfileCalculationResultV4, report_content: dict[str, Any]) -> tuple[int, int]:
+def check_golden_values(
+    profile: ProfileCalculationResultV4, report_content: dict[str, Any]
+) -> tuple[int, int]:
     """Count correct vs total number integrity checks."""
     correct = 0
     total = 0
@@ -167,7 +167,9 @@ async def run_eval(
         # Check non-applicable sections have no claims/refs
         na_ok = True
         for s in sections:
-            if not s.applicable and (s.claims or s.supporting_calculation_refs or s.supporting_knowledge_refs):
+            if not s.applicable and (
+                s.claims or s.supporting_calculation_refs or s.supporting_knowledge_refs
+            ):
                 na_ok = False
         metrics.non_applicable_ok = na_ok
 
@@ -193,7 +195,11 @@ async def evaluate_config(
         profile_id = str(entry["core_name"])
         profile = compute_profile(entry)
         for run_idx in range(RUNS_PER_CONFIG):
-            print(f"  [{config_label}] {profile_id} run {run_idx + 1}/{RUNS_PER_CONFIG} ...", end=" ", flush=True)
+            print(
+                f"  [{config_label}] {profile_id} run {run_idx + 1}/{RUNS_PER_CONFIG} ...",
+                end=" ",
+                flush=True,
+            )
             m = await run_eval(provider, profile, profile_id, config_label, run_idx + 1)
             all_metrics.append(m)
             print("OK" if m.error == "" else f"ERROR: {m.error[:80]}")
@@ -232,7 +238,10 @@ def print_report(h1: EvalReport, h2: EvalReport) -> None:
     print(f"  max_output_tokens: {NUMRA_V3_INITIAL_MAX_OUTPUT_TOKENS}")
     print()
 
-    for label, r in [("H1: Thinking (reasoning_effort=high)", h1), ("H2: Non-Thinking (temperature=0.2)", h2)]:
+    for label, r in [
+        ("H1: Thinking (reasoning_effort=high)", h1),
+        ("H2: Non-Thinking (temperature=0.2)", h2),
+    ]:
         print(f"  --- {label} ---")
         print(f"  Successful: {r.successful_runs}/{r.total_runs}")
         print(f"  Failed:     {r.failed_runs}/{r.total_runs}")
@@ -275,7 +284,9 @@ async def main() -> None:
 
     # H1: Thinking mode enabled
     print("--- H1: Thinking (reasoning_effort=high) ---")
-    h1_settings = base_settings.model_copy(update={"thinking_enabled": True, "reasoning_effort": "high"})
+    h1_settings = base_settings.model_copy(
+        update={"thinking_enabled": True, "reasoning_effort": "high"}
+    )
     h1 = await evaluate_config(h1_settings, "H1-thinking")
 
     # H2: Non-Thinking with temperature 0.2

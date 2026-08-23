@@ -135,7 +135,7 @@ class AnalysisSectionV3(_AgentModelV3):
     limitations: tuple[str, ...] = ()
 
     @model_validator(mode="after")
-    def validate_applicability(self) -> "AnalysisSectionV3":
+    def validate_applicability(self) -> AnalysisSectionV3:
         if self.applicable:
             if not 1 <= len(self.claims) <= 4:
                 raise ValueError(
@@ -143,11 +143,7 @@ class AnalysisSectionV3(_AgentModelV3):
                     f"got {len(self.claims)}"
                 )
         else:
-            if (
-                self.claims
-                or self.supporting_calculation_refs
-                or self.supporting_knowledge_refs
-            ):
+            if self.claims or self.supporting_calculation_refs or self.supporting_knowledge_refs:
                 raise ValueError(
                     f"non-applicable section {self.section_id!r} must contain "
                     f"no claims or references"

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import ConfigDict, Field
+from pydantic import Field
 
 from numerology_knowledge.models import (
     AuthoringProvenance,

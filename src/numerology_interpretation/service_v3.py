@@ -14,6 +14,7 @@ from numerology_interpretation.models import (
     InterpretationSection,
 )
 from numerology_knowledge.loader_v3 import load_knowledge_bundle_v3
+from numerology_knowledge.models import EntryClassification
 from numerology_knowledge.models_v3 import KnowledgeBundleV3, KnowledgeEntryV3, ResultContextV3
 from numerology_safety.validation import assert_claims_safe
 
@@ -71,21 +72,14 @@ def compose_interpretation_for_profile_v4(
         _section_for_number_model(bundle, profile.birthday, "birthday", "birthday", "Geburtstag")
     )
     sections.extend(
-        _section_for_number_model(
-            bundle, profile.attitude, "attitude", "attitude", "Einstellung"
-        )
-    )
-    sections.extend(
-        _section_for_number_model(bundle, profile.maturity, "maturity", "maturity", "Reife")
+        _section_for_number_model(bundle, profile.attitude, "attitude", "attitude", "Einstellung")
     )
 
-    # --- Name-based numbers ---
+    # --- Name-based numbers (maturity lives on the name set, not the profile) ---
     if profile.core_name is not None:
         cn = profile.core_name
         sections.extend(
-            _section_for_number_model(
-                bundle, cn.expression, "expression", "expression", "Ausdruck"
-            )
+            _section_for_number_model(bundle, cn.expression, "expression", "expression", "Ausdruck")
         )
         sections.extend(
             _section_for_number_model(
@@ -96,6 +90,9 @@ def compose_interpretation_for_profile_v4(
             _section_for_number_model(
                 bundle, cn.personality, "personality", "personality", "Persönlichkeit"
             )
+        )
+        sections.extend(
+            _section_for_number_model(bundle, cn.maturity, "maturity", "maturity", "Reife")
         )
 
     # --- Cycles ---
@@ -110,12 +107,10 @@ def compose_interpretation_for_profile_v4(
                 _section_for_number_model(bundle, nm, key, ctx, label)  # type: ignore[arg-type]
             )
 
-    # --- Pinnacles ---
-    for i, pn in enumerate(profile.pinnacles, start=1):
+    # --- Pinnacles (V2 NumberModel, root-based) ---
+    for i, pn in enumerate(profile.cycles.pinnacles, start=1):
         sections.extend(
-            _section_for_number_model(
-                bundle, pn, f"pinnacle_{i}", "pinnacle", f"Pinnacle {i}"
-            )
+            _section_for_number_model(bundle, pn, f"pinnacle_{i}", "pinnacle", f"Pinnacle {i}")
         )
 
     # Collect claims and validate
@@ -124,7 +119,12 @@ def compose_interpretation_for_profile_v4(
         all_claims.extend(section.claims)
     assert_claims_safe(tuple(all_claims))
 
-    return InterpretationResult(sections=tuple(sections))
+    return InterpretationResult(
+        knowledge_bundle=bundle.bundle_id,
+        calculation_hash=profile.deterministic_hash,
+        scientific_position=bundle.scientific_position,
+        sections=tuple(sections),
+    )
 
 
 def _section_for_number_model(
@@ -166,13 +166,12 @@ def _section_for_number_model(
             title=entry.title,
             claims=tuple(claims),
             counter_hypotheses=entry.counter_hypotheses,
-            knowledge_refs=entry.source_refs,
         )
     )
     return sections
 
 
-def _to_entry_classification(nm: object) -> str | None:
+def _to_entry_classification(nm: object) -> EntryClassification | None:
     """Map NumberModel fields to EntryClassification."""
     is_m = getattr(nm, "is_master", False)
     cc = getattr(nm, "compound_classification", None)

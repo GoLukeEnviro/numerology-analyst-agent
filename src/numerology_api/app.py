@@ -25,6 +25,7 @@ from numerology_api.dependencies import (
 from numerology_api.dependencies import (
     package_version,
     production_dependencies,
+    production_dependencies_v3,
     settings_from_environment,
 )
 from numerology_api.http_models import FieldError, ProblemDetails
@@ -37,8 +38,16 @@ from numerology_api.middleware import (
     SecurityHeadersMiddleware,
 )
 from numerology_api.problem_details import PROBLEM_BASE, correlation_id, problem_response
-from numerology_api.routes import analyses, cycles, health, meta, profiles
-from numerology_api.routes import analyses_v2, meta_v2, profiles_v2
+from numerology_api.routes import (
+    analyses,
+    analyses_v2,
+    cycles,
+    health,
+    meta,
+    meta_v2,
+    profiles,
+    profiles_v2,
+)
 from numerology_domain.exceptions import NumerologyError
 
 _ERROR_LOGGER = logging.getLogger("numerology_api.error")
@@ -55,6 +64,7 @@ def create_app(
     """Build an independently testable FastAPI application instance."""
     resolved = settings or settings_from_environment()
     provider, rate_limiter = production_dependencies(resolved, provider, rate_limiter)
+    provider_v3 = production_dependencies_v3(resolved, provider_v3)
     circuit_breaker: CircuitBreaker | None = CircuitBreaker() if resolved.llm_enabled else None
     api = FastAPI(
         title="Numra API",
